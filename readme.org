@@ -1,0 +1,31 @@
+* Introduction
+
+~treefold~ builds on top of [[https://github.com/ubolonton/emacs-tree-sitter][emacs-tree-sitter]] to provide code folding base on the tree-sitter syntax tree.
+
+* Usage
+
+~tree-sitter-fold-close~: fold the current syntax node.
+
+~tree-sitter-fold-open~: open all folds inside the current syntax node.
+
+~tree-sitter-fold-open-recursively~: open the outmost fold of the current syntax node. Keep the sub-folds close.
+
+~tree-sitter-fold-close-all~: close all foldable syntax nodes in the current buffer.
+
+~tree-sitter-fold-open-all~: open all folded syntax nodes in the current buffer.
+
+* Customization
+
+~tree-sitter-fold~ allows user-defined rules of how to fold syntax nodes. Two variables determine which node is foldable and how ~tree-sitter-fold~ should fold those nodes. I only implement folding mechanisms for ~python~. Contribution on other types of folds and for other major modes are welcome.
+
+** ~tree-sitter-fold-foldable-node-alist~
+
+This is an alist whose keys are ~major-mode~ symbols, and the corresponding values are lists of ~tree-sitter-node-type~ considered foldable in the major mode. ~tree-sitter-fold-close~ will fold only if the node are one of the types defined in this list under the current major mode.
+
+** ~tree-sitter-fold-range-alist~
+
+This variable determines how ~tree-sitter-fold~ should fold each of the nodes defined in ~tree-sitter-fold-foldable-node-alist~. It is a nested alist, with the first key being the major mode, and second key being the ~tree-sitter-node-type~. The value should be a function that takes a ~tree-sitter-node~ as the single argument, and return a cons cell of buffer position as the range should be folded by ~tree-sitter-fold~. See ~tree-sitter-fold-range-python~ for an example.
+
+* License
+
+MIT
