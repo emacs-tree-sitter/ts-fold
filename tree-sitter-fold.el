@@ -89,7 +89,7 @@ the fold in a cons cell. See `tree-sitter-fold-range-python' for an example."
 
 (defun tree-sitter-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
-Return nil if no foldable node is found.
+Raise `user-error' if no foldable node is found.
 This function is borrowed from `tree-sitter-node-at-point'."
   (let* ((pos (or pos (point)))
          (foldable-types (alist-get major-mode tree-sitter-fold-foldable-node-alist))
@@ -101,7 +101,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
             (setq result current
                   current nil)
           (setq current (tsc-get-parent current))))
-      result)))
+      (or result (user-error "No foldable node found at POS")))))
 
 (defun tree-sitter-fold--get-fold-range (node)
   "Return the beginning (as buffer position) of fold for NODE."
