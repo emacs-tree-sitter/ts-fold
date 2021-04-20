@@ -1,6 +1,6 @@
 * Introduction
 
-~treefold~ builds on top of [[https://github.com/ubolonton/emacs-tree-sitter][emacs-tree-sitter]] to provide code folding base on the tree-sitter syntax tree.
+~tree-sitter-fold~ builds on top of [[https://github.com/ubolonton/emacs-tree-sitter][emacs-tree-sitter]] to provide code folding base on the tree-sitter syntax tree.
 
 * Usage
 
