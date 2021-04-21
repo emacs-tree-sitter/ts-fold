@@ -2,6 +2,24 @@
 
 ~tree-sitter-fold~ builds on top of [[https://github.com/ubolonton/emacs-tree-sitter][emacs-tree-sitter]] to provide code folding base on the tree-sitter syntax tree.
 
+* Installation
+
+- with ~straight.el~ and ~use-package~:
+  #+begin_src emacs-lisp
+    (use-package tree-sitter-fold
+      :straight (host github repo "junyi-hou/tree-sitter-fold"))
+  #+end_src
+
+- manual:
+ #+begin_src shell
+   git clone https://github.com/junyi-hou/tree-sitter-fold /path/to/lib
+ #+end_src
+ then in ~emacs~:
+ #+begin_src emacs-lisp
+   (add-to-list 'load-path "/path/to/lib")
+   (require 'tree-sitter-fold)
+ #+end_src
+
 * Usage
 
 ~tree-sitter-fold-close~: fold the current syntax node.
