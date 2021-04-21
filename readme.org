@@ -44,6 +44,15 @@ This is an alist whose keys are ~major-mode~ symbols, and the corresponding valu
 
 This variable determines how ~tree-sitter-fold~ should fold each of the nodes defined in ~tree-sitter-fold-foldable-node-alist~. It is a nested alist, with the first key being the major mode, and second key being the ~tree-sitter-node-type~. The value should be a function that takes a ~tree-sitter-node~ as the single argument, and return a cons cell of buffer position as the range should be folded by ~tree-sitter-fold~. See ~tree-sitter-fold-range-python~ for an example.
 
+* Supported languages
+
+- python
+- contribution of other languages are welcome!
+
+* Contribution
+
+Enable ~tree-sitter-mode~ first, then ~tree-sitter-query-builder~ is useful to test out queries that determine what syntax nodes should be foldable and how to fold them. emacs-tree-sitter has [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/][an excellent documentation]] on how to write ~tree-sitter~ queries.
+
 * License
 
 MIT
