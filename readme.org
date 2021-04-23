@@ -47,11 +47,54 @@ This variable determines how ~tree-sitter-fold~ should fold each of the nodes de
 * Supported languages
 
 - python
+- R (need to compile [[https://github.com/r-lib/tree-sitter-r][tree-sitter-r]] grammar, see [[Note on installing additional grammars to ~emacs-tree-sitter~]])
 - contribution of other languages are welcome!
 
 * Contribution
 
 Enable ~tree-sitter-mode~ first, then ~tree-sitter-query-builder~ is useful to test out queries that determine what syntax nodes should be foldable and how to fold them. emacs-tree-sitter has [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/][an excellent documentation]] on how to write ~tree-sitter~ queries.
+
+* Note on installing additional grammars to ~emacs-tree-sitter~
+
+Following the following steps to build additional grammar for ~emacs-tree-sitter~.
+
+1. make sure ~tree-sitter~ is installed and up-to-date. To check, run
+   #+begin_src shell
+     tree-sitter --version
+   #+end_src
+   The new ABI requires ~0.19.3~ or newer version of ~tree-sitter~. ~Node.js~ is also required to generate grammar parsers. See [[https://github.com/tree-sitter/tree-sitter/blob/master/cli/README.md][here]] for detailed instructions of how to install tree-sitter CLI tools.
+
+2. add new grammar repos to ~tree-sitter-langs-git-dir~. In the case of ~R~, run
+   #+begin_src emacs-lisp
+     ;; make sure I do not re-add the submodule multiple times
+     (condition-case _
+         (tree-sitter-langs--repo-status 'r)
+       (error
+        (let ((default-directory tree-sitter-langs-git-dir))
+          (tree-sitter-langs--call
+           "git" "submodule" "add" "https://github.com/r-lib/tree-sitter-r" "repos/r"))))
+   #+end_src
+
+3. compile the new grammar parser by running
+   #+begin_src emacs-lisp
+     ;; compile only if haven't done so
+     (unless (--filter (string= (f-base it) "r") (f-entries (tree-sitter-langs--bin-dir)))
+       (tree-sitter-langs-compile 'r))
+   #+end_src
+
+4. register the respective major mode with the newly compiled grammar
+   #+begin_src emacs-lisp
+     (unless (assq 'ess-r-mode tree-sitter-major-mode-language-alist)
+       (add-to-list 'tree-sitter-major-mode-language-alist '(ess-r-mode . r)))
+   #+end_src
+
+5. require the new grammar
+
+   #+begin_src emacs-lisp
+     (tree-sitter-require 'r)
+   #+end_src
+
+I have those things together in a function ~gatsby:install-and-load-tree-sitter-r~ at [[https://github.com/junyi-hou/dotfiles/blob/main/main.org#R][here]] and hook it to ~ess-r-mode-hook~.
 
 * License
 
