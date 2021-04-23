@@ -47,14 +47,14 @@ This variable determines how ~tree-sitter-fold~ should fold each of the nodes de
 * Supported languages
 
 - python
-- R (need to compile [[https://github.com/r-lib/tree-sitter-r][tree-sitter-r]] grammar, see [[Note on installing additional grammars to ~emacs-tree-sitter~]])
+- R (need to compile [[https://github.com/r-lib/tree-sitter-r][tree-sitter-r]] grammar, see [[Note on installing additional grammars]])
 - contribution of other languages are welcome!
 
 * Contribution
 
 Enable ~tree-sitter-mode~ first, then ~tree-sitter-query-builder~ is useful to test out queries that determine what syntax nodes should be foldable and how to fold them. emacs-tree-sitter has [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/][an excellent documentation]] on how to write ~tree-sitter~ queries.
 
-* Note on installing additional grammars to ~emacs-tree-sitter~
+* Note on installing additional grammars
 
 Following the following steps to build additional grammar for ~emacs-tree-sitter~.
 
