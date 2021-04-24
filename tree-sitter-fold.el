@@ -31,7 +31,7 @@
 
 (defcustom tree-sitter-fold-foldable-node-alist
   '((python-mode . (function_definition class_definition))
-    (ess-r-mode . (function_definition)))
+    (ess-r-mode . (brace_list)))
   "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
   :group 'tree-sitter-fold)
@@ -39,7 +39,8 @@
 (defcustom tree-sitter-fold-range-alist
   '((python-mode . ((function_definition . tree-sitter-fold-range-python)
                     (class_definition . tree-sitter-fold-range-python)))
-    (ess-r-mode . ((function_definition . tree-sitter-fold-range-r))))
+    (ess-r-mode . ((brace_list . tree-sitter-fold-range-r)))
+    (nix-mode . ((attrset . tree-sitter-fold-range-nix))))
   "An alist of (major-mode . (foldable-node-type . function)).
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
 in MAJOR-MODE.  It should take a single argument (the syntax node with type
@@ -232,14 +233,10 @@ If the current syntax node is not foldable, do nothing."
     (cons beg end)))
 
 (defun tree-sitter-fold-range-r (node)
-  "Return the fold range for `function_definition' NODE in R."
-  (let ((node (tsc-get-nth-named-child node 0)))
-    (while (not (eq (tsc-node-type node) 'brace_list))
-      (setq node (tsc-get-next-named-sibling node)))
-    ;; now node is a brace_list
-    (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
-          (end (1- (tsc-node-end-position node))))
-      (cons beg end))))
+  "Return the fold range for `brace_list' NODE in R."
+  (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+        (end (1- (tsc-node-end-position node))))
+    (cons beg end)))
 
 
 (provide 'tree-sitter-fold)
