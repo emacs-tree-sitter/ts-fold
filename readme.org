@@ -48,6 +48,7 @@ This variable determines how ~tree-sitter-fold~ should fold each of the nodes de
 
 - python
 - R (need to compile [[https://github.com/r-lib/tree-sitter-r][tree-sitter-r]] grammar, see [[Note on installing additional grammars]])
+- Nix (need to compile [[https://github.com/cstrahan/tree-sitter-nix][tree-sitter-nix]], see [[Note no installing additional grammars]])
 - contribution of other languages are welcome!
 
 * Contribution

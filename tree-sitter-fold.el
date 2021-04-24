@@ -31,7 +31,8 @@
 
 (defcustom tree-sitter-fold-foldable-node-alist
   '((python-mode . (function_definition class_definition))
-    (ess-r-mode . (brace_list)))
+    (ess-r-mode . (brace_list))
+    (nix-mode . (attrset function)))
   "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
   :group 'tree-sitter-fold)
@@ -45,7 +46,7 @@
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
 in MAJOR-MODE.  It should take a single argument (the syntax node with type
 FOLDABLE-NODE-TYPE) and return the buffer positions of the beginning and end of
-the fold in a cons cell. See `tree-sitter-fold-range-python' for an example."
+the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :type '(alist :key-type symbol
                 :value-type (alist :key-type symbol :value-type function))
   :group 'tree-sitter-fold)
@@ -237,6 +238,13 @@ If the current syntax node is not foldable, do nothing."
   (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
         (end (1- (tsc-node-end-position node))))
     (cons beg end)))
+
+(defun tree-sitter-fold-range-nix (node)
+  "Return the fold range for `attrset' NODE in Nix express language."
+  (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+        (end (1- (tsc-node-end-position node))))
+    (cons beg end)))
+
 
 
 (provide 'tree-sitter-fold)
