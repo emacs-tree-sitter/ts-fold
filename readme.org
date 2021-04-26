@@ -77,8 +77,10 @@ Following the following steps to build additional grammar for ~emacs-tree-sitter
 3. compile the new grammar parser by running
    #+begin_src emacs-lisp
      ;; compile only if haven't done so
-     (unless (--filter (string= (f-base it) "r") (f-entries (tree-sitter-langs--bin-dir)))
-       (tree-sitter-langs-compile 'r))
+     (unless (--filter (string= (f-base it) "nix") (f-entries (tree-sitter-langs--bin-dir)))
+       ;; do not display compile information in a new buffer
+       (cl-letf (((symbol-function 'tree-sitter-langs--buffer) (lambda (&rest _) nil)))
+         (tree-sitter-langs-compile 'r)))
    #+end_src
 
 4. register the respective major mode with the newly compiled grammar
