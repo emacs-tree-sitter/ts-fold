@@ -68,12 +68,10 @@ Following the following steps to build additional grammar for ~emacs-tree-sitter
 2. add new grammar repos to ~tree-sitter-langs-git-dir~. In the case of ~R~, run
    #+begin_src emacs-lisp
      ;; make sure I do not re-add the submodule multiple times
-     (condition-case _
-         (tree-sitter-langs--repo-status 'r)
-       (error
-        (let ((default-directory tree-sitter-langs-git-dir))
-          (tree-sitter-langs--call
-           "git" "submodule" "add" "https://github.com/r-lib/tree-sitter-r" "repos/r"))))
+     (unless (f-exists-p (concat tree-sitter-langs-git-dir "/repos/r"))
+       (let ((default-directory tree-sitter-langs-git-dir))
+         (tree-sitter-langs--call
+          "git" "submodule" "add" "https://github.com/r-lib/tree-sitter-r" "repos/r")))
    #+end_src
 
 3. compile the new grammar parser by running
