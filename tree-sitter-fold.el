@@ -30,7 +30,8 @@
   :prefix "tree-sitter-fold-")
 
 (defcustom tree-sitter-fold-foldable-node-alist
-  '((python-mode . (function_definition class_definition))
+  '((python-mode . (function_definition class_definition)) ;
+    (go-mode . (type_declaration function_declaration method_declaration))
     (ess-r-mode . (brace_list))
     (nix-mode . (attrset function)))
   "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
@@ -42,7 +43,10 @@
                     (class_definition . tree-sitter-fold-range-python)))
     (ess-r-mode . ((brace_list . tree-sitter-fold-range-r)))
     (nix-mode . ((attrset . tree-sitter-fold-range-nix-attrset)
-                 (function . tree-sitter-fold-range-nix-function))))
+                 (function . tree-sitter-fold-range-nix-function)))
+    (go-mode . ((type_declaration . tree-sitter-fold-range-go-type-declaration)
+                (function_declaration . tree-sitter-fold-range-go-method)
+                (method_declaration . tree-sitter-fold-range-go-method))))
   "An alist of (major-mode . (foldable-node-type . function)).
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
 in MAJOR-MODE.  It should take a single argument (the syntax node with type
@@ -124,9 +128,10 @@ This function is borrowed from `tree-sitter-node-at-point'."
 
 (defun tree-sitter-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
-  (let ((ov (make-overlay (car range) (cdr range))))
-    (overlay-put ov 'invisible 'tree-sitter-fold)
-    (overlay-put ov 'isearch-open-invisible #'tree-sitter-fold--isearch-open)))
+  (when (not (null range))
+    (let ((ov (make-overlay (car range) (cdr range))))
+      (overlay-put ov 'invisible 'tree-sitter-fold)
+      (overlay-put ov 'isearch-open-invisible #'tree-sitter-fold--isearch-open))))
 
 (defun tree-sitter-fold--isearch-open (ov)
   "Open overlay OV during `isearch' session."
@@ -135,14 +140,14 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun tree-sitter-fold-overlay-at (node)
   "Return the tree-sitter-fold overlay at NODE if NODE is foldable and folded.  Return nil otherwise."
   (when-let* ((foldable-types (alist-get major-mode tree-sitter-fold-foldable-node-alist))
-              (_ (memq (tsc-node-type node) foldable-types)))
-    (let ((range (tree-sitter-fold--get-fold-range node)))
+              (_ (memq (tsc-node-type node) foldable-types))
+              (range (tree-sitter-fold--get-fold-range node)))
       (thread-last (overlays-in (car range) (cdr range))
         (seq-filter (lambda (ov)
                       (and (eq (overlay-get ov 'invisible) 'tree-sitter-fold)
                            (= (overlay-start ov) (car range))
                            (= (overlay-end ov) (cdr range)))))
-        car))))
+        car)))
 
 ;; ========
 ;; commands
@@ -193,7 +198,7 @@ If the current node is not folded or not foldable, do nothing."
   (tree-sitter-fold--ensure-ts
     (let* ((node (tsc-root-node tree-sitter-tree))
            (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                 (alist-get major-mode tree-sitter-fold-folding-nodes-alist)
+                                 (alist-get major-mode tree-sitter-fold-foldable-node-alist)
                                  'vector))
            (query (tsc-make-query tree-sitter-language patterns))
            (nodes-to-fold (tsc-query-captures query node #'ignore)))
@@ -206,7 +211,7 @@ If the current node is not folded or not foldable, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
     (thread-last (overlays-in (point-min) (point-max))
-      (seq-filter (lambda (ov) (overlay-get ov 'tree-sitter-fold)))
+      (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
       (mapc #'delete-overlay))))
 
 (defun tree-sitter-fold-toggle ()
@@ -255,6 +260,32 @@ If the current syntax node is not foldable, do nothing."
         (end (tsc-node-end-position node)))
     (cons beg end)))
 
+(defun tree-sitter-fold-range-go-type-declaration (node)
+  "Return the fold range for `type_declaration' NODE in Go language.
+Only `struct_type' and `interface_type' nodes can be folded."
+  (when-let* ((type-spec-node (tsc-get-nth-child node 1))
+              ;; the type_spec node is not named in the Go grammar
+              ;; so ensure that the 1-th child is a type_spec node
+              (_ (eq (tsc-node-type type-spec-node) 'type_spec))
+              (type-node (tsc-get-child-by-field type-spec-node :type))
+              (type-node-type (tsc-node-type type-node)))
+    (cond
+     ;; only struct and interface types can be folded
+     ((or (eq type-node-type 'struct_type)
+          (eq type-node-type 'interface_type))
+      ;; find the end of the "struct" or "interface" keyword
+      (let ((beg (1+ (tsc-node-end-position (tsc-get-nth-child type-node 0))))
+            (end (tsc-node-end-position node)))
+        (cons beg end)))
+     (t nil))))
+
+(defun tree-sitter-fold-range-go-method (node)
+  "Return the fold range for `method_declaration' NODE in Go language."
+  (let* ((named-node (or (tsc-get-child-by-field node :result)
+                        (tsc-get-child-by-field node :parameters)))
+         (beg (1+ (tsc-node-end-position named-node)))
+        (end (tsc-node-end-position node)))
+    (cons beg end)))
 
 (provide 'tree-sitter-fold)
 ;;; tree-sitter-fold.el ends here
