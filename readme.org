@@ -49,6 +49,7 @@ This variable determines how ~tree-sitter-fold~ should fold each of the nodes de
 - python
 - R (need to compile [[https://github.com/r-lib/tree-sitter-r][tree-sitter-r]] grammar, see [[Note on installing additional grammars]])
 - Nix (need to compile [[https://github.com/cstrahan/tree-sitter-nix][tree-sitter-nix]], see [[Note no installing additional grammars]])
+- Go (thanks to [[https://github.com/jakejx][jakejx]])
 - contribution of other languages are welcome!
 
 * Contribution
@@ -59,7 +60,7 @@ Enable ~tree-sitter-mode~ first, then ~tree-sitter-query-builder~ is useful to t
 
 Following the following steps to build additional grammar for ~emacs-tree-sitter~.
 
-1. make sure ~tree-sitter~ is installed and up-to-date. To check, run
+1. make sure ~tree-sitter CLI~ is installed and up-to-date. To check, run
    #+begin_src shell
      tree-sitter --version
    #+end_src
@@ -77,7 +78,7 @@ Following the following steps to build additional grammar for ~emacs-tree-sitter
 3. compile the new grammar parser by running
    #+begin_src emacs-lisp
      ;; compile only if haven't done so
-     (unless (--filter (string= (f-base it) "nix") (f-entries (tree-sitter-langs--bin-dir)))
+     (unless (--filter (string= (f-base it) "r") (f-entries (tree-sitter-langs--bin-dir)))
        ;; do not display compile information in a new buffer
        (cl-letf (((symbol-function 'tree-sitter-langs--buffer) (lambda (&rest _) nil)))
          (tree-sitter-langs-compile 'r)))
@@ -95,7 +96,7 @@ Following the following steps to build additional grammar for ~emacs-tree-sitter
      (tree-sitter-require 'r)
    #+end_src
 
-I have those things together in a function ~gatsby:install-and-load-tree-sitter-r~ at [[https://github.com/junyi-hou/dotfiles/blob/main/main.org#R][here]] and hook it to ~ess-r-mode-hook~.
+I have those things together in a function ~gatsby:install-and-load-tree-sitter-r~ at [[https://github.com/junyi-hou/dotfiles/blob/main/main.org#rtree-sitter][here]] and hook it to ~ess-r-mode-hook~.
 
 * License
 
