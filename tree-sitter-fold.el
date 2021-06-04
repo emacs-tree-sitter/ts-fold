@@ -73,24 +73,21 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
       (progn
         (setq-local line-move-ignore-invisible t)
         (add-to-invisibility-spec '(tree-sitter-fold . t))
+
+        ;; evil integration
+        (if (bound-and-true-p evil-fold-list)
+            (add-to-list 'evil-fold-list
+                         '((tree-sitter-fold-mode)
+                           :open tree-sitter-fold-open
+                           :close tree-sitter-fold-close
+                           :open-rec tree-sitter-fold-open-recursively
+                           :open-all tree-sitter-fold-open-all
+                           :close-all tree-sitter-fold-close-all)))
+
         (run-hooks 'tree-sitter-fold-mode-hook))
     (remove-from-invisibility-spec '(tree-sitter-fold . t))
     (let ((tree-sitter-mode t))
       (tree-sitter-fold-open-all))))
-
-;; ================
-;; evil integration
-;; ================
-
-(eval-when-compile
-  (if (bound-and-true-p evil-fold-list)
-      (add-to-list 'evil-fold-list
-                   '((tree-sitter-fold-mode)
-                     :open tree-sitter-fold-open
-                     :close tree-sitter-fold-close
-                     :open-rec tree-sitter-fold-open-recursively
-                     :open-all tree-sitter-fold-open-all
-                     :close-all tree-sitter-fold-close-all))))
 
 ;; ============================================
 ;; using `tree-sitter' to determine fold range.
