@@ -63,14 +63,14 @@
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-range-alist
-  '((python-mode . ((function_definition . tree-sitter-fold-range-python)
-                    (class_definition . tree-sitter-fold-range-python)))
-    (ess-r-mode . ((brace_list . tree-sitter-fold-range-r)))
-    (nix-mode . ((attrset . tree-sitter-fold-range-nix-attrset)
-                 (function . tree-sitter-fold-range-nix-function)))
+  '((ess-r-mode . ((brace_list . tree-sitter-fold-range-r)))
     (go-mode . ((type_declaration . tree-sitter-fold-range-go-type-declaration)
                 (function_declaration . tree-sitter-fold-range-go-method)
-                (method_declaration . tree-sitter-fold-range-go-method))))
+                (method_declaration . tree-sitter-fold-range-go-method)))
+    (nix-mode . ((attrset . tree-sitter-fold-range-nix-attrset)
+                 (function . tree-sitter-fold-range-nix-function)))
+    (python-mode . ((function_definition . tree-sitter-fold-range-python)
+                    (class_definition . tree-sitter-fold-range-python))))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
