@@ -57,7 +57,8 @@
     (go-mode . (type_declaration function_declaration method_declaration))
     (ess-r-mode . (brace_list))
     (nix-mode . (attrset function)))
-  "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
+  "An alist of
+(mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
   :group 'tree-sitter-fold)
 
@@ -71,6 +72,7 @@
                 (function_declaration . tree-sitter-fold-range-go-method)
                 (method_declaration . tree-sitter-fold-range-go-method))))
   "An alist of (major-mode . (foldable-node-type . function)).
+
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
 in MAJOR-MODE.  It should take a single argument (the syntax node with type
 FOLDABLE-NODE-TYPE) and return the buffer positions of the beginning and end of
@@ -123,7 +125,9 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
 
 (defun tree-sitter-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
+
 Raise `user-error' if no foldable node is found.
+
 This function is borrowed from `tree-sitter-node-at-point'."
   (let* ((pos (or pos (point)))
          (foldable-types (alist-get major-mode tree-sitter-fold-foldable-node-alist))
@@ -161,7 +165,8 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (delete-overlay ov))
 
 (defun tree-sitter-fold-overlay-at (node)
-  "Return the tree-sitter-fold overlay at NODE if NODE is foldable and folded.  Return nil otherwise."
+  "Return the tree-sitter-fold overlay at NODE if NODE is foldable and folded.
+Return nil otherwise."
   (when-let* ((foldable-types (alist-get major-mode tree-sitter-fold-foldable-node-alist))
               (_ (memq (tsc-node-type node) foldable-types))
               (range (tree-sitter-fold--get-fold-range node)))
@@ -206,7 +211,7 @@ If the current node is not folded or not foldable, do nothing."
      (delete-overlay ov))))
 
 (defun tree-sitter-fold-open-recursively ()
-  "Open recursively folded syntax NODE that are contained in the node at `point'."
+  "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (tree-sitter-fold--ensure-ts
    (when-let* ((node (tree-sitter-fold--foldable-node-at-pos))
@@ -253,7 +258,8 @@ If the current syntax node is not foldable, do nothing."
 ;;
 
 (defun tree-sitter-fold-range-python (node)
-  "Return the fold range for `function_definition' and `class_definition' NODE in Python."
+  "Return the fold range for `function_definition' and `class_definition'
+NODE in Python."
   (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
                          (tsc-get-child-by-field node :return_type)
                          (tsc-get-child-by-field node :parameters)
