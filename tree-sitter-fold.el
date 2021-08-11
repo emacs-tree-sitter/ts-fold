@@ -7,8 +7,8 @@
 
 ;; Author: Junyi Hou <junyi.yi.hou@gmail.com>
 ;;         Shen, Jen-Chieh <jcs090218@gmail.com>
-;; Description:
-;; Keyword:
+;; Description: Code folding using tree-sitter
+;; Keyword: folding tree-sitter
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.1"))
 ;; URL: https://github.com/jcs090218/tree-sitter-fold
