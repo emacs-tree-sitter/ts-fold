@@ -10,7 +10,7 @@
 ;; Description: Code folding using tree-sitter
 ;; Keyword: folding tree-sitter
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.1"))
+;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1"))
 ;; URL: https://github.com/jcs090218/tree-sitter-fold
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,19 +31,21 @@
 ;;; Commentary:
 ;;
 ;; This package provides a code-folding mechanism based on tree-sitter
-;; package. Turn on the minor-mode `tree-sitter-fold-mode' to enable
-;; this mechanism. Note that all functionalities provided here based on the
+;; package.  Turn on the minor-mode `tree-sitter-fold-mode' to enable
+;; this mechanism.  Note that all functionalities provided here based on the
 ;; `tree-sitter-mode', and thus it should be enabled before
 ;; `tree-sitter-fold-mode' can properly fold codes.
 
 ;;; Code:
 
-(require 'tree-sitter)
 (require 'seq)
+(require 'subr-x)
 
-;; =============
-;; customization
-;; =============
+(require 'tree-sitter)
+
+;;
+;; (@* "Customization" )
+;;
 
 (defgroup tree-sitter-fold nil
   "Code folding using tree-sitter."
@@ -82,37 +84,42 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :type 'hook
   :group 'tree-sitter-fold)
 
-;; ==========
-;; minor mode
-;; ==========
+;;
+;; (@* "Entry" )
+;;
+
+(defun tree-sitter-fold--enable ()
+  "Start folding minor mode."
+  (setq-local line-move-ignore-invisible t)
+  (add-to-invisibility-spec '(tree-sitter-fold . t))
+
+  ;; evil integration
+  (if (bound-and-true-p evil-fold-list)
+      (add-to-list 'evil-fold-list
+                   '((tree-sitter-fold-mode)
+                     :open tree-sitter-fold-open
+                     :close tree-sitter-fold-close
+                     :open-rec tree-sitter-fold-open-recursively
+                     :open-all tree-sitter-fold-open-all
+                     :close-all tree-sitter-fold-close-all)))
+
+  (run-hooks 'tree-sitter-fold-mode-hook))
+
+(defun tree-sitter-fold--disable ()
+  "Stop folding minor mode."
+  (remove-from-invisibility-spec '(tree-sitter-fold . t))
+  (let ((tree-sitter-mode t))
+    (tree-sitter-fold-open-all)))
 
 (define-minor-mode tree-sitter-fold-mode
   "Folding code using tree sitter."
   :init-value nil
-  :lighter nil
-  (if tree-sitter-fold-mode
-      (progn
-        (setq-local line-move-ignore-invisible t)
-        (add-to-invisibility-spec '(tree-sitter-fold . t))
+  :lighter "TS-Fold"
+  (if tree-sitter-fold-mode (tree-sitter-fold--enable) (tree-sitter-fold--disable)))
 
-        ;; evil integration
-        (if (bound-and-true-p evil-fold-list)
-            (add-to-list 'evil-fold-list
-                         '((tree-sitter-fold-mode)
-                           :open tree-sitter-fold-open
-                           :close tree-sitter-fold-close
-                           :open-rec tree-sitter-fold-open-recursively
-                           :open-all tree-sitter-fold-open-all
-                           :close-all tree-sitter-fold-close-all)))
-
-        (run-hooks 'tree-sitter-fold-mode-hook))
-    (remove-from-invisibility-spec '(tree-sitter-fold . t))
-    (let ((tree-sitter-mode t))
-      (tree-sitter-fold-open-all))))
-
-;; ============================================
-;; using `tree-sitter' to determine fold range.
-;; ============================================
+;;
+;; (@* "Core" )
+;;
 
 (defun tree-sitter-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
@@ -140,9 +147,9 @@ This function is borrowed from `tree-sitter-node-at-point'."
          (format "Current node is not found in `tree-sitter-fold-range-alist' in %s"
                  major-mode)))))
 
-;; ========
-;; overlays
-;; ========
+;;
+;; (@* "Overlays" )
+;;
 
 (defun tree-sitter-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
@@ -167,21 +174,22 @@ This function is borrowed from `tree-sitter-node-at-point'."
                          (= (overlay-end ov) (cdr range)))))
       car)))
 
-;; ========
-;; commands
-;; ========
+;;
+;; (@* "Commands" )
+;;
 
 (defmacro tree-sitter-fold--ensure-ts (&rest body)
-  "Run BODY only if `tree-sitter-mode' is enabled."
+  "Run BODY only if `tree-sitter-mode` is enabled."
   (declare (indent 0))
   `(if (bound-and-true-p tree-sitter-mode)
        (progn ,@body)
      (user-error "Ignored, tree-sitter-mode is not enable in the current buffer")))
 
 (defun tree-sitter-fold-close (&optional node)
-  "Fold the syntax node at `point' if it is foldable.
-Foldable nodes are defined in `tree-sitter-fold-foldable-node-alist' for the current
-`major-mode'.  If no foldable node is found in point, do nothing."
+  "Fold the syntax node at `point` if it is foldable.
+
+Foldable nodes are defined in `tree-sitter-fold-foldable-node-alist' for the
+current `major-mode'.  If no foldable NODE is found in point, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
    (let ((node (or node (tree-sitter-fold--foldable-node-at-pos))))
@@ -242,9 +250,9 @@ If the current syntax node is not foldable, do nothing."
          (delete-overlay ov)
        (tree-sitter-fold-close node)))))
 
-;; =================
-;; language supports
-;; =================
+;;
+;; (@* "Languages" )
+;;
 
 (defun tree-sitter-fold-range-python (node)
   "Return the fold range for `function_definition' and `class_definition' NODE in Python."
