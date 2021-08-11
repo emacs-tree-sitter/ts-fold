@@ -143,9 +143,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
             (fn (alist-get (tsc-node-type node) fold-alist)))
       (if (functionp fn)
           (funcall fn node)
-        (user-error
-         (format "Current node is not found in `tree-sitter-fold-range-alist' in %s"
-                 major-mode)))))
+        (user-error "Current node is not found in `tree-sitter-fold-range-alist' in %s" major-mode))))
 
 ;;
 ;; (@* "Overlays" )
