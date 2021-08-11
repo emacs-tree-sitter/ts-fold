@@ -29,7 +29,7 @@ then in Emacs:
 (require 'tree-sitter-fold)
 ```
 
-## Usage
+## :card_index: Usage
 
 | Commands                          | Description                                                                 |
 |-----------------------------------|-----------------------------------------------------------------------------|
