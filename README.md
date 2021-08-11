@@ -7,7 +7,7 @@
 tree-sitter-fold builds on top of [elisp-tree-sitter](https://github.com/emacs-tree-sitter/elisp-tree-sitter)
 to provide code folding base on the tree-sitter syntax tree.
 
-## Installation
+## :floppy_disk: Installation
 
 #### Methods 1. with `straight.el` and `use-package`:
 
@@ -39,7 +39,7 @@ then in Emacs:
 | tree-sitter-fold-close-all        | close all foldable syntax nodes in the current buffer.                      |
 | tree-sitter-fold-open-all         | open all folded syntax nodes in the current buffer.                         |
 
-## Supported languages
+## :hammer: Supported languages
 
 * Go
 * Nix
