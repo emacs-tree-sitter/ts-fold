@@ -31,10 +31,10 @@ then in Emacs:
 
 ## Usage
 
- | Commands                            | Description                                                                 |
- |-------------------------------------|-----------------------------------------------------------------------------|
- | `tree-sitter-fold-close`            | fold the current syntax node.                                               |
- | `tree-sitter-fold-open`             | open all folds inside the current syntax node.                              |
- | `tree-sitter-fold-open-recursively` | open the outmost fold of the current syntax node. Keep the sub-folds close. |
- | `tree-sitter-fold-close-all`        | close all foldable syntax nodes in the current buffer.                      |
- | `tree-sitter-fold-open-all`         | open all folded syntax nodes in the current buffer.                         |
+ | Commands                          | Description                                                                 |
+ |-----------------------------------|-----------------------------------------------------------------------------|
+ | tree-sitter-fold-close            | fold the current syntax node.                                               |
+ | tree-sitter-fold-open             | open all folds inside the current syntax node.                              |
+ | tree-sitter-fold-open-recursively | open the outmost fold of the current syntax node. Keep the sub-folds close. |
+ | tree-sitter-fold-close-all        | close all foldable syntax nodes in the current buffer.                      |
+ | tree-sitter-fold-open-all         | open all folded syntax nodes in the current buffer.                         |
