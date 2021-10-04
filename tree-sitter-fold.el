@@ -149,11 +149,16 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   (let ((tree-sitter-mode t))
     (tree-sitter-fold-open-all)))
 
+;;;###autoload
 (define-minor-mode tree-sitter-fold-mode
   "Folding code using tree sitter."
   :init-value nil
   :lighter "TS-Fold"
   (if tree-sitter-fold-mode (tree-sitter-fold--enable) (tree-sitter-fold--disable)))
+
+;;;###autoload
+(define-global-minor-mode global-tree-sitter-fold-mode tree-sitter-fold-mode
+  (lambda () (tree-sitter-fold-mode 1)))
 
 ;;
 ;; (@* "Core" )
