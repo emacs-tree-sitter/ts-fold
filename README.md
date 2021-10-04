@@ -39,11 +39,13 @@ then in Emacs:
 | tree-sitter-fold-open-recursively | open the outmost fold of the current syntax node. Keep the sub-folds close. |
 | tree-sitter-fold-close-all        | close all foldable syntax nodes in the current buffer.                      |
 | tree-sitter-fold-open-all         | open all folded syntax nodes in the current buffer.                         |
+| tree-sitter-fold-toggle           | toggle the syntax node at `point'.                                          |
 
 ## :hammer: Supported languages
 
 * C
 * C++
+* C#
 * Go
 * JavaScript / JSX
 * Nix
