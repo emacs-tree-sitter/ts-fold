@@ -58,10 +58,18 @@
     (function_declaration . tree-sitter-fold-range-go-method)
     (method_declaration   . tree-sitter-fold-range-go-method)))
 
+(defun tree-sitter-fold-parsers-java ()
+  "Rule sets for Java."
+  '())
+
 (defun tree-sitter-fold-parsers-javascript ()
   "Rule sets for JavaScript."
   '((export_clause   . tree-sitter-fold-range-seq)
     (statement_block . tree-sitter-fold-range-seq)))
+
+(defun tree-sitter-fold-parsers-json ()
+  "Rule sets for JSON."
+  '(object . ))
 
 (defun tree-sitter-fold-parsers-nix ()
   "Rule sets for Nix."

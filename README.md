@@ -47,6 +47,7 @@ then in Emacs:
 * C++
 * C#
 * Go
+* Java
 * JavaScript / JSX
 * Nix
 * Python
