@@ -41,5 +41,35 @@
   ""
   (append (tree-sitter-fold-parsers-c)))
 
+(defun tree-sitter-fold-parsers-r ()
+  ""
+  '((brace_list . tree-sitter-fold-range-seq)))
+
+(defun tree-sitter-fold-parsers-go ()
+  ""
+  '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
+    (function_declaration . tree-sitter-fold-range-go-method)
+    (method_declaration   . tree-sitter-fold-range-go-method)))
+
+(defun tree-sitter-fold-parsers-javascript ()
+  ""
+  '((export_clause   . tree-sitter-fold-range-seq)
+    (statement_block . tree-sitter-fold-range-seq)))
+
+(defun tree-sitter-fold-parsers-nix ()
+  ""
+  '((attrset  . tree-sitter-fold-range-nix-attrset)
+    (function . tree-sitter-fold-range-nix-function)))
+
+(defun tree-sitter-fold-parsers-python ()
+  ""
+  '((function_definition . tree-sitter-fold-range-python)
+    (class_definition    . tree-sitter-fold-range-python)))
+
+(defun tree-sitter-fold-parsers-typescript ()
+  ""
+  (append (tree-sitter-fold-parsers-javascript)))
+
+
 (provide 'tree-sitter-fold-parsers)
 ;;; tree-sitter-fold-parsers.el ends here

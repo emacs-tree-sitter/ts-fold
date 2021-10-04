@@ -55,51 +55,19 @@
   :group 'tree-sitter
   :prefix "tree-sitter-fold-")
 
-(defcustom tree-sitter-fold-foldable-node-alist
-  '((c-mode          . (compound_statement declaration_list enumerator_list field_declaration_list comment))
-    (c++-mode        . (compound_statement declaration_list enumerator_list field_declaration_list comment))
-    (ess-r-mode      . (brace_list))
-    (go-mode         . (type_declaration function_declaration method_declaration))
-    (javascript-mode . (export_clause))
-    (js-mode         . (export_clause))
-    (js2-mode        . (export_clause named_imports statement_block switch_body object object_pattern))
-    (js3-mode        . (export_clause))
-    (rjsx-mode       . (export_clause named_imports statement_block switch_body object object_pattern jsx_expression))
-    (nix-mode        . (attrset function))
-    (python-mode     . (function_definition class_definition))
-    (typescript-mode . (export_clause)))
-  "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
-  :type '(alist :key-type symbol :value-type (repeat symbol))
-  :group 'tree-sitter-fold)
-
 (defcustom tree-sitter-fold-range-alist
-  `((c-mode . ,(tree-sitter-fold-parsers-c))
-    (c++-mode . ,(tree-sitter-fold-parsers-c++))
-    (ess-r-mode
-     . ((brace_list . tree-sitter-fold-range-seq)))
-    (go-mode
-     . ((type_declaration     . tree-sitter-fold-range-go-type-declaration)
-        (function_declaration . tree-sitter-fold-range-go-method)
-        (method_declaration   . tree-sitter-fold-range-go-method)))
-    (javascript-mode
-     . ((export_clause . tree-sitter-fold-range-seq)))
-    (js-mode
-     . ((export_clause . tree-sitter-fold-range-seq)))
-    (js2-mode
-     . ((export_clause   . tree-sitter-fold-range-seq)
-        (statement_block . tree-sitter-fold-range-seq)))
-    (js3-mode
-     . ((export_clause . tree-sitter-fold-range-seq)))
-    (rjsx-mode
-     . ((export_clause . tree-sitter-fold-range-seq)))
-    (nix-mode
-     . ((attrset  . tree-sitter-fold-range-nix-attrset)
-        (function . tree-sitter-fold-range-nix-function)))
-    (python-mode
-     . ((function_definition . tree-sitter-fold-range-python)
-        (class_definition    . tree-sitter-fold-range-python)))
-    (typescript-mode
-     . ((export_clause . tree-sitter-fold-range-seq))))
+  `((c-mode          . ,(tree-sitter-fold-parsers-c))
+    (c++-mode        . ,(tree-sitter-fold-parsers-c++))
+    (ess-r-mode      . ,(tree-sitter-fold-parsers-r))
+    (go-mode         . ,(tree-sitter-fold-parsers-go))
+    (javascript-mode . ,(tree-sitter-fold-parsers-javascript))
+    (js-mode         . ,(tree-sitter-fold-parsers-javascript))
+    (js2-mode        . ,(tree-sitter-fold-parsers-javascript))
+    (js3-mode        . ,(tree-sitter-fold-parsers-javascript))
+    (rjsx-mode       . ,(tree-sitter-fold-parsers-javascript))
+    (nix-mode        . ,(tree-sitter-fold-parsers-nix))
+    (python-mode     . ,(tree-sitter-fold-parsers-python))
+    (typescript-mode . ,(tree-sitter-fold-parsers-typescript)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
@@ -109,6 +77,15 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :type '(alist :key-type symbol
                 :value-type (alist :key-type symbol :value-type function))
   :group 'tree-sitter-fold)
+
+(defconst tree-sitter-fold-foldable-node-alist
+  (let (alist)
+    (dolist (item tree-sitter-fold-range-alist)
+      (let ((mode (car item)) nodes)
+        (dolist (rule (cdr item)) (push (car rule) nodes))
+        (push (cons mode nodes) alist)))
+    alist)
+  "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode)).")
 
 (defcustom tree-sitter-fold-mode-hook nil
   "Hook to run when enabling `tree-sitter-fold-mode`."
