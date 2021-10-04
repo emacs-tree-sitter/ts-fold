@@ -293,6 +293,12 @@ If the current syntax node is not foldable, do nothing."
 ;; (@* "Languages" )
 ;;
 
+(defun tree-sitter-fold-range-seq (node)
+  "Return the fold range in sequence."
+  (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+        (end (1- (tsc-node-end-position node))))
+    (cons beg end)))
+
 (defun tree-sitter-fold-range-python (node)
   "Return the fold range for `function_definition' and `class_definition'
 NODE in Python."
@@ -303,12 +309,6 @@ NODE in Python."
          ;; the colon is an anonymous node after return_type or parameters node
          (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
          (end (tsc-node-end-position node)))
-    (cons beg end)))
-
-(defun tree-sitter-fold-range-seq (node)
-  "Return the fold range in sequence."
-  (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
-        (end (1- (tsc-node-end-position node))))
     (cons beg end)))
 
 (defun tree-sitter-fold-range-nix-attrset (node)
