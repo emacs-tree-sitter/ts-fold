@@ -42,6 +42,8 @@
 (require 'subr-x)
 
 (require 'tree-sitter)
+
+(require 'tree-sitter-fold-parsers)
 (require 'tree-sitter-fold-summary)
 
 ;;
@@ -71,18 +73,8 @@
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-range-alist
-  '((c-mode
-     . ((compound_statement     . tree-sitter-fold-range-seq)
-        (declaration_list       . tree-sitter-fold-range-seq)
-        (enumerator_list        . tree-sitter-fold-range-seq)
-        (field_declaration_list . tree-sitter-fold-range-seq)
-        (comment                . tree-sitter-fold-range-seq)))
-    (c++-mode
-     . ((compound_statement     . tree-sitter-fold-range-seq)
-        (declaration_list       . tree-sitter-fold-range-seq)
-        (enumerator_list        . tree-sitter-fold-range-seq)
-        (field_declaration_list . tree-sitter-fold-range-seq)
-        (comment                . (tree-sitter-fold-range-seq 1 -1))))
+  `((c-mode . ,(tree-sitter-fold-parsers-c))
+    (c++-mode . ,(tree-sitter-fold-parsers-c++))
     (ess-r-mode
      . ((brace_list . tree-sitter-fold-range-seq)))
     (go-mode
@@ -316,7 +308,6 @@ If the current syntax node is not foldable, do nothing."
 
 (defun tree-sitter-fold-range-seq (node offset)
   "Return the fold range in sequence."
-  (jcs-print "offset" offset)
   (let ((beg (+ (tsc-node-start-position node) 1 (car offset)))
         (end (+ (tsc-node-end-position node) -1 (cdr offset))))
     (cons beg end)))
