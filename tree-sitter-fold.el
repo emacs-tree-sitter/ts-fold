@@ -109,6 +109,12 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :group 'tree-sitter-fold)
 
 ;;
+;; (@* "Externals" )
+;;
+
+(declare-function tree-sitter-fold-indicators-refresh "tree-sitter-fold-indicators.el")
+
+;;
 ;; (@* "Entry" )
 ;;
 
@@ -179,6 +185,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
   "Create invisible overlay in RANGE."
   (when (not (null range))
     (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
+      (overlay-put ov 'creator 'tree-sitter-fold)
       (overlay-put ov 'invisible 'tree-sitter-fold)
       (overlay-put ov 'display (or (and tree-sitter-fold-summary-show
                                         (tree-sitter-fold-summary--get (buffer-substring beg end)))
@@ -226,7 +233,8 @@ current `major-mode'.  If no foldable NODE is found in point, do nothing."
       ;; make sure I do not create multiple overlays for the same fold
       (when-let* ((ov (tree-sitter-fold-overlay-at node)))
         (delete-overlay ov))
-      (tree-sitter-fold--create-overlay (tree-sitter-fold--get-fold-range node)))))
+      (tree-sitter-fold--create-overlay (tree-sitter-fold--get-fold-range node)))
+    (tree-sitter-fold-indicators-refresh)))
 
 ;;;###autoload
 (defun tree-sitter-fold-open ()

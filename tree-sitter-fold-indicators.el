@@ -103,6 +103,8 @@
 
 (defvar tree-sitter-fold-foldable-node-alist)
 
+(declare-function tree-sitter-fold-overlay-at "tree-sitter-fold.el")
+
 ;;
 ;; (@* "Entry" )
 ;;
@@ -117,13 +119,16 @@
 (defun tree-sitter-fold-indicators--enable ()
   "Enable `tree-sitter-fold-indicators' mode."
   (if (tree-sitter-fold-mode 1)  ; Enable `tree-sitter-fold-mode' automatically
-      (add-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators--after-change nil t)
+      (progn
+        (add-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators-refresh nil t)
+        (add-hook 'after-save-hook #'tree-sitter-fold-indicators-refresh nil t))
     (tree-sitter-fold-indicators-mode -1)))
 
 (defun tree-sitter-fold-indicators--disable ()
   "Disable `tree-sitter-fold-indicators' mode."
-  (remove-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators--after-change t)
-  (tree-sitter-fold-indicators--remove-overlays (current-buffer)))
+  (remove-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators-refresh t)
+  (remove-hook 'after-save-hook #'tree-sitter-fold-indicators-refresh t)
+  (tree-sitter-fold-indicators--remove-overlays))
 
 ;;;###autoload
 (define-minor-mode tree-sitter-fold-indicators-mode
@@ -173,15 +178,17 @@
     (overlay-put ov 'creator 'tree-sitter-fold-indicators)
     ov))
 
-(defun tree-sitter-fold-indicators--create-overlays (beg end)
+(defun tree-sitter-fold-indicators--create-overlays (node beg end)
   "Return a list of indicator overlays from BEG to END."
-  (let ((ov-lst '()))
+  (let (ov-lst)
     (save-excursion
       (goto-char beg)
       (while (and (<= (line-beginning-position) end) (not (eobp)))
         (push (tree-sitter-fold-indicators--create-overlay-at-point) ov-lst)
         (forward-line 1)))
-    (tree-sitter-fold-indicators--update-overlays (reverse ov-lst) t)))
+    (tree-sitter-fold-indicators--update-overlays
+     (reverse ov-lst)
+     (not (tree-sitter-fold-overlay-at node)))))
 
 (defun tree-sitter-fold-indicators--get-priority (bitmap)
   "Get priority by BITMAP."
@@ -234,8 +241,8 @@
     (tree-sitter-fold-indicators--active-ov
      show first-ov
      (if show
-         (if (> len 1)
-             'tree-sitter-fold-indicators-fr-minus-tail 'tree-sitter-fold-indicators-fr-minus)
+         (if (> len 1) 'tree-sitter-fold-indicators-fr-minus-tail
+           'tree-sitter-fold-indicators-fr-minus)
        'tree-sitter-fold-indicators-fr-plus))
     (when (> len 1)
       (tree-sitter-fold-indicators--active-ov show last-ov (tree-sitter-fold-indicators--get-end-fringe)))
@@ -252,25 +259,26 @@
   "Create indicators with NODE."
   (let ((beg (tsc-node-start-position node))
         (end (tsc-node-end-position node)))
-    (tree-sitter-fold-indicators--create-overlays beg end)))
+    (tree-sitter-fold-indicators--create-overlays node beg end)))
 
-(defun tree-sitter-fold-indicators--after-change (&rest _)
-  "Register to hook `tree-sitter-after-change-functions'."
-  (tree-sitter-fold--ensure-ts
-    (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                 (alist-get major-mode tree-sitter-fold-foldable-node-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
-      (thread-last nodes-to-fold
-        (mapcar #'cdr)
-        (mapc #'tree-sitter-fold-indicators--create)))))
+(defun tree-sitter-fold-indicators-refresh (&rest _)
+  "Refresh indicators for all folding range."
+  (when tree-sitter-fold-indicators-mode
+    (tree-sitter-fold--ensure-ts
+      (let* ((node (tsc-root-node tree-sitter-tree))
+             (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
+                                   (alist-get major-mode tree-sitter-fold-foldable-node-alist)
+                                   'vector))
+             (query (tsc-make-query tree-sitter-language patterns))
+             (nodes-to-fold (tsc-query-captures query node #'ignore)))
+        (tree-sitter-fold-indicators--remove-overlays)
+        (thread-last nodes-to-fold
+          (mapcar #'cdr)
+          (mapc #'tree-sitter-fold-indicators--create))))))
 
-(defun tree-sitter-fold-indicators--remove-overlays (buffer)
-  "Remove all indicators overlays from BUFFER."
-  (with-current-buffer buffer
-    (remove-overlays (point-min) (point-max) 'creator 'tree-sitter-fold-indicators)))
+(defun tree-sitter-fold-indicators--remove-overlays ()
+  "Remove all indicators overlays."
+  (remove-overlays (point-min) (point-max) 'creator 'tree-sitter-fold-indicators))
 
 (provide 'tree-sitter-fold-indicators)
 ;;; tree-sitter-fold-indicators.el ends here
