@@ -65,7 +65,7 @@
 
 (defun tree-sitter-fold-parsers-nix ()
   "Rule sets for Nix."
-  '((attrset  . tree-sitter-fold-range-nix-attrset)
+  '((attrset  . tree-sitter-fold-range-seq)
     (function . tree-sitter-fold-range-nix-function)))
 
 (defun tree-sitter-fold-parsers-python ()

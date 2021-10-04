@@ -59,6 +59,10 @@ This happens only when summary length is larger than variable
             summary (concat summary tree-sitter-fold-summary-exceeded-string))))
   summary)
 
+(defun tree-sitter-fold-summary--apply-format (summary)
+  "Return the SUMMARY that has added the summary prefix."
+  (format tree-sitter-fold-summary-format summary))
+
 (defun tree-sitter-fold-summary--remove-comments (doc-str)
   "Remove comments from DOC-STR."
   ;;(s-replace-regexp "^[ \t]*[*]")
@@ -72,7 +76,7 @@ This happens only when summary length is larger than variable
       (when (integerp tree-sitter-fold-summary-max-length)
         (setq summary (tree-sitter-fold-summary--keep-length summary)))
       (when summary
-        (setq summary (origami-summary-apply-format summary)
+        (setq summary (tree-sitter-fold-summary--apply-format summary)
               summary (propertize summary 'face 'tree-sitter-fold-replacement-face)))
       summary
       nil  ; TODO: Remove this later on
