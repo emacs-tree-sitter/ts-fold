@@ -103,6 +103,7 @@
 
 (defvar tree-sitter-fold-foldable-node-alist)
 
+(declare-function tree-sitter-fold-mode "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-overlay-at "tree-sitter-fold.el")
 
 ;;
