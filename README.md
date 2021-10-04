@@ -14,7 +14,7 @@ to provide code folding base on the tree-sitter syntax tree.
 
 ```el
 (use-package tree-sitter-fold
-  :straight (host github repo "junyi-hou/tree-sitter-fold"))
+  :straight (host github repo "jcs090218/tree-sitter-fold"))
 ```
 
 #### Methods 2. Manual
