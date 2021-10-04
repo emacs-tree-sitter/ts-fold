@@ -66,6 +66,11 @@
     (initializer_expression               . tree-sitter-fold-range-seq)
     (comment                              . (tree-sitter-fold-range-seq 1 -1))))
 
+(defun tree-sitter-fold-parsers-css ()
+  "Rule sets for CSS."
+  '((keyframe_block_list . tree-sitter-fold-range-seq)
+    (block               . tree-sitter-fold-range-seq)))
+
 (defun tree-sitter-fold-parsers-go ()
   "Rule sets for Go."
   '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
