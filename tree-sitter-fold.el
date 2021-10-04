@@ -72,9 +72,11 @@
     (js3-mode        . ,(tree-sitter-fold-parsers-javascript))
     (json-mode       . ,(tree-sitter-fold-parsers-json))
     (jsonc-mode      . ,(tree-sitter-fold-parsers-json))
-    (rjsx-mode       . ,(tree-sitter-fold-parsers-javascript))
     (nix-mode        . ,(tree-sitter-fold-parsers-nix))
     (python-mode     . ,(tree-sitter-fold-parsers-python))
+    (rjsx-mode       . ,(tree-sitter-fold-parsers-javascript))
+    (rust-mode       . ,(tree-sitter-fold-parsers-rust))
+    (rustic-mode     . ,(tree-sitter-fold-parsers-rust))
     (typescript-mode . ,(tree-sitter-fold-parsers-typescript)))
   "An alist of (major-mode . (foldable-node-type . function)).
 

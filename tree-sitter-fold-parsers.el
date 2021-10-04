@@ -121,6 +121,17 @@
   "Rule sets for R."
   '((brace_list . tree-sitter-fold-range-seq)))
 
+(defun tree-sitter-fold-parsers-rust ()
+  "Rule sets for Rust."
+  '((declaration_list       . tree-sitter-fold-range-seq)
+    (enum_variant_list      . tree-sitter-fold-range-seq)
+    (field_declaration_list . tree-sitter-fold-range-seq)
+    (use_list               . tree-sitter-fold-range-seq)
+    (field_initializer_list . tree-sitter-fold-range-seq)
+    (match_block            . tree-sitter-fold-range-seq)
+    (block                  . tree-sitter-fold-range-seq)
+    (block_comment          . (tree-sitter-fold-range-seq 1 -1))))
+
 (defun tree-sitter-fold-parsers-typescript ()
   "Rule sets for TypeScript."
   (append (tree-sitter-fold-parsers-javascript)))

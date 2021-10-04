@@ -55,6 +55,7 @@ then in Emacs:
 * Nix
 * Python
 * R
+* Rust
 * TypeScript / TSX
 
 ## Contribution
