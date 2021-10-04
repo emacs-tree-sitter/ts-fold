@@ -65,7 +65,10 @@
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-range-alist
-  '((c-mode      . ((compound_statement . tree-sitter-fold-range-seq)))
+  '((c-mode      . ((compound_statement . tree-sitter-fold-range-seq)
+                    (declaration_list . tree-sitter-fold-range-seq)
+                    (enumerator_list . tree-sitter-fold-range-seq)
+                    (field_declaration_list . tree-sitter-fold-range-seq)))
     (c++-mode    . ((compound_statement . tree-sitter-fold-range-seq)))
     (ess-r-mode  . ((brace_list . tree-sitter-fold-range-seq)))
     (go-mode     . ((type_declaration . tree-sitter-fold-range-go-type-declaration)
