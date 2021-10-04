@@ -60,7 +60,17 @@
 
 (defun tree-sitter-fold-parsers-java ()
   "Rule sets for Java."
-  '())
+  '((switch_block                    . tree-sitter-fold-range-seq)
+    (block                           . tree-sitter-fold-range-seq)
+    (element_value_array_initializer . tree-sitter-fold-range-seq)
+    (module_body                     . tree-sitter-fold-range-seq)
+    (enum_body                       . tree-sitter-fold-range-seq)
+    (class_body                      . tree-sitter-fold-range-seq)
+    (constructor_body                . tree-sitter-fold-range-seq)
+    (annotation_type_body            . tree-sitter-fold-range-seq)
+    (interface_body                  . tree-sitter-fold-range-seq)
+    (array_initializer               . tree-sitter-fold-range-seq)
+    (comment                         . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-javascript ()
   "Rule sets for JavaScript."
@@ -69,7 +79,8 @@
 
 (defun tree-sitter-fold-parsers-json ()
   "Rule sets for JSON."
-  '(object . ))
+  '((object . tree-sitter-fold-range-seq)
+    (array  . tree-sitter-fold-range-seq)))
 
 (defun tree-sitter-fold-parsers-nix ()
   "Rule sets for Nix."
