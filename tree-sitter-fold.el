@@ -53,12 +53,18 @@
   :prefix "tree-sitter-fold-")
 
 (defcustom tree-sitter-fold-foldable-node-alist
-  '((c-mode      . (compound_statement))
-    (c++-mode    . (compound_statement))
-    (ess-r-mode  . (brace_list))
-    (go-mode     . (type_declaration function_declaration method_declaration))
-    (nix-mode    . (attrset function))
-    (python-mode . (function_definition class_definition)))
+  '((c-mode          . (compound_statement declaration_list enumerator_list field_declaration_list))
+    (c++-mode        . (compound_statement declaration_list enumerator_list field_declaration_list))
+    (ess-r-mode      . (brace_list))
+    (go-mode         . (type_declaration function_declaration method_declaration))
+    (javascript-mode . (export_clause))
+    (js-mode         . (export_clause))
+    (js2-mode        . (export_clause named_imports statement_block switch_body object object_pattern))
+    (js3-mode        . (export_clause))
+    (rjsx-mode       . (export_clause named_imports statement_block switch_body object object_pattern jsx_expression))
+    (nix-mode        . (attrset function))
+    (python-mode     . (function_definition class_definition))
+    (typescript-mode . (export_clause)))
   "An alist of
 (mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
