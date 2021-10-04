@@ -329,28 +329,6 @@ If the current syntax node is not foldable, do nothing."
     (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-python (node offset)
-  "Return the fold range for `function_definition' and `class_definition'."
-  (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
-                         (tsc-get-child-by-field node :return_type)
-                         (tsc-get-child-by-field node :parameters)
-                         (tsc-get-child-by-field node :name)))
-         ;; the colon is an anonymous node after return_type or parameters node
-         (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
-         (end (tsc-node-end-position node)))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
-
-(defun tree-sitter-fold-range-nix-function (node offset)
-  "Return the fold range for `function' NODE in Nix express language."
-  (let ((beg (thread-first node
-               (tsc-get-child-by-field :formals)
-               (tsc-get-next-sibling)
-               (tsc-node-end-position)))
-        (end (tsc-node-end-position node)))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
-
 (defun tree-sitter-fold-range-go-type-declaration (node offset)
   "Return the fold range for `type_declaration' NODE in Go language.
 Only `struct_type' and `interface_type' nodes can be folded."
@@ -379,6 +357,32 @@ Only `struct_type' and `interface_type' nodes can be folded."
          (end (tsc-node-end-position node)))
     (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
     (cons beg end)))
+
+(defun tree-sitter-fold-range-nix-function (node offset)
+  "Return the fold range for `function' NODE in Nix express language."
+  (let ((beg (thread-first node
+               (tsc-get-child-by-field :formals)
+               (tsc-get-next-sibling)
+               (tsc-node-end-position)))
+        (end (tsc-node-end-position node)))
+    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
+    (cons beg end)))
+
+(defun tree-sitter-fold-range-python (node offset)
+  "Return the fold range for `function_definition' and `class_definition'."
+  (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
+                         (tsc-get-child-by-field node :return_type)
+                         (tsc-get-child-by-field node :parameters)
+                         (tsc-get-child-by-field node :name)))
+         ;; the colon is an anonymous node after return_type or parameters node
+         (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
+         (end (tsc-node-end-position node)))
+    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
+    (cons beg end)))
+
+(defun tree-sitter-fold-range-ruby (node offset)
+  ""
+  )
 
 (provide 'tree-sitter-fold)
 ;;; tree-sitter-fold.el ends here

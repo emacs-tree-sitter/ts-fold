@@ -123,7 +123,7 @@
 
 (defun tree-sitter-fold-parsers-ruby ()
   "Rule sets for Ruby."
-  '(()))
+  '((if . (tree-sitter-fold-range-seq 1 -2))))
 
 (defun tree-sitter-fold-parsers-rust ()
   "Rule sets for Rust."
