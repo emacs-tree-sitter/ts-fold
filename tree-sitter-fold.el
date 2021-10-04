@@ -42,6 +42,7 @@
 (require 'subr-x)
 
 (require 'tree-sitter)
+(require 'tree-sitter-fold-summary)
 
 ;;
 ;; (@* "Customization" )
@@ -190,9 +191,11 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun tree-sitter-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
   (when (not (null range))
-    (let ((ov (make-overlay (car range) (cdr range))))
+    (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
       (overlay-put ov 'invisible 'tree-sitter-fold)
-      (overlay-put ov 'display tree-sitter-fold-replacement)
+      (overlay-put ov 'display (or (and tree-sitter-fold-show-summary
+                                        (tree-sitter-fold--get-summary (buffer-substring beg end)))
+                                   tree-sitter-fold-replacement))
       (overlay-put ov 'face 'tree-sitter-fold-replacement-face)
       (overlay-put ov 'isearch-open-invisible #'tree-sitter-fold--isearch-open))))
 
