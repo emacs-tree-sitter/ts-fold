@@ -25,8 +25,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'fringe-helper)
-
 (require 'tree-sitter-fold-util)
 
 (defcustom tree-sitter-fold-indicators-fringe 'left-fringe
@@ -98,6 +98,12 @@
   "........" "........" "........" "........" "........")
 
 ;;
+;; (@* "Externals" )
+;;
+
+(defvar tree-sitter-fold-foldable-node-alist)
+
+;;
 ;; (@* "Entry" )
 ;;
 
@@ -111,30 +117,27 @@
 (defun tree-sitter-fold-indicators--enable ()
   "Enable `tree-sitter-fold-indicators' mode."
   (if (tree-sitter-fold-mode 1)  ; Enable `tree-sitter-fold-mode' automatically
-      (progn
-        (add-hook 'after-change-functions #'tree-sitter-fold-indicators--start-timer nil t)
-        (add-hook 'after-save-hook #'tree-sitter-fold-indicators--start-timer nil t))
-    (origami-indicators-mode -1)))
+      (add-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators--after-change nil t)
+    (tree-sitter-fold-indicators-mode -1)))
 
 (defun tree-sitter-fold-indicators--disable ()
   "Disable `tree-sitter-fold-indicators' mode."
-  (remove-hook 'after-change-functions #'tree-sitter-fold-indicators--start-timer t)
-  (remove-hook 'after-save-hook #'tree-sitter-fold-indicators--start-timer t)
+  (remove-hook 'tree-sitter-after-change-functions #'tree-sitter-fold-indicators--after-change t)
   (tree-sitter-fold-indicators--remove-overlays (current-buffer)))
 
 ;;;###autoload
-(define-minor-mode origami-indicators-mode
+(define-minor-mode tree-sitter-fold-indicators-mode
   "Minor mode for indicators mode."
-  :group 'origami-indicators
+  :group 'tree-sitter-fold-indicators
   :lighter nil
-  :keymap origami-indicators-mode-map
+  :keymap tree-sitter-fold-indicators-mode-map
   :init-value nil
-  (if origami-indicators-mode (tree-sitter-fold-indicators--enable)
+  (if tree-sitter-fold-indicators-mode (tree-sitter-fold-indicators--enable)
     (tree-sitter-fold-indicators--disable)))
 
 ;;;###autoload
-(define-global-minor-mode global-origami-indicators-mode origami-indicators-mode
-  (lambda () (origami-indicators-mode 1)))
+(define-global-minor-mode global-tree-sitter-fold-indicators-mode tree-sitter-fold-indicators-mode
+  (lambda () (tree-sitter-fold-indicators-mode 1)))
 
 ;;
 ;; (@* "Events" )
@@ -163,22 +166,22 @@
 ;; (@* "Core" )
 ;;
 
-(defun origami-indicators--create-overlay-at-point ()
+(defun tree-sitter-fold-indicators--create-overlay-at-point ()
   "Create indicator overlay at current point."
   (let* ((pos (line-beginning-position))
          (ov (make-overlay pos (1+ pos))))
-    (overlay-put ov 'creator 'origami-indicators)
+    (overlay-put ov 'creator 'tree-sitter-fold-indicators)
     ov))
 
-(defun origami-indicators--create-overlays (beg end)
+(defun tree-sitter-fold-indicators--create-overlays (beg end)
   "Return a list of indicator overlays from BEG to END."
   (let ((ov-lst '()))
     (save-excursion
       (goto-char beg)
       (while (and (<= (line-beginning-position) end) (not (eobp)))
-        (push (origami-indicators--create-overlay-at-point) ov-lst)
+        (push (tree-sitter-fold-indicators--create-overlay-at-point) ov-lst)
         (forward-line 1)))
-    (origami-indicators--update-overlays (reverse ov-lst) t)))
+    (tree-sitter-fold-indicators--update-overlays (reverse ov-lst) t)))
 
 (defun tree-sitter-fold-indicators--get-priority (bitmap)
   "Get priority by BITMAP."
@@ -206,85 +209,68 @@
         (tree-sitter-fold-indicators-fr-end-right nil)
         (t nil)))))
 
-(defun origami-indicators--active-ov (show ov bitmap)
+(defun tree-sitter-fold-indicators--active-ov (show ov bitmap)
   "SHOW the indicator OV with BITMAP."
   (when (overlayp ov)
-    (overlay-put ov 'origami-indicators-active show)
+    (overlay-put ov 'tree-sitter-fold-indicators-active show)
     (overlay-put ov 'type bitmap)
     (overlay-put ov 'priority (tree-sitter-fold-indicators--get-priority bitmap))
     (overlay-put ov 'before-string (tree-sitter-fold-indicators--get-string show ov bitmap))))
 
-(defun origami-indicators--get-end-fringe ()
+(defun tree-sitter-fold-indicators--get-end-fringe ()
   "Return end fringe bitmap according to variable `tree-sitter-fold-indicators-fringe'."
   (cl-case tree-sitter-fold-indicators-fringe
-    (left-fringe 'origami-indicators-fr-end-left)
-    (right-fringe 'origami-indicators-fr-end-right)
+    (left-fringe 'tree-sitter-fold-indicators-fr-end-left)
+    (right-fringe 'tree-sitter-fold-indicators-fr-end-right)
     (t (user-error "Invalid indicators fringe type: %s" tree-sitter-fold-indicators-fringe))))
 
-(defun origami-indicators--update-overlays (ov-lst show)
+(defun tree-sitter-fold-indicators--update-overlays (ov-lst show)
   "SHOW indicators overlays OV-LST."
   (let* ((len (length ov-lst))
          (len-1 (1- len))
          (first-ov (nth 0 ov-lst))
          (last-ov (nth len-1 ov-lst))
          (index 1))
-    (origami-indicators--active-ov
+    (tree-sitter-fold-indicators--active-ov
      show first-ov
      (if show
          (if (> len 1)
-             'origami-indicators-fr-minus-tail 'origami-indicators-fr-minus)
-       'origami-indicators-fr-plus))
+             'tree-sitter-fold-indicators-fr-minus-tail 'tree-sitter-fold-indicators-fr-minus)
+       'tree-sitter-fold-indicators-fr-plus))
     (when (> len 1)
-      (origami-indicators--active-ov show last-ov (origami-indicators--get-end-fringe)))
+      (tree-sitter-fold-indicators--active-ov show last-ov (tree-sitter-fold-indicators--get-end-fringe)))
     (while (< index len-1)
-      (origami-indicators--active-ov show (nth index ov-lst) 'origami-indicators-fr-center)
+      (tree-sitter-fold-indicators--active-ov show (nth index ov-lst) 'tree-sitter-fold-indicators-fr-center)
       (cl-incf index)))
   ov-lst)
 
 ;;
-;; (@* "Timer" )
+;; (@* "Update" )
 ;;
 
-(defcustom tree-sitter-fold-indicators-time 0.5
-  "Indicators refresh rate in time."
-  :type 'float
-  :group 'tree-sitter-fold)
+(defun tree-sitter-fold-indicators--create (node)
+  "Create indicators with NODE."
+  (let ((beg (tsc-node-start-position node))
+        (end (tsc-node-end-position node)))
+    (tree-sitter-fold-indicators--create-overlays beg end)))
 
-(defvar-local tree-sitter-fold-indicators--timer nil
-  "Timer for update indicators.")
-
-(defun tree-sitter-fold-indicators--refresh (buffer &rest _)
-  "Refresh indicator overlays to BUFFER."
-  (when tree-sitter-fold-indicators-mode
-    (tree-sitter-fold-util--with-current-buffer buffer
-      (ignore-errors (call-interactively #'origami-open-node))  ; first rebuild tree
-      ;; Remove other invalid obsolete overlays
-      (let ((ovs (origami-tree-overlays buffer)))
-        (dolist (ov (origami-util-overlays-in 'creator 'origami))
-          (unless (memq ov ovs) (delete-overlay ov))))
-      ;; Remove all indicator overlays
-      (remove-overlays (point-min) (point-max) 'creator 'origami-indicators)
-      ;; Reapply indicator overlays
-      (let ((ovs (overlays-in (point-min) (point-max))) start end tmp-ovs)
-        (dolist (ov ovs)
-          (when (eq 'origami (overlay-get ov 'creator))
-            (setq start (overlay-start ov) end (overlay-end ov)
-                  tmp-ovs (overlay-get ov 'ind-ovs))
-            (unless (equal start end)
-              (when (listp tmp-ovs) (mapc #'delete-overlay tmp-ovs))
-              (overlay-put ov 'ind-ovs (origami-indicators--create-overlays start end)))))))))
-
-(defun tree-sitter-fold-indicators--start-timer (&rest _)
-  "Start refresh timer."
-  (when (timerp tree-sitter-fold-indicators--timer) (cancel-timer tree-sitter-fold-indicators--timer))
-  (setq tree-sitter-fold-indicators--timer
-        (run-with-idle-timer tree-sitter-fold-indicators-time nil
-                             #'tree-sitter-fold-indicators--refresh (current-buffer))))
+(defun tree-sitter-fold-indicators--after-change (&rest _)
+  "Register to hook `tree-sitter-after-change-functions'."
+  (tree-sitter-fold--ensure-ts
+    (let* ((node (tsc-root-node tree-sitter-tree))
+           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
+                                 (alist-get major-mode tree-sitter-fold-foldable-node-alist)
+                                 'vector))
+           (query (tsc-make-query tree-sitter-language patterns))
+           (nodes-to-fold (tsc-query-captures query node #'ignore)))
+      (thread-last nodes-to-fold
+        (mapcar #'cdr)
+        (mapc #'tree-sitter-fold-indicators--create)))))
 
 (defun tree-sitter-fold-indicators--remove-overlays (buffer)
   "Remove all indicators overlays from BUFFER."
   (with-current-buffer buffer
-    (remove-overlays (point-min) (point-max) 'creator 'origami-indicators)))
+    (remove-overlays (point-min) (point-max) 'creator 'tree-sitter-fold-indicators)))
 
 (provide 'tree-sitter-fold-indicators)
 ;;; tree-sitter-fold-indicators.el ends here
