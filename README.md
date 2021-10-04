@@ -42,10 +42,14 @@ then in Emacs:
 
 ## :hammer: Supported languages
 
+* C
+* C++
 * Go
+* JavaScript / JSX
 * Nix
 * Python
 * R
+* TypeScript / TSX
 
 ## Contribution
 
