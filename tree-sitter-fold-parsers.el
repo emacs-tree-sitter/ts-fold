@@ -29,6 +29,20 @@
 
 ;;; Code:
 
+;;
+;; (@* "Externals" )
+;;
+
+(declare-function tree-sitter-fold-range-seq "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-nix-function "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-go-type-declaration "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-go-method "tree-sitter-fold.el")
+
+;;
+;; (@* "Parsers" )
+;;
+
 (defun tree-sitter-fold-parsers-c ()
   "Rule sets for C."
   '((compound_statement     . tree-sitter-fold-range-seq)
@@ -57,6 +71,12 @@
   '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
     (function_declaration . tree-sitter-fold-range-go-method)
     (method_declaration   . tree-sitter-fold-range-go-method)))
+
+(defun tree-sitter-fold-parsers-html ()
+  "Rule sets for HTML."
+  '((style_start_tag  . tree-sitter-fold-range-seq)
+    (script_start_tag . tree-sitter-fold-range-seq)
+    (comment          . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-java ()
   "Rule sets for Java."

@@ -7,6 +7,7 @@
  "tree-sitter-fold.el"
  "tree-sitter-fold-parsers.el"
  "tree-sitter-fold-summary.el"
+ "tree-sitter-fold-indicators.el"
  "tree-sitter-fold-util.el")
 
 (depends-on "tree-sitter")

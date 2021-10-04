@@ -45,6 +45,7 @@
 
 (require 'tree-sitter-fold-parsers)
 (require 'tree-sitter-fold-summary)
+(require 'tree-sitter-fold-indicators)
 
 ;;
 ;; (@* "Customization" )
@@ -61,6 +62,8 @@
     (csharp-mode     . ,(tree-sitter-fold-parsers-csharp))
     (ess-r-mode      . ,(tree-sitter-fold-parsers-r))
     (go-mode         . ,(tree-sitter-fold-parsers-go))
+    (html-mode       . ,(tree-sitter-fold-parsers-html))
+    (mhtml-mode      . ,(tree-sitter-fold-parsers-html))
     (java-mode       . ,(tree-sitter-fold-parsers-java))
     (javascript-mode . ,(tree-sitter-fold-parsers-javascript))
     (js-mode         . ,(tree-sitter-fold-parsers-javascript))
