@@ -9,8 +9,8 @@
 ;;         Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; Description: Code folding using tree-sitter
 ;; Keyword: folding tree-sitter
-;; Version: 0.0.1
-;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0"))
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1"))
 ;; URL: https://github.com/jcs090218/tree-sitter-fold
 
 ;; This file is NOT part of GNU Emacs.
@@ -58,6 +58,7 @@
 (defcustom tree-sitter-fold-range-alist
   `((c-mode          . ,(tree-sitter-fold-parsers-c))
     (c++-mode        . ,(tree-sitter-fold-parsers-c++))
+    (csharp-mode     . ,(tree-sitter-fold-parsers-csharp))
     (ess-r-mode      . ,(tree-sitter-fold-parsers-r))
     (go-mode         . ,(tree-sitter-fold-parsers-go))
     (javascript-mode . ,(tree-sitter-fold-parsers-javascript))
@@ -78,7 +79,7 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
                 :value-type (alist :key-type symbol :value-type function))
   :group 'tree-sitter-fold)
 
-(defconst tree-sitter-fold-foldable-node-alist
+(defvar tree-sitter-fold-foldable-node-alist
   (let (alist)
     (dolist (item tree-sitter-fold-range-alist)
       (let ((mode (car item)) nodes)
@@ -100,6 +101,11 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
 (defface tree-sitter-fold-replacement-face
   '((t :foreground "#808080" :box '(:line-width -1 :style 'pressed-button)))
   "Face used to display the fold replacement text."
+  :group 'tree-sitter-fold)
+
+(defface tree-sitter-fold-fringe-face
+  '((t ()))
+  "Face used to display fringe contents."
   :group 'tree-sitter-fold)
 
 ;;

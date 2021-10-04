@@ -41,6 +41,17 @@
   "Rule sets for C++."
   (append (tree-sitter-fold-parsers-c)))
 
+(defun tree-sitter-fold-parsers-csharp ()
+  "Rule sets for C#."
+  '((block                                . tree-sitter-fold-range-seq)
+    (accessor_list                        . tree-sitter-fold-range-seq)
+    (enum_member_declaration_list         . tree-sitter-fold-range-seq)
+    (declaration_list                     . tree-sitter-fold-range-seq)
+    (switch_body                          . tree-sitter-fold-range-seq)
+    (anonymous_object_creation_expression . tree-sitter-fold-range-seq)
+    (initializer_expression               . tree-sitter-fold-range-seq)
+    (comment                              . (tree-sitter-fold-range-seq 1 -1))))
+
 (defun tree-sitter-fold-parsers-go ()
   "Rule sets for Go."
   '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
