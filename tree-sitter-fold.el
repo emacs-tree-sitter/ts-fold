@@ -86,7 +86,8 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
         (dolist (rule (cdr item)) (push (car rule) nodes))
         (push (cons mode nodes) alist)))
     alist)
-  "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode)).")
+  "An alist of
+(mode . (list of tree-sitter-nodes considered foldable in this mode)).")
 
 (defcustom tree-sitter-fold-mode-hook nil
   "Hook to run when enabling `tree-sitter-fold-mode`."
