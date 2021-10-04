@@ -10,7 +10,7 @@
 ;; Description: Code folding using tree-sitter
 ;; Keyword: folding tree-sitter
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1"))
+;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0"))
 ;; URL: https://github.com/jcs090218/tree-sitter-fold
 
 ;; This file is NOT part of GNU Emacs.
@@ -71,31 +71,43 @@
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-range-alist
-  '((c-mode          . ((compound_statement     . tree-sitter-fold-range-seq)
-                        (declaration_list       . tree-sitter-fold-range-seq)
-                        (enumerator_list        . tree-sitter-fold-range-seq)
-                        (field_declaration_list . tree-sitter-fold-range-seq)
-                        (comment                . tree-sitter-fold-range-seq)))
-    (c++-mode        . ((compound_statement     . tree-sitter-fold-range-seq)
-                        (declaration_list       . tree-sitter-fold-range-seq)
-                        (enumerator_list        . tree-sitter-fold-range-seq)
-                        (field_declaration_list . tree-sitter-fold-range-seq)
-                        (comment                . tree-sitter-fold-range-seq)))
-    (ess-r-mode      . ((brace_list . tree-sitter-fold-range-seq)))
-    (go-mode         . ((type_declaration     . tree-sitter-fold-range-go-type-declaration)
-                        (function_declaration . tree-sitter-fold-range-go-method)
-                        (method_declaration   . tree-sitter-fold-range-go-method)))
-    (javascript-mode . ((export_clause . tree-sitter-fold-range-seq)))
-    (js-mode         . ((export_clause . tree-sitter-fold-range-seq)))
-    (js2-mode        . ((export_clause   . tree-sitter-fold-range-seq)
-                        (statement_block . tree-sitter-fold-range-seq)))
-    (js3-mode        . ((export_clause . tree-sitter-fold-range-seq)))
-    (rjsx-mode       . ((export_clause . tree-sitter-fold-range-seq)))
-    (nix-mode        . ((attrset  . tree-sitter-fold-range-nix-attrset)
-                        (function . tree-sitter-fold-range-nix-function)))
-    (python-mode     . ((function_definition . tree-sitter-fold-range-python)
-                        (class_definition    . tree-sitter-fold-range-python)))
-    (typescript-mode . ((export_clause . tree-sitter-fold-range-seq))))
+  '((c-mode
+     . ((compound_statement     . tree-sitter-fold-range-seq)
+        (declaration_list       . tree-sitter-fold-range-seq)
+        (enumerator_list        . tree-sitter-fold-range-seq)
+        (field_declaration_list . tree-sitter-fold-range-seq)
+        (comment                . tree-sitter-fold-range-seq)))
+    (c++-mode
+     . ((compound_statement     . tree-sitter-fold-range-seq)
+        (declaration_list       . tree-sitter-fold-range-seq)
+        (enumerator_list        . tree-sitter-fold-range-seq)
+        (field_declaration_list . tree-sitter-fold-range-seq)
+        (comment                . (tree-sitter-fold-range-seq 1 -1))))
+    (ess-r-mode
+     . ((brace_list . tree-sitter-fold-range-seq)))
+    (go-mode
+     . ((type_declaration     . tree-sitter-fold-range-go-type-declaration)
+        (function_declaration . tree-sitter-fold-range-go-method)
+        (method_declaration   . tree-sitter-fold-range-go-method)))
+    (javascript-mode
+     . ((export_clause . tree-sitter-fold-range-seq)))
+    (js-mode
+     . ((export_clause . tree-sitter-fold-range-seq)))
+    (js2-mode
+     . ((export_clause   . tree-sitter-fold-range-seq)
+        (statement_block . tree-sitter-fold-range-seq)))
+    (js3-mode
+     . ((export_clause . tree-sitter-fold-range-seq)))
+    (rjsx-mode
+     . ((export_clause . tree-sitter-fold-range-seq)))
+    (nix-mode
+     . ((attrset  . tree-sitter-fold-range-nix-attrset)
+        (function . tree-sitter-fold-range-nix-function)))
+    (python-mode
+     . ((function_definition . tree-sitter-fold-range-python)
+        (class_definition    . tree-sitter-fold-range-python)))
+    (typescript-mode
+     . ((export_clause . tree-sitter-fold-range-seq))))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
@@ -179,10 +191,10 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun tree-sitter-fold--get-fold-range (node)
   "Return the beginning (as buffer position) of fold for NODE."
   (if-let* ((fold-alist (alist-get major-mode tree-sitter-fold-range-alist))
-            (fn (alist-get (tsc-node-type node) fold-alist)))
-      (if (functionp fn)
-          (funcall fn node)
-        (user-error "Current node is not found in `tree-sitter-fold-range-alist' in %s" major-mode))))
+            (item (alist-get (tsc-node-type node) fold-alist)))
+      (cond ((functionp item) (funcall item node (cons 0 0)))
+            ((listp item) (funcall (nth 0 item) node (cons (nth 1 item) (nth 2 item))))
+            (t (user-error "Current node is not found in `tree-sitter-fold-range-alist' in %s" major-mode)))))
 
 ;;
 ;; (@* "Overlays" )
@@ -193,8 +205,8 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (when (not (null range))
     (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
       (overlay-put ov 'invisible 'tree-sitter-fold)
-      (overlay-put ov 'display (or (and tree-sitter-fold-show-summary
-                                        (tree-sitter-fold--get-summary (buffer-substring beg end)))
+      (overlay-put ov 'display (or (and tree-sitter-fold-summary-show
+                                        (tree-sitter-fold-summary--get (buffer-substring beg end)))
                                    tree-sitter-fold-replacement))
       (overlay-put ov 'face 'tree-sitter-fold-replacement-face)
       (overlay-put ov 'isearch-open-invisible #'tree-sitter-fold--isearch-open))))
@@ -227,6 +239,7 @@ Return nil otherwise."
        (progn ,@body)
      (user-error "Ignored, tree-sitter-mode is not enable in the current buffer")))
 
+;;;###autoload
 (defun tree-sitter-fold-close (&optional node)
   "Fold the syntax node at `point` if it is foldable.
 
@@ -240,6 +253,7 @@ current `major-mode'.  If no foldable NODE is found in point, do nothing."
         (delete-overlay ov))
       (tree-sitter-fold--create-overlay (tree-sitter-fold--get-fold-range node)))))
 
+;;;###autoload
 (defun tree-sitter-fold-open ()
   "Open the fold of the syntax node in which `point' resides.
 If the current node is not folded or not foldable, do nothing."
@@ -249,6 +263,7 @@ If the current node is not folded or not foldable, do nothing."
                 (ov (tree-sitter-fold-overlay-at node)))
       (delete-overlay ov))))
 
+;;;###autoload
 (defun tree-sitter-fold-open-recursively ()
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
@@ -260,6 +275,7 @@ If the current node is not folded or not foldable, do nothing."
         (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
         (mapc #'delete-overlay)))))
 
+;;;###autoload
 (defun tree-sitter-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
@@ -274,6 +290,7 @@ If the current node is not folded or not foldable, do nothing."
         (mapcar #'cdr)
         (mapc #'tree-sitter-fold-close)))))
 
+;;;###autoload
 (defun tree-sitter-fold-open-all ()
   "Unfold all syntax nodes in the buffer."
   (interactive)
@@ -282,6 +299,7 @@ If the current node is not folded or not foldable, do nothing."
       (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
       (mapc #'delete-overlay))))
 
+;;;###autoload
 (defun tree-sitter-fold-toggle ()
   "Toggle the syntax node at `point'.
 If the current syntax node is not foldable, do nothing."
@@ -296,10 +314,11 @@ If the current syntax node is not foldable, do nothing."
 ;; (@* "Languages" )
 ;;
 
-(defun tree-sitter-fold-range-seq (node)
+(defun tree-sitter-fold-range-seq (node offset)
   "Return the fold range in sequence."
-  (let ((beg (1+ (tsc-node-start-position node)))
-        (end (1- (tsc-node-end-position node))))
+  (jcs-print "offset" offset)
+  (let ((beg (+ (tsc-node-start-position node) 1 (car offset)))
+        (end (+ (tsc-node-end-position node) -1 (cdr offset))))
     (cons beg end)))
 
 (defun tree-sitter-fold-range-python (node)
