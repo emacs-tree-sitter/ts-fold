@@ -30,7 +30,7 @@
 ;;; Code:
 
 (defun tree-sitter-fold-parsers-c ()
-  ""
+  "Rule sets for C."
   '((compound_statement     . tree-sitter-fold-range-seq)
     (declaration_list       . tree-sitter-fold-range-seq)
     (enumerator_list        . tree-sitter-fold-range-seq)
@@ -38,38 +38,37 @@
     (comment                . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-c++ ()
-  ""
+  "Rule sets for C++."
   (append (tree-sitter-fold-parsers-c)))
 
-(defun tree-sitter-fold-parsers-r ()
-  ""
-  '((brace_list . tree-sitter-fold-range-seq)))
-
 (defun tree-sitter-fold-parsers-go ()
-  ""
+  "Rule sets for Go."
   '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
     (function_declaration . tree-sitter-fold-range-go-method)
     (method_declaration   . tree-sitter-fold-range-go-method)))
 
 (defun tree-sitter-fold-parsers-javascript ()
-  ""
+  "Rule sets for JavaScript."
   '((export_clause   . tree-sitter-fold-range-seq)
     (statement_block . tree-sitter-fold-range-seq)))
 
 (defun tree-sitter-fold-parsers-nix ()
-  ""
+  "Rule sets for Nix."
   '((attrset  . tree-sitter-fold-range-nix-attrset)
     (function . tree-sitter-fold-range-nix-function)))
 
 (defun tree-sitter-fold-parsers-python ()
-  ""
+  "Rule sets for Python."
   '((function_definition . tree-sitter-fold-range-python)
     (class_definition    . tree-sitter-fold-range-python)))
 
-(defun tree-sitter-fold-parsers-typescript ()
-  ""
-  (append (tree-sitter-fold-parsers-javascript)))
+(defun tree-sitter-fold-parsers-r ()
+  "Rule sets for R."
+  '((brace_list . tree-sitter-fold-range-seq)))
 
+(defun tree-sitter-fold-parsers-typescript ()
+  "Rule sets for TypeScript."
+  (append (tree-sitter-fold-parsers-javascript)))
 
 (provide 'tree-sitter-fold-parsers)
 ;;; tree-sitter-fold-parsers.el ends here
