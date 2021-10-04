@@ -121,6 +121,10 @@
   "Rule sets for R."
   '((brace_list . tree-sitter-fold-range-seq)))
 
+(defun tree-sitter-fold-parsers-ruby ()
+  "Rule sets for Ruby."
+  '(()))
+
 (defun tree-sitter-fold-parsers-rust ()
   "Rule sets for Rust."
   '((declaration_list       . tree-sitter-fold-range-seq)
