@@ -32,14 +32,14 @@ then in Emacs:
 
 ## :card_index: Usage
 
-| Commands                          | Description                                                                 |
-|-----------------------------------|-----------------------------------------------------------------------------|
-| tree-sitter-fold-close            | fold the current syntax node.                                               |
-| tree-sitter-fold-open             | open all folds inside the current syntax node.                              |
-| tree-sitter-fold-open-recursively | open the outmost fold of the current syntax node. Keep the sub-folds close. |
-| tree-sitter-fold-close-all        | close all foldable syntax nodes in the current buffer.                      |
-| tree-sitter-fold-open-all         | open all folded syntax nodes in the current buffer.                         |
-| tree-sitter-fold-toggle           | toggle the syntax node at `point'.                                          |
+| Commands                            | Description                                                                 |
+|-------------------------------------|-----------------------------------------------------------------------------|
+| `tree-sitter-fold-close`            | fold the current syntax node.                                               |
+| `tree-sitter-fold-open`             | open all folds inside the current syntax node.                              |
+| `tree-sitter-fold-open-recursively` | open the outmost fold of the current syntax node. Keep the sub-folds close. |
+| `tree-sitter-fold-close-all`        | close all foldable syntax nodes in the current buffer.                      |
+| `tree-sitter-fold-open-all`         | open all folded syntax nodes in the current buffer.                         |
+| `tree-sitter-fold-toggle`           | toggle the syntax node at `point'.                                          |
 
 ## :hammer: Supported languages
 
