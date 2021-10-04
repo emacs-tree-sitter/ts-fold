@@ -289,7 +289,7 @@ If the current syntax node is not foldable, do nothing."
         (end (+ (tsc-node-end-position node) -1 (cdr offset))))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-python (node)
+(defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'
 NODE in Python."
   (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
@@ -301,13 +301,13 @@ NODE in Python."
          (end (tsc-node-end-position node)))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-nix-attrset (node)
+(defun tree-sitter-fold-range-nix-attrset (node offset)
   "Return the fold range for `attrset' NODE in Nix express language."
   (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
         (end (1- (tsc-node-end-position node))))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-nix-function (node)
+(defun tree-sitter-fold-range-nix-function (node offset)
   "Return the fold range for `function' NODE in Nix express language."
   (let ((beg (thread-first node
                (tsc-get-child-by-field :formals)
@@ -316,7 +316,7 @@ NODE in Python."
         (end (tsc-node-end-position node)))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-go-type-declaration (node)
+(defun tree-sitter-fold-range-go-type-declaration (node offset)
   "Return the fold range for `type_declaration' NODE in Go language.
 Only `struct_type' and `interface_type' nodes can be folded."
   (when-let* ((type-spec-node (tsc-get-nth-child node 1))
@@ -335,7 +335,7 @@ Only `struct_type' and `interface_type' nodes can be folded."
         (cons beg end)))
      (t nil))))
 
-(defun tree-sitter-fold-range-go-method (node)
+(defun tree-sitter-fold-range-go-method (node offset)
   "Return the fold range for `method_declaration' NODE in Go language."
   (let* ((named-node (or (tsc-get-child-by-field node :result)
                          (tsc-get-child-by-field node :parameters)))

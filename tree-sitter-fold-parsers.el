@@ -24,7 +24,7 @@
 ;;
 ;; This isn't a real parser implementation, but records down the rule
 ;; in order to let the Tree-Sitter to parse things correctly.  Think of
-;; rule sets!
+;; the rule sets!
 ;;
 
 ;;; Code:
