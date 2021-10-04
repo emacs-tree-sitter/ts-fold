@@ -65,8 +65,7 @@
     (nix-mode        . (attrset function))
     (python-mode     . (function_definition class_definition))
     (typescript-mode . (export_clause)))
-  "An alist of
-(mode . (list of tree-sitter-nodes considered foldable in this mode))."
+  "An alist of (mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
   :group 'tree-sitter-fold)
 
@@ -105,8 +104,18 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-mode-hook nil
-  "Hook to run when enabling `tree-sitter-fold-mode'."
+  "Hook to run when enabling `tree-sitter-fold-mode`."
   :type 'hook
+  :group 'tree-sitter-fold)
+
+(defcustom tree-sitter-fold-replacement "..."
+  "Show this string instead of the folded text."
+  :type 'string
+  :group 'tree-sitter-fold)
+
+(defface tree-sitter-fold-replacement-face
+  '((t :foreground "#808080" :box '(:line-width -1 :style 'pressed-button)))
+  "Face used to display the fold replacement text."
   :group 'tree-sitter-fold)
 
 ;;
@@ -181,6 +190,8 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (when (not (null range))
     (let ((ov (make-overlay (car range) (cdr range))))
       (overlay-put ov 'invisible 'tree-sitter-fold)
+      (overlay-put ov 'display tree-sitter-fold-replacement)
+      (overlay-put ov 'face 'tree-sitter-fold-replacement-face)
       (overlay-put ov 'isearch-open-invisible #'tree-sitter-fold--isearch-open))))
 
 (defun tree-sitter-fold--isearch-open (ov)
