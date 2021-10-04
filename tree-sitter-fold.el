@@ -295,7 +295,7 @@ If the current syntax node is not foldable, do nothing."
 
 (defun tree-sitter-fold-range-seq (node)
   "Return the fold range in sequence."
-  (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+  (let ((beg (1+ (tsc-node-start-position node)))
         (end (1- (tsc-node-end-position node))))
     (cons beg end)))
 
