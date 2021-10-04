@@ -53,22 +53,26 @@
   :prefix "tree-sitter-fold-")
 
 (defcustom tree-sitter-fold-foldable-node-alist
-  '((python-mode . (function_definition class_definition)) ;
-    (go-mode . (type_declaration function_declaration method_declaration))
-    (ess-r-mode . (brace_list))
-    (nix-mode . (attrset function)))
+  '((c-mode      . (compound_statement))
+    (c++-mode    . (compound_statement))
+    (ess-r-mode  . (brace_list))
+    (go-mode     . (type_declaration function_declaration method_declaration))
+    (nix-mode    . (attrset function))
+    (python-mode . (function_definition class_definition)))
   "An alist of
 (mode . (list of tree-sitter-nodes considered foldable in this mode))."
   :type '(alist :key-type symbol :value-type (repeat symbol))
   :group 'tree-sitter-fold)
 
 (defcustom tree-sitter-fold-range-alist
-  '((ess-r-mode . ((brace_list . tree-sitter-fold-range-r)))
-    (go-mode . ((type_declaration . tree-sitter-fold-range-go-type-declaration)
-                (function_declaration . tree-sitter-fold-range-go-method)
-                (method_declaration . tree-sitter-fold-range-go-method)))
-    (nix-mode . ((attrset . tree-sitter-fold-range-nix-attrset)
-                 (function . tree-sitter-fold-range-nix-function)))
+  '((c-mode      . ((compound_statement . tree-sitter-fold-range-seq)))
+    (c++-mode    . ((compound_statement . tree-sitter-fold-range-seq)))
+    (ess-r-mode  . ((brace_list . tree-sitter-fold-range-seq)))
+    (go-mode     . ((type_declaration . tree-sitter-fold-range-go-type-declaration)
+                    (function_declaration . tree-sitter-fold-range-go-method)
+                    (method_declaration . tree-sitter-fold-range-go-method)))
+    (nix-mode    . ((attrset . tree-sitter-fold-range-nix-attrset)
+                    (function . tree-sitter-fold-range-nix-function)))
     (python-mode . ((function_definition . tree-sitter-fold-range-python)
                     (class_definition . tree-sitter-fold-range-python))))
   "An alist of (major-mode . (foldable-node-type . function)).
@@ -195,63 +199,63 @@ Foldable nodes are defined in `tree-sitter-fold-foldable-node-alist' for the
 current `major-mode'.  If no foldable NODE is found in point, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (let ((node (or node (tree-sitter-fold--foldable-node-at-pos))))
-     ;; make sure I do not create multiple overlays for the same fold
-     (when-let* ((ov (tree-sitter-fold-overlay-at node)))
-       (delete-overlay ov))
-     (tree-sitter-fold--create-overlay (tree-sitter-fold--get-fold-range node)))))
+    (let ((node (or node (tree-sitter-fold--foldable-node-at-pos))))
+      ;; make sure I do not create multiple overlays for the same fold
+      (when-let* ((ov (tree-sitter-fold-overlay-at node)))
+        (delete-overlay ov))
+      (tree-sitter-fold--create-overlay (tree-sitter-fold--get-fold-range node)))))
 
 (defun tree-sitter-fold-open ()
   "Open the fold of the syntax node in which `point' resides.
 If the current node is not folded or not foldable, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (when-let* ((node (tree-sitter-fold--foldable-node-at-pos))
-               (ov (tree-sitter-fold-overlay-at node)))
-     (delete-overlay ov))))
+    (when-let* ((node (tree-sitter-fold--foldable-node-at-pos))
+                (ov (tree-sitter-fold-overlay-at node)))
+      (delete-overlay ov))))
 
 (defun tree-sitter-fold-open-recursively ()
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (when-let* ((node (tree-sitter-fold--foldable-node-at-pos))
-               (beg (tsc-node-start-position node))
-               (end (tsc-node-end-position node)))
-     (thread-last (overlays-in beg end)
-       (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
-       (mapc #'delete-overlay)))))
+    (when-let* ((node (tree-sitter-fold--foldable-node-at-pos))
+                (beg (tsc-node-start-position node))
+                (end (tsc-node-end-position node)))
+      (thread-last (overlays-in beg end)
+        (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
+        (mapc #'delete-overlay)))))
 
 (defun tree-sitter-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (let* ((node (tsc-root-node tree-sitter-tree))
-          (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                (alist-get major-mode tree-sitter-fold-foldable-node-alist)
-                                'vector))
-          (query (tsc-make-query tree-sitter-language patterns))
-          (nodes-to-fold (tsc-query-captures query node #'ignore)))
-     (thread-last nodes-to-fold
-       (mapcar #'cdr)
-       (mapc #'tree-sitter-fold-close)))))
+    (let* ((node (tsc-root-node tree-sitter-tree))
+           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
+                                 (alist-get major-mode tree-sitter-fold-foldable-node-alist)
+                                 'vector))
+           (query (tsc-make-query tree-sitter-language patterns))
+           (nodes-to-fold (tsc-query-captures query node #'ignore)))
+      (thread-last nodes-to-fold
+        (mapcar #'cdr)
+        (mapc #'tree-sitter-fold-close)))))
 
 (defun tree-sitter-fold-open-all ()
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (thread-last (overlays-in (point-min) (point-max))
-     (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
-     (mapc #'delete-overlay))))
+    (thread-last (overlays-in (point-min) (point-max))
+      (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'tree-sitter-fold)))
+      (mapc #'delete-overlay))))
 
 (defun tree-sitter-fold-toggle ()
   "Toggle the syntax node at `point'.
 If the current syntax node is not foldable, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
-   (let ((node (tree-sitter-fold--foldable-node-at-pos (point))))
-     (if-let* ((ov (tree-sitter-fold-overlay-at node)))
-         (delete-overlay ov)
-       (tree-sitter-fold-close node)))))
+    (let ((node (tree-sitter-fold--foldable-node-at-pos (point))))
+      (if-let* ((ov (tree-sitter-fold-overlay-at node)))
+          (delete-overlay ov)
+        (tree-sitter-fold-close node)))))
 
 ;;
 ;; (@* "Languages" )
@@ -269,8 +273,8 @@ NODE in Python."
          (end (tsc-node-end-position node)))
     (cons beg end)))
 
-(defun tree-sitter-fold-range-r (node)
-  "Return the fold range for `brace_list' NODE in R."
+(defun tree-sitter-fold-range-seq (node)
+  "Return the fold range in sequence."
   (let ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
         (end (1- (tsc-node-end-position node))))
     (cons beg end)))
