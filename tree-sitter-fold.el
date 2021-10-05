@@ -87,15 +87,18 @@ FOLDABLE-NODE-TYPE) and return the buffer positions of the beginning and end of
 the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :type '(alist :key-type symbol
                 :value-type (alist :key-type symbol :value-type function))
+  :set (lambda (symbol value)
+         (set-default symbol value)
+         (setq tree-sitter-fold-foldable-node-alist
+               (let (alist)
+                 (dolist (item tree-sitter-fold-range-alist)
+                   (let ((mode (car item)) nodes)
+                     (dolist (rule (cdr item)) (push (car rule) nodes))
+                     (push (cons mode nodes) alist)))
+                 alist)))
   :group 'tree-sitter-fold)
 
-(defvar tree-sitter-fold-foldable-node-alist
-  (let (alist)
-    (dolist (item tree-sitter-fold-range-alist)
-      (let ((mode (car item)) nodes)
-        (dolist (rule (cdr item)) (push (car rule) nodes))
-        (push (cons mode nodes) alist)))
-    alist)
+(defvar tree-sitter-fold-foldable-node-alist nil
   "Collect a list of foldable node from variable `tree-sitter-fold-range-alist'.
 
 The alist is in form of (major-mode . (foldable-node-type)).")
@@ -354,24 +357,32 @@ Argument OFFSET can be used to tweak the final beginning and end position."
         (end (1- (tsc-node-end-position node))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
-(defun tree-sitter-fold-range-csharp-comment (node offset)
-  "Define fold range for C# comment.
+(defun tree-sitter-fold-range-line-comment (node offset prefix)
+  "Define fold range for line comment.
 
-For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq'
-for more information."
-  (if (tree-sitter-fold--multi-line node)
-      (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset))
-    (when-let* ((first-node (tree-sitter-fold--continuous-node-prefix node "///" nil))
-                (last-node (tree-sitter-fold--continuous-node-prefix node "///" t))
-                (beg (+ (tsc-node-start-position first-node) 3))
-                (end (tsc-node-end-position last-node)))
-      (tree-sitter-fold-util--cons-add (cons beg end) offset))))
+For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
+more information.
+
+Argument PREFIX is the comment prefix in string."
+  (when-let* ((first-node (tree-sitter-fold--continuous-node-prefix node prefix nil))
+              (last-node (tree-sitter-fold--continuous-node-prefix node prefix t))
+              (prefix-len (length prefix))
+              (beg (+ (tsc-node-start-position first-node) prefix-len))
+              (end (tsc-node-end-position last-node)))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
+
+(defun tree-sitter-fold-range-block-comment (node offset)
+  "Define fold range for block comment.
+
+For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
+more information."
+  (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset)))
 
 (defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'.
 
-For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq'
-for more information."
+For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
+more information."
   (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
                          (tsc-get-child-by-field node :return_type)
                          (tsc-get-child-by-field node :parameters)
@@ -384,8 +395,8 @@ for more information."
 (defun tree-sitter-fold-range-ruby (node offset)
   "Define fold range for Ruby.
 
-For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq'
-for more information."
+For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
+more information."
   ;; TODO: ..
   (progn ))
 
