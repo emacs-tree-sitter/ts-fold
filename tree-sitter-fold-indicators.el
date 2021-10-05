@@ -151,6 +151,7 @@
                   ovs))
         (when ov
           (end-of-line)
+          (when (nth 4 (syntax-ppss)) (back-to-indentation))
           (call-interactively #'tree-sitter-fold-toggle))))))
 
 ;;
