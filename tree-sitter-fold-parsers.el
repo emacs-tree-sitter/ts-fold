@@ -37,7 +37,6 @@
 
 (declare-function tree-sitter-fold-range-csharp-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
-(declare-function tree-sitter-fold-range-nix-function "tree-sitter-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -108,8 +107,9 @@
 
 (defun tree-sitter-fold-parsers-nix ()
   "Rule sets for Nix."
-  '((attrset  . tree-sitter-fold-range-seq)
-    (function . tree-sitter-fold-range-nix-function)))
+  '((attrset       . tree-sitter-fold-range-seq)
+    (interpolation . tree-sitter-fold-range-seq)
+    (list          . tree-sitter-fold-range-seq)))
 
 (defun tree-sitter-fold-parsers-python ()
   "Rule sets for Python."

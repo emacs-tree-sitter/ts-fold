@@ -340,16 +340,6 @@ If the current syntax node is not foldable, do nothing."
     ;; TODO: ..
     nil))
 
-(defun tree-sitter-fold-range-nix-function (node offset)
-  "Return the fold range for `function' NODE."
-  (let ((beg (thread-first node
-               (tsc-get-child-by-field :formals)
-               (tsc-get-next-sibling)
-               (tsc-node-end-position)))
-        (end (tsc-node-end-position node)))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
-
 (defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'."
   (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
