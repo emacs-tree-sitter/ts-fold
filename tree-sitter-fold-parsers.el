@@ -131,7 +131,11 @@
     (use_list            . tree-sitter-fold-range-seq)
     (switch_block        . tree-sitter-fold-range-seq)
     (compound_statement  . tree-sitter-fold-range-seq)
-    (comment             . tree-sitter-fold-c-like-comment)))
+    (comment
+     . (lambda (node offset)
+         (if (string-prefix-p "#" (tsc-node-text node))
+             (tree-sitter-fold-range-line-comment node offset "#")
+           (tree-sitter-fold-c-like-comment node offset))))))
 
 (defun tree-sitter-fold-parsers-python ()
   "Rule sets for Python."
