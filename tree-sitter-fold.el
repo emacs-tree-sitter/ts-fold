@@ -193,7 +193,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
 
 (defun tree-sitter-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
-  (unless (null range)
+  (when range
     (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'tree-sitter-fold)
       (overlay-put ov 'invisible 'tree-sitter-fold)
@@ -332,7 +332,8 @@ If NEXT is non-nil, return next sibling.  Otherwirse, return previouse sibling."
 (defun tree-sitter-fold--continuous-node-prefix (node prefix next)
   "Iterate through node starting from NODE and compare node-text to PREFIX;
 then return the last iterated node."
-  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) text break last-node)
+  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) text break
+        (last-node node))
     (while (and iter-node (not break))
       (setq text (tsc-node-text iter-node))
       (if (string-prefix-p prefix text)
