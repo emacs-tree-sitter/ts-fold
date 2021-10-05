@@ -403,7 +403,7 @@ more information."
          (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
-(defun tree-sitter-fold-range-ruby (node offset)
+(defun tree-sitter-fold-range-ruby (_node _offset)
   "Define fold range for Ruby.
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
