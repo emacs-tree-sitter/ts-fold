@@ -56,8 +56,14 @@
   :group 'tree-sitter
   :prefix "tree-sitter-fold-")
 
+(defvar tree-sitter-fold-foldable-node-alist nil
+  "Collect a list of foldable node from variable `tree-sitter-fold-range-alist'.
+
+The alist is in form of (major-mode . (foldable-node-type)).")
+
 (defcustom tree-sitter-fold-range-alist
   `((agda-mode       . ,(tree-sitter-fold-parsers-agda))
+    (sh-mode         . ,(tree-sitter-fold-parsers-bash))
     (c-mode          . ,(tree-sitter-fold-parsers-c))
     (c++-mode        . ,(tree-sitter-fold-parsers-c++))
     (csharp-mode     . ,(tree-sitter-fold-parsers-csharp))
@@ -79,7 +85,8 @@
     (ruby-mode       . ,(tree-sitter-fold-parsers-ruby))
     (rust-mode       . ,(tree-sitter-fold-parsers-rust))
     (rustic-mode     . ,(tree-sitter-fold-parsers-rust))
-    (sh-mode         . ,(tree-sitter-fold-parsers-bash))
+    (scala-mode      . ,(tree-sitter-fold-parsers-scala))
+    (swift-mode      . ,(tree-sitter-fold-parsers-swift))
     (typescript-mode . ,(tree-sitter-fold-parsers-typescript)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
@@ -99,11 +106,6 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
                      (push (cons mode nodes) alist)))
                  alist)))
   :group 'tree-sitter-fold)
-
-(defvar tree-sitter-fold-foldable-node-alist nil
-  "Collect a list of foldable node from variable `tree-sitter-fold-range-alist'.
-
-The alist is in form of (major-mode . (foldable-node-type)).")
 
 (defcustom tree-sitter-fold-mode-hook nil
   "Hook to run when enabling `tree-sitter-fold-mode`."
@@ -379,6 +381,12 @@ Argument PREFIX is the comment prefix in string."
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
   (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset)))
+
+(defun tree-sitter-fold-c-like-comment (node offset)
+  "Define fold range for C-like comemnt."
+  (if (tree-sitter-fold--multi-line node)
+      (tree-sitter-fold-range-block-comment node offset)
+    (tree-sitter-fold-range-line-comment node offset "///")))
 
 (defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'.

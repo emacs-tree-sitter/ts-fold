@@ -38,6 +38,7 @@
 (declare-function tree-sitter-fold-range-seq "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-line-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-block-comment "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-c-like-comment "tree-sitter-fold.el")
 
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
 
@@ -75,11 +76,7 @@
     (switch_body                          . tree-sitter-fold-range-seq)
     (anonymous_object_creation_expression . tree-sitter-fold-range-seq)
     (initializer_expression               . tree-sitter-fold-range-seq)
-    (comment
-     . (lambda (node offset)
-         (if (tree-sitter-fold--multi-line node)
-             (tree-sitter-fold-range-block-comment node offset)
-           (tree-sitter-fold-range-line-comment node offset "///"))))))
+    (comment                              . tree-sitter-fold-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-css ()
   "Rule sets for CSS."
@@ -152,6 +149,28 @@
     (line_comment           . (lambda (node offset)
                                 (tree-sitter-fold-range-line-comment node offset "///")))
     (block_comment          . tree-sitter-fold-range-block-comment)))
+
+(defun tree-sitter-fold-parsers-scala ()
+  "Rule sets for Scala."
+  '((import_selectors . tree-sitter-fold-range-seq)
+    (template_body    . tree-sitter-fold-range-seq)
+    (block            . tree-sitter-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (if (tree-sitter-fold--multi-line node)
+             (tree-sitter-fold-range-block-comment node offset)
+           (tree-sitter-fold-range-line-comment node offset "///"))))))
+
+(defun tree-sitter-fold-parsers-swift ()
+  "Rule sets for Swift."
+  '((switch_statement      . tree-sitter-fold-range-seq)
+    (function_declaration  . tree-sitter-fold-range-seq)
+    (enum_declaration      . tree-sitter-fold-range-seq)
+    (struct_declaration    . tree-sitter-fold-range-seq)
+    (class_declaration     . tree-sitter-fold-range-seq)
+    (protocol_declaration  . tree-sitter-fold-range-seq)
+    (extension_declaration . tree-sitter-fold-range-seq)
+    (comment               . tree-sitter-fold-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-typescript ()
   "Rule sets for TypeScript."

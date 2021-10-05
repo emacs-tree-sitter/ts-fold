@@ -43,6 +43,7 @@ then in Emacs:
 
 ## :hammer: Supported languages
 
+* Agda (WIP)
 * Bash
 * C / C++ / C# CSS
 * Go
@@ -51,6 +52,7 @@ then in Emacs:
 * Nix
 * Python
 * R / Ruby / Rust
+* Scala / Swift
 * TypeScript / TSX
 
 ## Contribution
