@@ -43,20 +43,13 @@ then in Emacs:
 
 ## :hammer: Supported languages
 
-* C
-* C++
-* C#
-* CSS
+* C / C++ / C# CSS
 * Go
 * HTML
-* Java
-* JavaScript / JSX
-* JSON
+* Java / JavaScript / JSX / JSON
 * Nix
 * Python
-* R
-* Ruby
-* Rust
+* R / Ruby / Rust
 * TypeScript / TSX
 
 ## Contribution
