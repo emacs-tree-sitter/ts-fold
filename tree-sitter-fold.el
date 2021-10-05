@@ -57,7 +57,8 @@
   :prefix "tree-sitter-fold-")
 
 (defcustom tree-sitter-fold-range-alist
-  `((c-mode          . ,(tree-sitter-fold-parsers-c))
+  `((agda-mode       . ,(tree-sitter-fold-parsers-agda))
+    (c-mode          . ,(tree-sitter-fold-parsers-c))
     (c++-mode        . ,(tree-sitter-fold-parsers-c++))
     (csharp-mode     . ,(tree-sitter-fold-parsers-csharp))
     (css-mode        . ,(tree-sitter-fold-parsers-css))
@@ -78,6 +79,7 @@
     (ruby-mode       . ,(tree-sitter-fold-parsers-ruby))
     (rust-mode       . ,(tree-sitter-fold-parsers-rust))
     (rustic-mode     . ,(tree-sitter-fold-parsers-rust))
+    (sh-mode         . ,(tree-sitter-fold-parsers-bash))
     (typescript-mode . ,(tree-sitter-fold-parsers-typescript)))
   "An alist of (major-mode . (foldable-node-type . function)).
 

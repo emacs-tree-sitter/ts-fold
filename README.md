@@ -43,6 +43,7 @@ then in Emacs:
 
 ## :hammer: Supported languages
 
+* Bash
 * C / C++ / C# CSS
 * Go
 * HTML

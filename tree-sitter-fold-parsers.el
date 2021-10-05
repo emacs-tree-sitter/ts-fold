@@ -45,6 +45,15 @@
 ;; (@* "Parsers" )
 ;;
 
+(defun tree-sitter-fold-parsers-agda ()
+  "Rule sets for Agda."
+  '(()))
+
+(defun tree-sitter-fold-parsers-bash ()
+  "Rule sets for Bash."
+  '((compound_statement . tree-sitter-fold-range-seq)
+    (expansion          . tree-sitter-fold-range-seq)))
+
 (defun tree-sitter-fold-parsers-c ()
   "Rule sets for C."
   '((compound_statement     . tree-sitter-fold-range-seq)
