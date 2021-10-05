@@ -34,10 +34,10 @@
 ;;
 
 (declare-function tree-sitter-fold-range-seq "tree-sitter-fold.el")
+
+(declare-function tree-sitter-fold-range-csharp-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-nix-function "tree-sitter-fold.el")
-(declare-function tree-sitter-fold-range-go-type-declaration "tree-sitter-fold.el")
-(declare-function tree-sitter-fold-range-go-method "tree-sitter-fold.el")
 
 ;;
 ;; (@* "Parsers" )
