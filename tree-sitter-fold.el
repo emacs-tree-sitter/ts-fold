@@ -181,11 +181,11 @@ This function is borrowed from `tree-sitter-node-at-point'."
 
 (defun tree-sitter-fold--get-fold-range (node)
   "Return the beginning (as buffer position) of fold for NODE."
-  (if-let* ((fold-alist (alist-get major-mode tree-sitter-fold-range-alist))
-            (item (alist-get (tsc-node-type node) fold-alist)))
-      (cond ((functionp item) (funcall item node (cons 0 0)))
-            ((listp item) (funcall (nth 0 item) node (cons (nth 1 item) (nth 2 item))))
-            (t (user-error "Current node is not found in `tree-sitter-fold-range-alist' in %s" major-mode)))))
+  (when-let* ((fold-alist (alist-get major-mode tree-sitter-fold-range-alist))
+              (item (alist-get (tsc-node-type node) fold-alist)))
+    (cond ((functionp item) (funcall item node (cons 0 0)))
+          ((listp item) (funcall (nth 0 item) node (cons (nth 1 item) (nth 2 item))))
+          (t (user-error "Current node is not found in `tree-sitter-fold-range-alist' in %s" major-mode)))))
 
 ;;
 ;; (@* "Overlays" )
@@ -193,7 +193,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
 
 (defun tree-sitter-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
-  (when (not (null range))
+  (unless (null range)
     (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'tree-sitter-fold)
       (overlay-put ov 'invisible 'tree-sitter-fold)
