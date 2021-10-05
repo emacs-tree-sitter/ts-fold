@@ -120,12 +120,6 @@ the fold in a cons cell.  See `tree-sitter-fold-range-python' for an example."
   :group 'tree-sitter-fold)
 
 ;;
-;; (@* "Externals" )
-;;
-
-(declare-function tree-sitter-fold-indicators-refresh "tree-sitter-fold-indicators.el")
-
-;;
 ;; (@* "Entry" )
 ;;
 

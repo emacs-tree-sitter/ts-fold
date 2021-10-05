@@ -243,6 +243,7 @@
         (end (tsc-node-end-position node)))
     (tree-sitter-fold-indicators--create-overlays node beg end)))
 
+;;;###autoload
 (defun tree-sitter-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
   (when tree-sitter-fold-indicators-mode
