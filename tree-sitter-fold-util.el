@@ -26,16 +26,6 @@
 ;;; Code:
 
 ;;
-;; (@* "Macros" )
-;;
-
-(defmacro tree-sitter-fold-util--with-current-buffer (buffer-or-name &rest body)
-  "Safe to use function `with-current-buffer'."
-  (declare (indent 1) (debug t))
-  `(when (buffer-live-p ,buffer-or-name)
-     (with-current-buffer ,buffer-or-name (progn ,@body))))
-
-;;
 ;; (@* "Cons" )
 ;;
 
