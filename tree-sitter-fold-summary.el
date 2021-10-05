@@ -106,6 +106,12 @@ type of content by checking the word boundary's existence."
     (setq doc-str (s-replace-regexp "<[/]*[^>]+." "" doc-str))
     (tree-sitter-fold-summary--generic doc-str (if type-triple "///" "//"))))
 
+(defun tree-sitter-fold-summary-csharp (doc-str)
+  "Extract summary for C# from DOC-STR."
+  (or (tree-sitter-fold-summary-javadoc doc-str)
+      (tree-sitter-fold-summary-csharp-vsdoc doc-str)
+      (tree-sitter-fold-summary-c-macro doc-str)))
+
 (defun tree-sitter-fold-summary-javadoc (doc-str)
   "Extract javadoc summary from DOC-STR."
   (tree-sitter-fold-summary--generic doc-str "*"))
@@ -189,7 +195,7 @@ type of content by checking the word boundary's existence."
     (bat-mode          . tree-sitter-fold-summary-batch)
     (c-mode            . tree-sitter-fold-summary-c)
     (c++-mode          . tree-sitter-fold-summary-c)
-    (csharp-mode       . tree-sitter-fold-summary-csharp-vsdoc)
+    (csharp-mode       . tree-sitter-fold-summary-csharp)
     (go-mode           . tree-sitter-fold-summary-go)
     (java-mode         . tree-sitter-fold-summary-javadoc)
     (javascript-mode   . tree-sitter-fold-summary-javadoc)

@@ -64,7 +64,7 @@
     (switch_body                          . tree-sitter-fold-range-seq)
     (anonymous_object_creation_expression . tree-sitter-fold-range-seq)
     (initializer_expression               . tree-sitter-fold-range-seq)
-    (comment                              . (tree-sitter-fold-range-seq 1 -1))))
+    (comment                              . tree-sitter-fold-range-csharp-comment)))
 
 (defun tree-sitter-fold-parsers-css ()
   "Rule sets for CSS."
@@ -73,9 +73,8 @@
 
 (defun tree-sitter-fold-parsers-go ()
   "Rule sets for Go."
-  '((type_declaration     . tree-sitter-fold-range-go-type-declaration)
-    (function_declaration . tree-sitter-fold-range-go-method)
-    (method_declaration   . tree-sitter-fold-range-go-method)))
+  '((block   . tree-sitter-fold-range-seq)
+    (comment . tree-sitter-fold-range-seq)))
 
 (defun tree-sitter-fold-parsers-html ()
   "Rule sets for HTML."

@@ -321,6 +321,10 @@ If the current syntax node is not foldable, do nothing."
 ;; (@* "Languages" )
 ;;
 
+(defun tree-sitter-fold-multi-line (node)
+  "Return t, if content NODE is single line."
+  (string-match-p "\n" (tsc-node-text node)))
+
 (defun tree-sitter-fold-range-seq (node offset)
   "Return the fold range in sequence."
   (let ((beg (1+ (tsc-node-start-position node)))
@@ -328,8 +332,14 @@ If the current syntax node is not foldable, do nothing."
     (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
     (cons beg end)))
 
+(defun tree-sitter-fold-range-csharp-comment (node offset)
+  "Define fold range for C# comment."
+  (if (tree-sitter-fold-multi-line node)
+      (tree-sitter-fold-range-seq node (cons 1 -1))
+    nil))
+
 (defun tree-sitter-fold-range-go-type-declaration (node offset)
-  "Return the fold range for `type_declaration' NODE in Go language.
+  "Return the fold range for `type_declaration' NODE.
 Only `struct_type' and `interface_type' nodes can be folded."
   (when-let* ((type-spec-node (tsc-get-nth-child node 1))
               ;; the type_spec node is not named in the Go grammar
@@ -349,7 +359,7 @@ Only `struct_type' and `interface_type' nodes can be folded."
      (t nil))))
 
 (defun tree-sitter-fold-range-go-method (node offset)
-  "Return the fold range for `method_declaration' NODE in Go language."
+  "Return the fold range for `method_declaration' NODE."
   (let* ((named-node (or (tsc-get-child-by-field node :result)
                          (tsc-get-child-by-field node :parameters)))
          (beg (1+ (tsc-node-end-position named-node)))
@@ -358,7 +368,7 @@ Only `struct_type' and `interface_type' nodes can be folded."
     (cons beg end)))
 
 (defun tree-sitter-fold-range-nix-function (node offset)
-  "Return the fold range for `function' NODE in Nix express language."
+  "Return the fold range for `function' NODE."
   (let ((beg (thread-first node
                (tsc-get-child-by-field :formals)
                (tsc-get-next-sibling)
