@@ -164,17 +164,18 @@
     (overlay-put ov 'creator 'tree-sitter-fold-indicators)
     ov))
 
-(defun tree-sitter-fold-indicators--create-overlays (node beg end)
-  "Return a list of indicator overlays from BEG to END."
+(defun tree-sitter-fold-indicators--create-overlays (beg end show)
+  "Return a list of indicator overlays.
+
+Argument BEG and END are range to create indicators.  Argument SHOW is the flag
+defined folded region."
   (let (ov-lst)
     (save-excursion
       (goto-char beg)
       (while (and (<= (line-beginning-position) end) (not (eobp)))
         (push (tree-sitter-fold-indicators--create-overlay-at-point) ov-lst)
         (forward-line 1)))
-    (tree-sitter-fold-indicators--update-overlays
-     (reverse ov-lst)
-     (not (tree-sitter-fold-overlay-at node)))))
+    (tree-sitter-fold-indicators--update-overlays (reverse ov-lst) show)))
 
 (defun tree-sitter-fold-indicators--get-priority (bitmap)
   "Get priority by BITMAP."
@@ -239,9 +240,10 @@
 
 (defun tree-sitter-fold-indicators--create (node)
   "Create indicators with NODE."
-  (let ((beg (tsc-node-start-position node))
-        (end (tsc-node-end-position node)))
-    (tree-sitter-fold-indicators--create-overlays node beg end)))
+  (when-let* ((range (tree-sitter-fold--get-fold-range node))
+              (beg (car range)) (end (cdr range)))
+    (let ((show (not (tree-sitter-fold-overlay-at node))))
+      (tree-sitter-fold-indicators--create-overlays beg end show))))
 
 ;;;###autoload
 (defun tree-sitter-fold-indicators-refresh (&rest _)
