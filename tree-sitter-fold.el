@@ -45,7 +45,6 @@
 
 (require 'tree-sitter-fold-parsers)
 (require 'tree-sitter-fold-summary)
-(require 'tree-sitter-fold-indicators)
 
 ;;
 ;; (@* "Customization" )
