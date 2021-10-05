@@ -308,6 +308,10 @@ If the current syntax node is not foldable, do nothing."
         (delete-overlay ov)
       (tree-sitter-fold-close))))
 
+(defun tree-sitter-fold--after-command (&rest _)
+  "Function call after interactive commands."
+  (tree-sitter-fold-indicators-refresh))
+
 (let ((commands '(tree-sitter-fold-close
                   tree-sitter-fold-open
                   tree-sitter-fold-open-recursively
@@ -315,7 +319,7 @@ If the current syntax node is not foldable, do nothing."
                   tree-sitter-fold-open-all
                   tree-sitter-fold-toggle)))
   (dolist (command commands)
-    (advice-add command :after #'tree-sitter-fold-indicators-refresh)))
+    (advice-add command :after #'tree-sitter-fold--after-command)))
 
 ;;
 ;; (@* "Languages" )
