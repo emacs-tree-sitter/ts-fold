@@ -323,15 +323,22 @@ If the current syntax node is not foldable, do nothing."
   "Return t, if content NODE is single line."
   (string-match-p "\n" (tsc-node-text node)))
 
-(defun tree-sitter-fold--last-continuous-node-prefix (node prefix)
-  "Return the "
-  (let ((next-node (tsc-get-next-sibling node)) text break last-node)
-    (while (and next-node (not break))
-      (setq text (tsc-node-text next-node))
+(defun tree-sitter-fold--next-prev-node (node next)
+  "Return previous/next sibling node starting from NODE.
+
+If NEXT is non-nil, return next sibling.  Otherwirse, return previouse sibling."
+  (if next (tsc-get-next-sibling node) (tsc-get-prev-sibling node)))
+
+(defun tree-sitter-fold--continuous-node-prefix (node prefix next)
+  "Iterate through node starting from NODE and compare node-text to PREFIX;
+then return the last iterated node."
+  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) text break last-node)
+    (while (and iter-node (not break))
+      (setq text (tsc-node-text iter-node))
       (if (string-prefix-p prefix text)
-          (setq last-node next-node)
+          (setq last-node iter-node)
         (setq break t))
-      (setq next-node (tsc-get-next-sibling next-node)))
+      (setq iter-node (tree-sitter-fold--next-prev-node iter-node next)))
     last-node))
 
 (defun tree-sitter-fold-range-seq (node offset)
@@ -344,8 +351,9 @@ If the current syntax node is not foldable, do nothing."
   "Define fold range for C# comment."
   (if (tree-sitter-fold--multi-line node)
       (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset))
-    (when-let* ((last-node (tree-sitter-fold--last-continuous-node-prefix node "///"))
-                (beg (+ (tsc-node-start-position node) 3))
+    (when-let* ((first-node (tree-sitter-fold--continuous-node-prefix node "///" nil))
+                (last-node (tree-sitter-fold--continuous-node-prefix node "///" t))
+                (beg (+ (tsc-node-start-position first-node) 3))
                 (end (tsc-node-end-position last-node)))
       (tree-sitter-fold-util--cons-add (cons beg end) offset))))
 
