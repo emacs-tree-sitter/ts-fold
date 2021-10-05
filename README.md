@@ -50,7 +50,7 @@ then in Emacs:
 * HTML
 * Java / JavaScript / JSX / JSON
 * Nix
-* Python
+* PHP / Python
 * R / Ruby / Rust
 * Scala / Swift
 * TypeScript / TSX

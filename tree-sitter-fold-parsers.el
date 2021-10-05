@@ -124,6 +124,15 @@
     (interpolation . tree-sitter-fold-range-seq)
     (list          . tree-sitter-fold-range-seq)))
 
+(defun tree-sitter-fold-parsers-php ()
+  "Rule sets for PHP."
+  '((namespace_use_group . tree-sitter-fold-range-seq)
+    (declaration_list    . tree-sitter-fold-range-seq)
+    (use_list            . tree-sitter-fold-range-seq)
+    (switch_block        . tree-sitter-fold-range-seq)
+    (compound_statement  . tree-sitter-fold-range-seq)
+    (comment             . tree-sitter-fold-c-like-comment)))
+
 (defun tree-sitter-fold-parsers-python ()
   "Rule sets for Python."
   '((function_definition . tree-sitter-fold-range-python)
