@@ -302,10 +302,10 @@ If the current node is not folded or not foldable, do nothing."
 If the current syntax node is not foldable, do nothing."
   (interactive)
   (tree-sitter-fold--ensure-ts
-    (let ((node (tree-sitter-fold--foldable-node-at-pos (point))))
-      (if-let* ((ov (tree-sitter-fold-overlay-at node)))
-          (delete-overlay ov)
-        (tree-sitter-fold-close node)))))
+    (if-let* ((node (tree-sitter-fold--foldable-node-at-pos (point)))
+              (ov (tree-sitter-fold-overlay-at node)))
+        (delete-overlay ov)
+      (tree-sitter-fold-close))))
 
 (let ((commands '(tree-sitter-fold-close
                   tree-sitter-fold-open
