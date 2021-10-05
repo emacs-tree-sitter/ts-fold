@@ -36,6 +36,14 @@
      (with-current-buffer ,buffer-or-name (progn ,@body))))
 
 ;;
+;; (@* "Cons" )
+;;
+
+(defun tree-sitter-fold-util--cons-add (c1 c2)
+  "Addition for two cons C1 and C2."
+  (cons (+ (car c1) (car c2)) (+ (cdr c1) (cdr c2))))
+
+;;
 ;; (@* "Overlay" )
 ;;
 

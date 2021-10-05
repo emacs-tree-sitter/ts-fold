@@ -43,6 +43,7 @@
 
 (require 'tree-sitter)
 
+(require 'tree-sitter-fold-util)
 (require 'tree-sitter-fold-parsers)
 (require 'tree-sitter-fold-summary)
 
@@ -335,7 +336,8 @@ If the current syntax node is not foldable, do nothing."
 (defun tree-sitter-fold-range-csharp-comment (node offset)
   "Define fold range for C# comment."
   (if (tree-sitter-fold-multi-line node)
-      (tree-sitter-fold-range-seq node (cons 1 -1))
+      (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset))
+    ;; TODO: ..
     nil))
 
 (defun tree-sitter-fold-range-nix-function (node offset)
