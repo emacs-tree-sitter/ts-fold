@@ -26,6 +26,8 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'subr-x)
+
 (require 'fringe-helper)
 
 (require 'tree-sitter-fold-util)
@@ -53,15 +55,6 @@
   "X..X..X"
   "X.XXX.X"
   "X..X..X"
-  "X.....X"
-  "XXXXXXX")
-
-(fringe-helper-define 'tree-sitter-fold-indicators-fr-minus nil
-  "XXXXXXX"
-  "X.....X"
-  "X.....X"
-  "X.XXX.X"
-  "X.....X"
   "X.....X"
   "XXXXXXX")
 
@@ -151,7 +144,6 @@
       (beginning-of-line)
       (setq cur-ln (line-number-at-pos (point)))
       (setq ovs (append (tree-sitter-fold-util--overlays-in 'type 'tree-sitter-fold-indicators-fr-plus)
-                        (tree-sitter-fold-util--overlays-in 'type 'tree-sitter-fold-indicators-fr-minus)
                         (tree-sitter-fold-util--overlays-in 'type 'tree-sitter-fold-indicators-fr-minus-tail)))
       (when ovs
         (setq ov (cl-some
@@ -189,7 +181,6 @@
   (let ((prior tree-sitter-fold-indicators-priority))
     (cl-case bitmap
       (tree-sitter-fold-indicators-fr-plus (+ prior 2))
-      (tree-sitter-fold-indicators-fr-minus (+ prior 2))
       (tree-sitter-fold-indicators-fr-minus-tail (+ prior 2))
       (tree-sitter-fold-indicators-fr-end-left (+ prior 1))
       (tree-sitter-fold-indicators-fr-end-right (+ prior 1))
@@ -204,7 +195,6 @@
     (if show str
       (cl-case bitmap
         (tree-sitter-fold-indicators-fr-plus str)
-        (tree-sitter-fold-indicators-fr-minus nil)
         (tree-sitter-fold-indicators-fr-minus-tail nil)
         (tree-sitter-fold-indicators-fr-end-left nil)
         (tree-sitter-fold-indicators-fr-end-right nil)
@@ -227,19 +217,17 @@
 
 (defun tree-sitter-fold-indicators--update-overlays (ov-lst show)
   "SHOW indicators overlays OV-LST."
-  (let* ((len (length ov-lst))
-         (len-1 (1- len))
-         (first-ov (nth 0 ov-lst))
-         (last-ov (nth len-1 ov-lst))
-         (index 1))
+  (when-let* ((len (length ov-lst))
+              ((> len 1))
+              (len-1 (1- len))
+              (first-ov (nth 0 ov-lst))
+              (last-ov (nth len-1 ov-lst))
+              (index 1))
     (tree-sitter-fold-indicators--active-ov
      show first-ov
-     (if show
-         (if (> len 1) 'tree-sitter-fold-indicators-fr-minus-tail
-           'tree-sitter-fold-indicators-fr-minus)
+     (if show 'tree-sitter-fold-indicators-fr-minus-tail
        'tree-sitter-fold-indicators-fr-plus))
-    (when (> len 1)
-      (tree-sitter-fold-indicators--active-ov show last-ov (tree-sitter-fold-indicators--get-end-fringe)))
+    (tree-sitter-fold-indicators--active-ov show last-ov (tree-sitter-fold-indicators--get-end-fringe))
     (while (< index len-1)
       (tree-sitter-fold-indicators--active-ov show (nth index ov-lst) 'tree-sitter-fold-indicators-fr-center)
       (cl-incf index)))
