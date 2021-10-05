@@ -179,16 +179,15 @@ type of content by checking the word boundary's existence."
 
 (defun tree-sitter-fold-summary--get (doc-str)
   "Extract summary from DOC-STR in order to display ontop of the overlay."
-  (when (nth 4 (syntax-ppss))
-    (let ((parser (cdr (tree-sitter-fold-summary--parser))) summary)
-      (when parser
-        (setq summary (funcall parser doc-str))
-        (when (integerp tree-sitter-fold-summary-max-length)
-          (setq summary (tree-sitter-fold-summary--keep-length summary)))
-        (when summary
-          (setq summary (tree-sitter-fold-summary--apply-format summary)
-                summary (propertize summary 'face 'tree-sitter-fold-replacement-face))))
-      summary)))
+  (let ((parser (cdr (tree-sitter-fold-summary--parser))) summary)
+    (when parser
+      (setq summary (funcall parser doc-str))
+      (when (integerp tree-sitter-fold-summary-max-length)
+        (setq summary (tree-sitter-fold-summary--keep-length summary)))
+      (when summary
+        (setq summary (tree-sitter-fold-summary--apply-format summary)
+              summary (propertize summary 'face 'tree-sitter-fold-replacement-face))))
+    summary))
 
 (defcustom tree-sitter-fold-summary-parsers-alist
   `((actionscript-mode . tree-sitter-fold-summary-javadoc)
