@@ -338,35 +338,6 @@ If the current syntax node is not foldable, do nothing."
       (tree-sitter-fold-range-seq node (cons 1 -1))
     nil))
 
-(defun tree-sitter-fold-range-go-type-declaration (node offset)
-  "Return the fold range for `type_declaration' NODE.
-Only `struct_type' and `interface_type' nodes can be folded."
-  (when-let* ((type-spec-node (tsc-get-nth-child node 1))
-              ;; the type_spec node is not named in the Go grammar
-              ;; so ensure that the 1-th child is a type_spec node
-              ((eq (tsc-node-type type-spec-node) 'type_spec))
-              (type-node (tsc-get-child-by-field type-spec-node :type))
-              (type-node-type (tsc-node-type type-node)))
-    (cond
-     ;; only struct and interface types can be folded
-     ((or (eq type-node-type 'struct_type)
-          (eq type-node-type 'interface_type))
-      ;; find the end of the "struct" or "interface" keyword
-      (let ((beg (1+ (tsc-node-end-position (tsc-get-nth-child type-node 0))))
-            (end (tsc-node-end-position node)))
-        (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-        (cons beg end)))
-     (t nil))))
-
-(defun tree-sitter-fold-range-go-method (node offset)
-  "Return the fold range for `method_declaration' NODE."
-  (let* ((named-node (or (tsc-get-child-by-field node :result)
-                         (tsc-get-child-by-field node :parameters)))
-         (beg (1+ (tsc-node-end-position named-node)))
-         (end (tsc-node-end-position node)))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
-
 (defun tree-sitter-fold-range-nix-function (node offset)
   "Return the fold range for `function' NODE."
   (let ((beg (thread-first node
