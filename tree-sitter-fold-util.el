@@ -48,5 +48,37 @@
         (push ov lst)))
     lst))
 
+;;
+;; (@* "Face" )
+;;
+
+(defvar tree-sitter-fold-util--doc-faces
+  '(font-lock-doc-face
+    font-lock-comment-face
+    font-lock-comment-delimiter-face
+    tree-sitter-hl-face:comment
+    tree-sitter-hl-face:doc
+    hl-todo)
+  "List of face that apply for document string.")
+
+(defun tree-sitter-fold-util--get-face (obj trim)
+  "Return face name from OBJ.
+If argument TRIM is non-nil, trim the OBJ."
+  (get-text-property 0 'face (if trim (string-trim obj) obj)))
+
+(defun tree-sitter-fold-util--is-face (obj lst-face &optional trim)
+  "Return non-nil if OBJ's face is define inside list LST-FACE.
+Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
+  (unless (listp lst-face) (setq lst-face (list lst-face)))
+  (let ((faces (tree-sitter-fold-util--get-face obj trim)))
+    (cond ((listp faces)
+           (cl-some (lambda (face) (memq face lst-face)) faces))
+          (t (memq faces lst-face)))))
+
+(defun tree-sitter-fold-util--doc-faces-p (obj &optional trim)
+  "Return non-nil if face at OBJ is within `tree-sitter-fold-util--doc-faces' list.
+Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
+  (tree-sitter-fold-util--is-face obj tree-sitter-fold-util--doc-faces trim))
+
 (provide 'tree-sitter-fold-util)
 ;;; tree-sitter-fold-util.el ends here
