@@ -108,9 +108,9 @@ type of content by checking the word boundary's existence."
 
 (defun tree-sitter-fold-summary-csharp (doc-str)
   "Extract summary for C# from DOC-STR."
-  (or (tree-sitter-fold-summary-javadoc doc-str)
-      (tree-sitter-fold-summary-csharp-vsdoc doc-str)
-      (tree-sitter-fold-summary-c-macro doc-str)))
+  (cond ((string-match-p "///" doc-str)
+         (tree-sitter-fold-summary-csharp-vsdoc doc-str))
+        (t (tree-sitter-fold-summary-javadoc doc-str))))
 
 (defun tree-sitter-fold-summary-javadoc (doc-str)
   "Extract javadoc summary from DOC-STR."
