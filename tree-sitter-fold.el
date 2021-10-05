@@ -315,30 +315,41 @@ If the current syntax node is not foldable, do nothing."
                   tree-sitter-fold-open-all
                   tree-sitter-fold-toggle)))
   (dolist (command commands)
-    (advice-add command :after (lambda ()
-                                 (tree-sitter-fold-indicators-refresh)))))
+    (advice-add command :after #'tree-sitter-fold-indicators-refresh)))
 
 ;;
 ;; (@* "Languages" )
 ;;
 
-(defun tree-sitter-fold-multi-line (node)
+(defun tree-sitter-fold--multi-line (node)
   "Return t, if content NODE is single line."
   (string-match-p "\n" (tsc-node-text node)))
+
+(defun tree-sitter-fold--last-continuous-node-prefix (node prefix)
+  "Return the "
+  (let ((next-node (tsc-get-next-sibling node)) text break last-node)
+    (while (and next-node (not break))
+      (setq text (tsc-node-text next-node))
+      (if (string-prefix-p prefix text)
+          (setq last-node next-node)
+        (setq break t))
+      (setq next-node (tsc-get-next-sibling next-node)))
+    last-node))
 
 (defun tree-sitter-fold-range-seq (node offset)
   "Return the fold range in sequence."
   (let ((beg (1+ (tsc-node-start-position node)))
         (end (1- (tsc-node-end-position node))))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-csharp-comment (node offset)
   "Define fold range for C# comment."
-  (if (tree-sitter-fold-multi-line node)
+  (if (tree-sitter-fold--multi-line node)
       (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset))
-    ;; TODO: ..
-    nil))
+    (when-let* ((last-node (tree-sitter-fold--last-continuous-node-prefix node "///"))
+                (beg (+ (tsc-node-start-position node) 3))
+                (end (tsc-node-end-position last-node)))
+      (tree-sitter-fold-util--cons-add (cons beg end) offset))))
 
 (defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'."
@@ -349,8 +360,7 @@ If the current syntax node is not foldable, do nothing."
          ;; the colon is an anonymous node after return_type or parameters node
          (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
          (end (tsc-node-end-position node)))
-    (setq beg (+ beg (car offset)) end (+ end (cdr offset)))
-    (cons beg end)))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-ruby (node offset)
   ""
