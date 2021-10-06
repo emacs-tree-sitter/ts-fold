@@ -347,9 +347,9 @@ If NEXT is non-nil, return next sibling.  Otherwirse, return previouse sibling."
 (defun tree-sitter-fold--get-node-by-text (node text next)
   "Return node with matching TEXT.
 Argument NODE is the starting node."
-  (let ((current (tree-sitter-fold--next-prev-node node next)) result)
+  (let ((current node) result)
     (while current
-      (if (string= text (string-trim (tsc-node-text current)))
+      (if (string-prefix-p text (string-trim (tsc-node-text current)))
           (setq result current
                 current nil)
         (setq current (tree-sitter-fold--next-prev-node current next))))
@@ -435,18 +435,18 @@ more information."
 (defun tree-sitter-fold-range-c-preproc-elif (node offset)
   "Define fold range for `elif' preprocessor."
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
-              (next (or (tree-sitter-fold--get-node-by-text named-node "#elif" t)
+              (next (or (tree-sitter-fold--get-node-by-text named-node "#elif" t)  ; search itself
                         (tree-sitter-fold--get-node-by-text named-node "#else" t)
                         (tree-sitter-fold--get-node-by-text named-node "#endif" t)))
-              (beg (tsc-node-end-position node))
+              (beg (tsc-node-end-position named-node))
               (end (1- (tsc-node-start-position next))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-c-preproc-else (node offset)
   "Define fold range for `else' preprocessor."
-  (when-let* ((next (tree-sitter-fold--get-node-by-text node "#endif" t))
-              (beg (tsc-node-end-position node))
-              (end (1- (tsc-node-start-position next))))
+  (when-let* ((beg (+ (tsc-node-start-position node) 5))
+              (text (tsc-node-text node))
+              (end (+ beg (length text) -5)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-python (node offset)
