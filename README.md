@@ -51,7 +51,7 @@ then in Emacs:
 * Java / JavaScript / JSX / JSON
 * Nix
 * PHP / Python
-* R / Ruby / Rust
+* R / Rust
 * Scala / Swift
 * TypeScript / TSX
 
@@ -59,6 +59,7 @@ then in Emacs:
 
 * Agda
 * HTML
+* Ruby
 
 ## Contribution
 
