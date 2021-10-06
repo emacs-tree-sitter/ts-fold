@@ -350,12 +350,14 @@ then return the last iterated node.
 
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
-  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) text break
-        (last-node node))
+  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) (last-node node)
+        (last-line (car (tsc-node-start-point node))) line text break)
     (while (and iter-node (not break))
-      (setq text (tsc-node-text iter-node))
-      (if (string-prefix-p prefix text)
-          (setq last-node iter-node)
+      (setq text (tsc-node-text iter-node)
+            line (car (tsc-node-start-point iter-node)))
+      (if (and (tree-sitter-fold-util--in-range-p line (1- last-line) (1+ last-line))
+               (string-prefix-p prefix text))
+          (setq last-node iter-node last-line line)
         (setq break t))
       (setq iter-node (tree-sitter-fold--next-prev-node iter-node next)))
     last-node))
@@ -427,9 +429,11 @@ more information."
 
 (defun tree-sitter-fold-range-c-preproc-else (node offset)
   "Define fold range for `else' preprocessor."
-  (when-let* ((beg (+ (tsc-node-start-position node) 5))
+  (when-let* ((target "#else")
+              (len (length target))
+              (beg (+ (tsc-node-start-position node) len))
               (text (tsc-node-text node))
-              (end (+ beg (length text) -5)))
+              (end (+ beg (length text) (- 0 len))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-python (node offset)
@@ -446,13 +450,18 @@ more information."
               (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
-(defun tree-sitter-fold-range-ruby (_node _offset)
-  "Define fold range for Ruby.
+(defun tree-sitter-fold-range-ruby-method (node offset)
+  "Define fold range for `method' in Ruby.
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
-  ;; TODO: ..
-  (progn ))
+  (let* ((named-node (tsc-get-child-by-field node :name))
+         (parameters-node (tsc-get-child-by-field node :parameters))
+         (end-node (tsc-get-child-by-field node :end))
+         (beg (tsc-node-end-position parameters-node))
+         (end 0))
+    (jcs-print ">" end-node)
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-rust-macro (node offset)
   "Return the fold range for `macro_definition' NODE in Rust.

@@ -78,5 +78,13 @@ Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
 Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
   (tree-sitter-fold-util--is-face obj tree-sitter-fold-util--doc-faces trim))
 
+;;
+;; (@* "Math" )
+;;
+
+(defun tree-sitter-fold-util--in-range-p (in-val in-min in-max)
+  "Check to see if IN-VAL is between IN-MIN and IN-MAX."
+  (and (<= in-min in-val) (<= in-val in-max)))
+
 (provide 'tree-sitter-fold-util)
 ;;; tree-sitter-fold-util.el ends here
