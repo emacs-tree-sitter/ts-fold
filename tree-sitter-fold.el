@@ -410,16 +410,6 @@ more information."
 ;; (@* "Languages" )
 ;;
 
-(defun tree-sitter-fold-range-c-preproc-def (node offset)
-  ""
-  (when-let* ((named-node (tsc-get-child-by-field node :name))
-              (beg (tsc-node-end-position named-node))
-              (next (or (tree-sitter-fold--get-node-by-text node "#elif" t)
-                        (tree-sitter-fold--get-node-by-text node "#else" t)
-                        (tree-sitter-fold--get-node-by-text node "#endif" t)))
-              (end (1- (tsc-node-start-position next))))
-    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
-
 (defun tree-sitter-fold-range-c-preproc-if (node offset)
   ""
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
