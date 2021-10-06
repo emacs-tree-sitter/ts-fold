@@ -41,6 +41,7 @@
 (declare-function tree-sitter-fold-c-like-comment "tree-sitter-fold.el")
 
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-rust-macro "tree-sitter-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -158,6 +159,7 @@
     (use_list               . tree-sitter-fold-range-seq)
     (field_initializer_list . tree-sitter-fold-range-seq)
     (match_block            . tree-sitter-fold-range-seq)
+    (macro_definition       . (tree-sitter-fold-range-rust-macro 1 -1))
     (block                  . tree-sitter-fold-range-seq)
     (line_comment           . (lambda (node offset)
                                 (tree-sitter-fold-range-line-comment node offset "///")))

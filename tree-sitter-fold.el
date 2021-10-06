@@ -417,5 +417,19 @@ more information."
   ;; TODO: ..
   (progn ))
 
+(defun tree-sitter-fold-range-rust-macro (node offset)
+  "Return the fold range for `macro_definition' NODE in Rust.
+
+For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
+more information."
+  (let* ((children (tsc-count-children node))
+         (result nil)
+         (last_bracket (tsc-get-nth-child node (- children 1)))
+         (first_bracket (tsc-get-nth-child node 2)))
+    (setq result (cons
+                  (tsc-node-start-position first_bracket)
+                  (+ 1 (tsc-node-start-position last_bracket))))
+    (tree-sitter-fold-util--cons-add result offset)))
+
 (provide 'tree-sitter-fold)
 ;;; tree-sitter-fold.el ends here
