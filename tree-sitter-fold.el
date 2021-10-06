@@ -314,7 +314,7 @@ If the current syntax node is not foldable, do nothing."
   (tree-sitter-fold--ensure-ts
     (if-let* ((node (tree-sitter-fold--foldable-node-at-pos (point)))
               (ov (tree-sitter-fold-overlay-at node)))
-        (delete-overlay ov)
+        (progn (delete-overlay ov) t)
       (tree-sitter-fold-close))))
 
 (defun tree-sitter-fold--after-command (&rest _)

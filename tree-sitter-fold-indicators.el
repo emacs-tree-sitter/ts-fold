@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'seq)
 (require 'subr-x)
 
 (require 'fringe-helper)
@@ -150,9 +151,11 @@
                   (lambda (ov) (= cur-ln (line-number-at-pos (overlay-start ov))))
                   ovs))
         (when ov
-          (end-of-line)
-          (when (nth 4 (syntax-ppss)) (back-to-indentation))
-          (call-interactively #'tree-sitter-fold-toggle))))))
+          (or (save-excursion
+                (end-of-line)
+                (when (nth 4 (syntax-ppss)) (back-to-indentation))
+                (tree-sitter-fold-toggle))
+              (tree-sitter-fold-toggle)))))))
 
 ;;
 ;; (@* "Core" )
