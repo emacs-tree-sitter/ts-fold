@@ -404,36 +404,48 @@ more information."
   "Define fold range for C-like comemnt."
   (if (tree-sitter-fold--multi-line node)
       (tree-sitter-fold-range-block-comment node offset)
-    (tree-sitter-fold-range-line-comment node offset "///")))
+    (if (string-prefix-p "///" (tsc-node-text node))
+        (tree-sitter-fold-range-line-comment node offset "///")
+      (tree-sitter-fold-range-line-comment node offset "//"))))
 
 ;;
 ;; (@* "Languages" )
 ;;
 
 (defun tree-sitter-fold-range-c-preproc-if (node offset)
-  ""
-  (when-let* ((named-node (tsc-get-child-by-field node :condition))
-              (beg (tsc-node-end-position named-node))
-              (next (or (tree-sitter-fold--get-node-by-text node "#elif" t)
-                        (tree-sitter-fold--get-node-by-text node "#else" t)
-                        (tree-sitter-fold--get-node-by-text node "#endif" t)))
-              (end (1- (tsc-node-start-position next))))
+  "Define fold range for `if' preprocessor."
+  (let* ((named-node (tsc-get-child-by-field node :condition))
+         (next (or (tree-sitter-fold--get-node-by-text named-node "#elif" t)
+                   (tree-sitter-fold--get-node-by-text named-node "#else" t)
+                   (tree-sitter-fold--get-node-by-text named-node "#endif" t)))
+         (beg (tsc-node-end-position named-node))
+         (end (1- (tsc-node-start-position next))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-c-preproc-ifdef (node offset)
-  ""
+  "Define fold range for `ifdef' and `ifndef' preprocessor."
   (when-let* ((named-node (tsc-get-child-by-field node :name))
+              (next (or (tree-sitter-fold--get-node-by-text named-node "#elif" t)
+                        (tree-sitter-fold--get-node-by-text named-node "#else" t)
+                        (tree-sitter-fold--get-node-by-text named-node "#endif" t)))
               (beg (tsc-node-end-position named-node))
-              (next (or (tree-sitter-fold--get-node-by-text node "#elif" t)
-                        (tree-sitter-fold--get-node-by-text node "#else" t)
-                        (tree-sitter-fold--get-node-by-text node "#endif" t)))
+              (end (1- (tsc-node-start-position next))))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
+
+(defun tree-sitter-fold-range-c-preproc-elif (node offset)
+  "Define fold range for `elif' preprocessor."
+  (when-let* ((named-node (tsc-get-child-by-field node :condition))
+              (next (or (tree-sitter-fold--get-node-by-text named-node "#elif" t)
+                        (tree-sitter-fold--get-node-by-text named-node "#else" t)
+                        (tree-sitter-fold--get-node-by-text named-node "#endif" t)))
+              (beg (tsc-node-end-position node))
               (end (1- (tsc-node-start-position next))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-c-preproc-else (node offset)
-  ""
-  (when-let* ((beg (tsc-node-end-position node))
-              (next (tree-sitter-fold--get-node-by-text node "#endif" t))
+  "Define fold range for `else' preprocessor."
+  (when-let* ((next (tree-sitter-fold--get-node-by-text node "#endif" t))
+              (beg (tsc-node-end-position node))
               (end (1- (tsc-node-start-position next))))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 

@@ -42,6 +42,7 @@
 
 (declare-function tree-sitter-fold-range-c-preproc-ifdef "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-if "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-c-preproc-elif "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-else "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-rust-macro "tree-sitter-fold.el")
@@ -67,8 +68,9 @@
     (field_declaration_list . tree-sitter-fold-range-seq)
     (preproc_if             . tree-sitter-fold-range-c-preproc-if)
     (preproc_ifdef          . tree-sitter-fold-range-c-preproc-ifdef)
+    (preproc_elif           . tree-sitter-fold-range-c-preproc-elif)
     (preproc_else           . tree-sitter-fold-range-c-preproc-else)
-    (comment                . (tree-sitter-fold-range-seq 1 -1))))
+    (comment                . tree-sitter-fold-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-c++ ()
   "Rule sets for C++."
