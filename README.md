@@ -43,7 +43,7 @@ then in Emacs:
 
 ## 🔨 Supported languages
 
-These languages are fairly complete:
+> These languages are fairly complete:
 
 * Bash
 * C / C++ / C# / CSS
@@ -55,7 +55,7 @@ These languages are fairly complete:
 * Scala / Swift
 * TypeScript / TSX
 
-These languages are in development:
+> These languages are in development:
 
 * Agda
 * HTML
