@@ -85,6 +85,12 @@
     (switch_body                          . tree-sitter-fold-range-seq)
     (anonymous_object_creation_expression . tree-sitter-fold-range-seq)
     (initializer_expression               . tree-sitter-fold-range-seq)
+    (if_directive                         . tree-sitter-fold-range-seq)
+    (else_directive                       . tree-sitter-fold-range-seq)
+    (elif_directive                       . tree-sitter-fold-range-seq)
+    (endif_directive                      . tree-sitter-fold-range-seq)
+    (region_directive                     . tree-sitter-fold-range-seq)
+    (endregion_directive                  . tree-sitter-fold-range-seq)
     (comment                              . tree-sitter-fold-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-css ()
