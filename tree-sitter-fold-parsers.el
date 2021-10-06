@@ -40,6 +40,10 @@
 (declare-function tree-sitter-fold-range-block-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-c-like-comment "tree-sitter-fold.el")
 
+(declare-function tree-sitter-fold-range-c-preproc-def "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-c-preproc-ifdef "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-c-preproc-if "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-c-preproc-else "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-rust-macro "tree-sitter-fold.el")
 
@@ -62,7 +66,10 @@
     (declaration_list       . tree-sitter-fold-range-seq)
     (enumerator_list        . tree-sitter-fold-range-seq)
     (field_declaration_list . tree-sitter-fold-range-seq)
-    (preproc_def            . tree-sitter-fold-range-c-preproc)
+    (preproc_def            . tree-sitter-fold-range-c-preproc-def)
+    (preproc_if             . tree-sitter-fold-range-c-preproc-if)
+    (preproc_ifdef          . tree-sitter-fold-range-c-preproc-ifdef)
+    (preproc_else           . tree-sitter-fold-range-c-preproc-else)
     (comment                . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-c++ ()
