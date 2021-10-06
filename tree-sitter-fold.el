@@ -422,14 +422,12 @@ more information."
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
-  (let* ((children (tsc-count-children node))
-         (result nil)
-         (last_bracket (tsc-get-nth-child node (- children 1)))
-         (first_bracket (tsc-get-nth-child node 2)))
-    (setq result (cons
-                  (tsc-node-start-position first_bracket)
-                  (+ 1 (tsc-node-start-position last_bracket))))
-    (tree-sitter-fold-util--cons-add result offset)))
+  (when-let* ((children (tsc-count-children node))
+              (last_bracket (tsc-get-nth-child node (- children 1)))
+              (first_bracket (tsc-get-nth-child node 2))
+              (beg (tsc-node-start-position first_bracket))
+              (end (1+ (tsc-node-start-position last_bracket))))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (provide 'tree-sitter-fold)
 ;;; tree-sitter-fold.el ends here
