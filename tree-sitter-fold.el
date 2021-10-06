@@ -389,7 +389,7 @@ For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
   (tree-sitter-fold-range-seq node (tree-sitter-fold-util--cons-add '(1 . -1) offset)))
 
-(defun tree-sitter-fold-c-like-comment (node offset)
+(defun tree-sitter-fold-range-c-like-comment (node offset)
   "Define fold range for C-like comemnt."
   (if (tree-sitter-fold--multi-line node)
       (tree-sitter-fold-range-block-comment node offset)

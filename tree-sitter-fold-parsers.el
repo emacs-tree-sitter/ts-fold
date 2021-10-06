@@ -38,7 +38,7 @@
 (declare-function tree-sitter-fold-range-seq "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-line-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-block-comment "tree-sitter-fold.el")
-(declare-function tree-sitter-fold-c-like-comment "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-c-like-comment "tree-sitter-fold.el")
 
 (declare-function tree-sitter-fold-range-c-preproc-ifdef "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-if "tree-sitter-fold.el")
@@ -70,7 +70,7 @@
     (preproc_ifdef          . tree-sitter-fold-range-c-preproc-ifdef)
     (preproc_elif           . tree-sitter-fold-range-c-preproc-elif)
     (preproc_else           . tree-sitter-fold-range-c-preproc-else)
-    (comment                . tree-sitter-fold-c-like-comment)))
+    (comment                . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-c++ ()
   "Rule sets for C++."
@@ -91,7 +91,7 @@
     (endif_directive                      . tree-sitter-fold-range-seq)
     (region_directive                     . tree-sitter-fold-range-seq)
     (endregion_directive                  . tree-sitter-fold-range-seq)
-    (comment                              . tree-sitter-fold-c-like-comment)))
+    (comment                              . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-css ()
   "Rule sets for CSS."
@@ -126,7 +126,8 @@
 (defun tree-sitter-fold-parsers-javascript ()
   "Rule sets for JavaScript."
   '((export_clause   . tree-sitter-fold-range-seq)
-    (statement_block . tree-sitter-fold-range-seq)))
+    (statement_block . tree-sitter-fold-range-seq)
+    (comment         . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-json ()
   "Rule sets for JSON."
@@ -150,7 +151,7 @@
      . (lambda (node offset)
          (if (string-prefix-p "#" (tsc-node-text node))
              (tree-sitter-fold-range-line-comment node offset "#")
-           (tree-sitter-fold-c-like-comment node offset))))))
+           (tree-sitter-fold-range-c-like-comment node offset))))))
 
 (defun tree-sitter-fold-parsers-python ()
   "Rule sets for Python."
@@ -199,7 +200,7 @@
     (class_declaration     . tree-sitter-fold-range-seq)
     (protocol_declaration  . tree-sitter-fold-range-seq)
     (extension_declaration . tree-sitter-fold-range-seq)
-    (comment               . tree-sitter-fold-c-like-comment)))
+    (comment               . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-typescript ()
   "Rule sets for TypeScript."
