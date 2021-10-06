@@ -331,8 +331,19 @@ If the current syntax node is not foldable, do nothing."
     (advice-add command :after #'tree-sitter-fold--after-command)))
 
 ;;
-;; (@* "Languages" )
+;; (@* "Rule Helpers" )
 ;;
+
+(defun tree-sitter-fold--get-node-by-text (node text)
+  "Return node with matching TEXT.
+Argument NODE is the starting node."
+  (let ((current (tsc-get-next-sibling node)) result)
+    (while current
+      (if (string= text (string-trim (tsc-node-text current)))
+          (setq result current
+                current nil)
+        (setq current (tsc-get-next-sibling current))))
+    result))
 
 (defun tree-sitter-fold--multi-line (node)
   "Return t, if content NODE is single line."
@@ -395,18 +406,30 @@ more information."
       (tree-sitter-fold-range-block-comment node offset)
     (tree-sitter-fold-range-line-comment node offset "///")))
 
+;;
+;; (@* "Languages" )
+;;
+
+(defun tree-sitter-fold-range-c-preproc (node offset)
+  ""
+  (when-let* ((named-node (tsc-get-child-by-field node :name))
+              (beg (tsc-node-end-position named-node))
+              (end-node (tree-sitter-fold--get-node-by-text node "#endif"))
+              (end (1- (tsc-node-start-position end-node))))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
+
 (defun tree-sitter-fold-range-python (node offset)
   "Return the fold range for `function_definition' and `class_definition'.
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
-  (let* ((named-node (or (tsc-get-child-by-field node :superclasses)
-                         (tsc-get-child-by-field node :return_type)
-                         (tsc-get-child-by-field node :parameters)
-                         (tsc-get-child-by-field node :name)))
-         ;; the colon is an anonymous node after return_type or parameters node
-         (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
-         (end (tsc-node-end-position node)))
+  (when-let* ((named-node (or (tsc-get-child-by-field node :superclasses)
+                              (tsc-get-child-by-field node :return_type)
+                              (tsc-get-child-by-field node :parameters)
+                              (tsc-get-child-by-field node :name)))
+              ;; the colon is an anonymous node after return_type or parameters node
+              (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
+              (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-ruby (_node _offset)

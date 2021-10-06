@@ -62,6 +62,7 @@
     (declaration_list       . tree-sitter-fold-range-seq)
     (enumerator_list        . tree-sitter-fold-range-seq)
     (field_declaration_list . tree-sitter-fold-range-seq)
+    (preproc_def            . tree-sitter-fold-range-c-preproc)
     (comment                . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-c++ ()
