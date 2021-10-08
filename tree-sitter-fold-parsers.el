@@ -159,7 +159,11 @@
 (defun tree-sitter-fold-parsers-python ()
   "Rule sets for Python."
   '((function_definition . tree-sitter-fold-range-python)
-    (class_definition    . tree-sitter-fold-range-python)))
+    (class_definition    . tree-sitter-fold-range-python)
+    (list                . tree-sitter-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (tree-sitter-fold-range-line-comment node offset "#")))))
 
 (defun tree-sitter-fold-parsers-r ()
   "Rule sets for R."
