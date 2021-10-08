@@ -12,14 +12,14 @@ to provide code folding base on the tree-sitter syntax tree.
 **Table of Contents**
 
 - [tree-sitter-fold](#tree-sitter-fold)
-    - [💾 Installation](#💾-installation)
-        - [🔍 Methods 1. with `straight.el` and `use-package`:](#🔍-methods-1-with-straightel-and-use-package)
-        - [🔍 Methods 2. Manual](#🔍-methods-2-manual)
-    - [📇 Commands](#📇-commands)
-    - [🔨 Supported languages](#🔨-supported-languages)
-    - [🔰 Contribution](#🔰-contribution)
-    - [⚖️ Indicators Mode](#⚖️-indicators-mode)
-    - [📝 Summary](#📝-summary)
+- [💾 Installation](#💾-installation)
+- [🔍 Methods 1. with `straight.el` and `use-package`:](#🔍-methods-1-with-straightel-and-use-package)
+- [🔍 Methods 2. Manual](#🔍-methods-2-manual)
+- [📇 Commands](#📇-commands)
+- [🔨 Supported languages](#🔨-supported-languages)
+- [🔰 Contribution](#🔰-contribution)
+- [⚖️ Indicators Mode](#⚖️-indicators-mode)
+- [📝 Summary](#📝-summary)
 
 <!-- markdown-toc end -->
 
@@ -66,7 +66,7 @@ then in Emacs:
 * Java / JavaScript / JSX / JSON
 * Nix
 * PHP / Python
-* R / Rust
+* R / Ruby / Rust
 * Scala / Swift
 * TypeScript / TSX
 
@@ -74,7 +74,6 @@ then in Emacs:
 
 * Agda
 * HTML
-* Ruby
 
 ## 🔰 Contribution
 
