@@ -431,8 +431,7 @@ more information."
   (when-let* ((target "#else")
               (len (length target))
               (beg (+ (tsc-node-start-position node) len))
-              (text (tsc-node-text node))
-              (end (+ beg (length text) (- 0 len))))
+              (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-python (node offset)
