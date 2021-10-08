@@ -449,8 +449,8 @@ more information."
               (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
-(defun tree-sitter-fold-range-ruby-method (node offset)
-  "Define fold range for `method' in Ruby.
+(defun tree-sitter-fold-range-ruby (node offset)
+  "Define fold range for `method' and `class' in Ruby.
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."

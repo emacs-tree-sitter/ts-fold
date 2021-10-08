@@ -45,6 +45,7 @@
 (declare-function tree-sitter-fold-range-c-preproc-elif "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-else "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-ruby "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-rust-macro "tree-sitter-fold.el")
 
 ;;
@@ -171,8 +172,8 @@
 
 (defun tree-sitter-fold-parsers-ruby ()
   "Rule sets for Ruby."
-  '((class  . tree-sitter-fold-range-ruby-method)
-    (method . tree-sitter-fold-range-ruby-method)
+  '((class  . tree-sitter-fold-range-ruby)
+    (method . tree-sitter-fold-range-ruby)
     (array  . tree-sitter-fold-range-seq)
     (comment
      . (lambda (node offset)
