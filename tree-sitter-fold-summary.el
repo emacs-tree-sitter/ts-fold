@@ -97,43 +97,43 @@ type of content by checking the word boundary's existence."
     (tree-sitter-fold-summary--doc-extract doc-str sym)))
 
 (defun tree-sitter-fold-summary-batch (doc-str)
-  "Extract batch summary from DOC-STR."
+  "Extract summary from DOC-STR in Batch."
   (tree-sitter-fold-summary--generic doc-str '("::" "rem" "REM")))
 
 (defun tree-sitter-fold-summary-csharp-vsdoc (doc-str)
-  "Extract C# vsdoc summary from DOC-STR."
+  "Extract summary from DOC-STR in C# vsdoc."
   (let ((type-triple (string-match-p "///" doc-str)))
     (setq doc-str (s-replace-regexp "<[/]*[^>]+." "" doc-str))
     (tree-sitter-fold-summary--generic doc-str (if type-triple "///" "//"))))
 
 (defun tree-sitter-fold-summary-csharp (doc-str)
-  "Extract summary for C# from DOC-STR."
+  "Extract summary from DOC-STR in C#."
   (cond ((string-match-p "///" doc-str)
          (tree-sitter-fold-summary-csharp-vsdoc doc-str))
         (t (tree-sitter-fold-summary-javadoc doc-str))))
 
 (defun tree-sitter-fold-summary-javadoc (doc-str)
-  "Extract javadoc summary from DOC-STR."
+  "Extract summary from DOC-STR in Javadoc."
   (tree-sitter-fold-summary--generic doc-str "*"))
 
 (defun tree-sitter-fold-summary-go (doc-str)
-  "Extract Go document summary from DOC-STR."
+  "Extract summary from DOC-STR in Go."
   (tree-sitter-fold-summary--generic doc-str "//"))
 
 (defun tree-sitter-fold-summary-lua-doc (doc-str)
-  "Extract Lua document string from DOC-STR."
+  "Extract summary from DOC-STR in Lua."
   (tree-sitter-fold-summary--generic doc-str "--"))
 
 (defun tree-sitter-fold-summary-python-doc (doc-str)
-  "Extract Python document string from DOC-STR."
+  "Extract summary from DOC-STR in Python."
   (tree-sitter-fold-summary--generic doc-str "\"\"\""))
 
 (defun tree-sitter-fold-summary-ruby-doc (doc-str)
-  "Extract Ruby document string from DOC-STR."
+  "Extract summary from DOC-STR in Ruby."
   (tree-sitter-fold-summary--generic doc-str "#"))
 
 (defun tree-sitter-fold-summary-rust-doc (doc-str)
-  "Extract Rust document summary from DOC-STR."
+  "Extract summary from DOC-STR in Rust."
   (tree-sitter-fold-summary--generic doc-str "///"))
 
 (defun tree-sitter-fold-summary-c-macro (doc-str)
@@ -144,17 +144,21 @@ type of content by checking the word boundary's existence."
     (tree-sitter-fold-summary--doc-extract doc-str "")))
 
 (defun tree-sitter-fold-summary-c (doc-str)
-  "Summary parser for C from DOC-STR."
+  "Extract summary from DOC-STR in C comment."
   (or (tree-sitter-fold-summary-javadoc doc-str)
       (tree-sitter-fold-summary-c-macro doc-str)))
 
 (defun tree-sitter-fold-summary-markdown (doc-str)
-  "Extract Makrdown block from DOC-STR."
+  "Extract summary from DOC-STR in Markdown block."
   (tree-sitter-fold-summary--doc-extract doc-str '()))
 
 (defun tree-sitter-fold-summary-org (doc-str)
-  "Extract Org block from DOC-STR."
+  "Extract summary from DOC-STR in Org block."
   (tree-sitter-fold-summary--doc-extract doc-str '()))
+
+(defun tree-sitter-fold-summary-xml (doc-str)
+  "Extract summary from DOC-STR in XML."
+  (tree-sitter-fold-summary--generic doc-str "-"))
 
 ;;
 ;; (@* "Core" )
@@ -196,6 +200,7 @@ type of content by checking the word boundary's existence."
     (c++-mode          . tree-sitter-fold-summary-c)
     (csharp-mode       . tree-sitter-fold-summary-csharp)
     (go-mode           . tree-sitter-fold-summary-go)
+    (html-mode         . tree-sitter-fold-summary-xml)
     (java-mode         . tree-sitter-fold-summary-javadoc)
     (javascript-mode   . tree-sitter-fold-summary-javadoc)
     (js-mode           . tree-sitter-fold-summary-javadoc)
@@ -214,7 +219,8 @@ type of content by checking the word boundary's existence."
     (scala-mode        . tree-sitter-fold-summary-javadoc)
     (sh-mode           . tree-sitter-fold-summary-javadoc)
     (swift-mode        . tree-sitter-fold-summary-c)
-    (typescript-mode   . tree-sitter-fold-summary-javadoc))
+    (typescript-mode   . tree-sitter-fold-summary-javadoc)
+    (nxml-mode         . tree-sitter-fold-summary-xml))
   "Alist mapping major-mode to doc parser function."
   :type 'hook
   :group 'tree-sitter-fold)
