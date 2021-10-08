@@ -168,21 +168,23 @@
     (overlay-put ov 'creator 'tree-sitter-fold-indicators)
     ov))
 
-(defun tree-sitter-fold-indicators--create-overlays (beg end show)
-  "Return a list of indicator overlays.
+(defun tree-sitter-fold-indicators--create-overlays (beg end folded)
+  "Create indicators overlays in range of BEG to END.
 
-Argument BEG and END are range to create indicators.  Argument SHOW is the flag
-defined folded region."
+If argument FOLDED is non-nil, means the region is close/hidden (overlay
+is created); this is used to determie what indicators' bitmap to use."
   (let (ov-lst)
     (save-excursion
       (goto-char beg)
       (while (and (<= (line-beginning-position) end) (not (eobp)))
         (push (tree-sitter-fold-indicators--create-overlay-at-point) ov-lst)
         (forward-line 1)))
-    (tree-sitter-fold-indicators--update-overlays (reverse ov-lst) show)))
+    (tree-sitter-fold-indicators--update-overlays (reverse ov-lst) folded)))
 
 (defun tree-sitter-fold-indicators--get-priority (bitmap)
-  "Get priority by BITMAP."
+  "Return the priority integer depends on the type of the BITMAP.
+
+This is a static/constant method."
   (let ((prior tree-sitter-fold-indicators-priority))
     (cl-case bitmap
       (tree-sitter-fold-indicators-fr-plus (+ prior 2))
@@ -191,27 +193,31 @@ defined folded region."
       (tree-sitter-fold-indicators-fr-end-right (+ prior 1))
       (t prior))))
 
-(defun tree-sitter-fold-indicators--get-string (show ov bitmap)
-  "Return the string properties for OV by SHOW and BITMAP."
+(defun tree-sitter-fold-indicators--get-string (folded ov bitmap)
+  "Return a string or nil for indicators overlay (OV).
+
+If argument FOLDED is nil, it must return a string so all indicators are shown
+in range.  Otherwise, we should only return string only when BITMAP is the
+head (first line) of the region."
   (let* ((face (or (and (functionp tree-sitter-fold-indicators-face-function)
                         (funcall tree-sitter-fold-indicators-face-function (overlay-start ov)))
                    'tree-sitter-fold-fringe-face))
          (str (propertize "." 'display `(,tree-sitter-fold-indicators-fringe ,bitmap ,face))))
-    (if show str
+    (if (not folded) str
       (cl-case bitmap
-        (tree-sitter-fold-indicators-fr-plus str)
+        (tree-sitter-fold-indicators-fr-plus str)  ; return string only in head
         (tree-sitter-fold-indicators-fr-minus-tail nil)
         (tree-sitter-fold-indicators-fr-end-left nil)
         (tree-sitter-fold-indicators-fr-end-right nil)
         (t nil)))))
 
-(defun tree-sitter-fold-indicators--active-ov (show ov bitmap)
+(defun tree-sitter-fold-indicators--active-ov (folded ov bitmap)
   "SHOW the indicator OV with BITMAP."
   (when (overlayp ov)
-    (overlay-put ov 'tree-sitter-fold-indicators-active show)
+    (overlay-put ov 'tree-sitter-fold-indicators-active folded)
     (overlay-put ov 'type bitmap)
     (overlay-put ov 'priority (tree-sitter-fold-indicators--get-priority bitmap))
-    (overlay-put ov 'before-string (tree-sitter-fold-indicators--get-string show ov bitmap))))
+    (overlay-put ov 'before-string (tree-sitter-fold-indicators--get-string folded ov bitmap))))
 
 (defun tree-sitter-fold-indicators--get-end-fringe ()
   "Return end fringe bitmap according to variable `tree-sitter-fold-indicators-fringe'."
@@ -220,7 +226,7 @@ defined folded region."
     (right-fringe 'tree-sitter-fold-indicators-fr-end-right)
     (t (user-error "Invalid indicators fringe type: %s" tree-sitter-fold-indicators-fringe))))
 
-(defun tree-sitter-fold-indicators--update-overlays (ov-lst show)
+(defun tree-sitter-fold-indicators--update-overlays (ov-lst folded)
   "SHOW indicators overlays OV-LST."
   (when-let* ((len (length ov-lst))
               ((> len 1))
@@ -229,12 +235,12 @@ defined folded region."
               (last-ov (nth len-1 ov-lst))
               (index 1))
     (tree-sitter-fold-indicators--active-ov
-     show first-ov
-     (if show 'tree-sitter-fold-indicators-fr-minus-tail
-       'tree-sitter-fold-indicators-fr-plus))
-    (tree-sitter-fold-indicators--active-ov show last-ov (tree-sitter-fold-indicators--get-end-fringe))
+     folded first-ov
+     (if folded 'tree-sitter-fold-indicators-fr-plus
+       'tree-sitter-fold-indicators-fr-minus-tail))
+    (tree-sitter-fold-indicators--active-ov folded last-ov (tree-sitter-fold-indicators--get-end-fringe))
     (while (< index len-1)
-      (tree-sitter-fold-indicators--active-ov show (nth index ov-lst) 'tree-sitter-fold-indicators-fr-center)
+      (tree-sitter-fold-indicators--active-ov folded (nth index ov-lst) 'tree-sitter-fold-indicators-fr-center)
       (cl-incf index)))
   ov-lst)
 
@@ -243,11 +249,11 @@ defined folded region."
 ;;
 
 (defun tree-sitter-fold-indicators--create (node)
-  "Create indicators with NODE."
+  "Create indicators using NODE."
   (when-let* ((range (tree-sitter-fold--get-fold-range node))
               (beg (car range)) (end (cdr range)))
-    (let ((show (not (tree-sitter-fold-overlay-at node))))
-      (tree-sitter-fold-indicators--create-overlays beg end show))))
+    (let ((folded (tree-sitter-fold-overlay-at node)))
+      (tree-sitter-fold-indicators--create-overlays beg end folded))))
 
 ;;;###autoload
 (defun tree-sitter-fold-indicators-refresh (&rest _)
