@@ -129,8 +129,26 @@ with this plugin.
 This plugin automatically extract summary from the comment/document string,
 so you can have a nice way to peek what's inside the fold range.
 
-If you don't want this to happens, do: (Default is `t`)
+If you don't want this to happen, do: (Default is `t`)
 
 ```el
 (setq tree-sitter-fold-summary-show nil)
+```
+
+Summary are truncated by length: (Default is `60`)
+
+```el
+(setq tree-sitter-fold-summary-max-length 60)
+```
+
+The exceeding string are replace by: (Default is `"..."`)
+
+```el
+(setq tree-sitter-fold-summary-exceeded-string "...")
+```
+
+To change summary format: (Default is `" <S> %s "`)
+
+```el
+(setq tree-sitter-fold-summary-format " <S> %s ")
 ```
