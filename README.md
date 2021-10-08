@@ -89,7 +89,7 @@ has an excellent documentation on how to write `tree-sitter` queries.
 ## ⚖️ Indicators Mode
 
 <p align="center">
-  <img src="./etc/indicators.png" width="80%" height="80%"/>
+  <img src="./etc/indicators.png" width="40%" height=480%"/>
 </p>
 
 You can enable this manually by doing the folloiwng
