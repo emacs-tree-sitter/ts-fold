@@ -8,6 +8,8 @@
 tree-sitter-fold builds on top of [elisp-tree-sitter](https://github.com/emacs-tree-sitter/elisp-tree-sitter)
 to provide code folding base on the tree-sitter syntax tree.
 
+![screenshot](./etc/screenshot.png)
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
