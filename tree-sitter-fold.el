@@ -436,6 +436,13 @@ more information."
               (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
+(defun tree-sitter-fold-range-html (node offset)
+  "Define fold range for tag in HTML."
+  (let* ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+         (end-node (tsc-get-nth-child node (1- (tsc-count-children node))))
+         (end (tsc-node-start-position end-node)))
+    (tree-sitter-fold-util--cons-add (cons beg end) offset)))
+
 (defun tree-sitter-fold-range-python (node offset)
   "Define fold range for `function_definition' and `class_definition'.
 

@@ -9,7 +9,7 @@ tree-sitter-fold builds on top of [elisp-tree-sitter](https://github.com/emacs-t
 to provide code folding base on the tree-sitter syntax tree.
 
 <p align="center">
-  <img src="./etc/screenshot.png" width="80%" height="80%"/>
+<img src="./etc/screenshot.png" width="80%" height="80%"/>
 </p>
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
@@ -67,6 +67,7 @@ then in Emacs:
 * Bash
 * C / C++ / C# / CSS
 * Go
+* HTML
 * Java / JavaScript / JSX / JSON
 * Nix
 * PHP / Python
@@ -77,8 +78,7 @@ then in Emacs:
 > These languages are in development:
 
 * Agda
-* HTML
-* XML
+* XML (upstream)
 
 ## 🔰 Contribution
 
@@ -90,7 +90,7 @@ has an excellent documentation on how to write `tree-sitter` queries.
 ## ⚖️ Indicators Mode
 
 <p align="center">
-  <img src="./etc/indicators.png" width="40%" height=480%"/>
+<img src="./etc/indicators.png" width="40%" height=480%"/>
 </p>
 
 You can enable this manually by doing the folloiwng
@@ -135,7 +135,7 @@ with this plugin.
 ## 📝 Summary
 
 <p align="center">
-  <img src="./etc/summary.gif" width="80%" height="80%"/>
+<img src="./etc/summary.gif" width="80%" height="80%"/>
 </p>
 
 This plugin automatically extract summary from the comment/document string,

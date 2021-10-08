@@ -44,6 +44,7 @@
 (declare-function tree-sitter-fold-range-c-preproc-if "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-elif "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-c-preproc-else "tree-sitter-fold.el")
+(declare-function tree-sitter-fold-range-html "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-python "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-ruby "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-rust-macro "tree-sitter-fold.el")
@@ -109,9 +110,8 @@
 
 (defun tree-sitter-fold-parsers-html ()
   "Rule sets for HTML."
-  '((style_start_tag  . tree-sitter-fold-range-seq)
-    (script_start_tag . tree-sitter-fold-range-seq)
-    (comment          . (tree-sitter-fold-range-seq 1 -1))))
+  '((element . tree-sitter-fold-range-html)
+    (comment . (tree-sitter-fold-range-seq 1 -1))))
 
 (defun tree-sitter-fold-parsers-java ()
   "Rule sets for Java."
