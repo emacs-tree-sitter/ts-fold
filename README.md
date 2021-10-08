@@ -89,7 +89,7 @@ has an excellent documentation on how to write `tree-sitter` queries.
 ## ⚖️ Indicators Mode
 
 <p align="center">
-  <img src="./etc/indicators-mode.gif" width="80%" height="80%"/>
+  <img src="./etc/indicators.png" width="80%" height="80%"/>
 </p>
 
 You can enable this manually by doing the folloiwng
@@ -132,6 +132,10 @@ with this plugin.
 ```
 
 ## 📝 Summary
+
+<p align="center">
+  <img src="./etc/summary.gif" width="80%" height="80%"/>
+</p>
 
 This plugin automatically extract summary from the comment/document string,
 so you can have a nice way to peek what's inside the fold range.
