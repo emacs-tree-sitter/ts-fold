@@ -25,14 +25,14 @@ to provide code folding base on the tree-sitter syntax tree.
 
 ## 💾 Installation
 
-### Methods 1. with `straight.el` and `use-package`:
+### 🔍 Methods 1. with `straight.el` and `use-package`:
 
 ```el
 (use-package tree-sitter-fold
   :straight (host github repo "jcs090218/tree-sitter-fold"))
 ```
 
-### Methods 2. Manual
+### 🔍 Methods 2. Manual
 
 ```sh
 git clone https://github.com/jcs090218/tree-sitter-fold /path/to/lib
