@@ -41,6 +41,7 @@
 (require 'seq)
 (require 'subr-x)
 
+(require 's)
 (require 'tree-sitter)
 
 (require 'tree-sitter-fold-util)
@@ -333,10 +334,6 @@ If the current syntax node is not foldable, do nothing."
 ;; (@* "Rule Helpers" )
 ;;
 
-(defun tree-sitter-fold--multi-line (node)
-  "Return t, if content NODE is single line."
-  (string-match-p "\n" (tsc-node-text node)))
-
 (defun tree-sitter-fold--next-prev-node (node next)
   "Return previous/next sibling node starting from NODE.
 
@@ -349,14 +346,18 @@ then return the last iterated node.
 
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
-  (let ((iter-node (tree-sitter-fold--next-prev-node node next)) (last-node node)
-        (last-line (car (tsc-node-start-point node))) line text break)
+  (let ((iter-node node) (last-node node)
+        (last-line (car (tsc-node-start-point node))) line text break
+        (line-range 1) (last-line-range 1) max-line-range)
     (while (and iter-node (not break))
       (setq text (tsc-node-text iter-node)
-            line (car (tsc-node-start-point iter-node)))
-      (if (and (tree-sitter-fold-util--in-range-p line (1- last-line) (1+ last-line))
+            line (car (tsc-node-start-point iter-node))
+            line-range (1+ (s-count-matches "\n" text))
+            max-line-range (max line-range last-line-range))
+      (if (and (tree-sitter-fold-util--in-range-p line (- last-line max-line-range) (+ last-line max-line-range))
                (string-prefix-p prefix text))
-          (setq last-node iter-node last-line line)
+          (setq last-node iter-node last-line line
+                last-line-range (1+ (s-count-matches "\n" text)))
         (setq break t))
       (setq iter-node (tree-sitter-fold--next-prev-node iter-node next)))
     last-node))
@@ -392,11 +393,12 @@ more information."
 
 (defun tree-sitter-fold-range-c-like-comment (node offset)
   "Define fold range for C-like comemnt."
-  (if (tree-sitter-fold--multi-line node)
-      (tree-sitter-fold-range-block-comment node offset)
-    (if (string-prefix-p "///" (tsc-node-text node))
-        (tree-sitter-fold-range-line-comment node offset "///")
-      (tree-sitter-fold-range-line-comment node offset "//"))))
+  (let ((text (tsc-node-text node)))
+    (if (and (string-match-p "\n" text) (string-prefix-p "/*" text))
+        (tree-sitter-fold-range-block-comment node offset)
+      (if (string-prefix-p "///" text)
+          (tree-sitter-fold-range-line-comment node offset "///")
+        (tree-sitter-fold-range-line-comment node offset "//")))))
 
 ;;
 ;; (@* "Languages" )
