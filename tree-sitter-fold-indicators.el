@@ -234,11 +234,14 @@ head (first line) of the region."
               (first-ov (nth 0 ov-lst))
               (last-ov (nth len-1 ov-lst))
               (index 1))
+    ;; Head
     (tree-sitter-fold-indicators--active-ov
      folded first-ov
      (if folded 'tree-sitter-fold-indicators-fr-plus
        'tree-sitter-fold-indicators-fr-minus-tail))
+    ;; Last
     (tree-sitter-fold-indicators--active-ov folded last-ov (tree-sitter-fold-indicators--get-end-fringe))
+    ;; In between `head' and `last'
     (while (< index len-1)
       (tree-sitter-fold-indicators--active-ov folded (nth index ov-lst) 'tree-sitter-fold-indicators-fr-center)
       (cl-incf index)))
