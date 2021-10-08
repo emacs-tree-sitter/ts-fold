@@ -82,6 +82,20 @@ To enable this automatically whenever `tree-sitter-mode` is enabled:
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-fold-indicators-mode)
 ```
 
+To switch to `right-frange`: (Default is `left-fringe`)
+
+```el
+(setq tree-sitter-fold-indicators-fringe 'right-fringe)
+```
+
+To lower/higher the fringe overlays: (Default is `30`)
+
+```el
+(setq tree-sitter-fold-indicators-priority 30)
+```
+
+<!-- TODO: .. -->
+
 ## Summary
 
 This plugin automatically extract summary from the comment/document string,
