@@ -454,13 +454,11 @@ more information."
 
 For arguments NODE and OFFSET, see function `tree-sitter-fold-range-seq' for
 more information."
-  (let* ((named-node (tsc-get-child-by-field node :name))
-         (parameters-node (tsc-get-child-by-field node :parameters))
-         (end-node (tsc-get-child-by-field node :end))
-         (beg (tsc-node-end-position parameters-node))
-         (end 0))
-    ;; TODO: ..
-    (jcs-print ">" end-node)
+  (when-let* ((named-node (or (tsc-get-child-by-field node :superclass)
+                              (tsc-get-child-by-field node :parameters)
+                              (tsc-get-child-by-field node :name)))
+              (beg (tsc-node-end-position named-node))
+              (end (tsc-node-end-position node)))
     (tree-sitter-fold-util--cons-add (cons beg end) offset)))
 
 (defun tree-sitter-fold-range-rust-macro (node offset)

@@ -171,9 +171,12 @@
 
 (defun tree-sitter-fold-parsers-ruby ()
   "Rule sets for Ruby."
-  '((method  . tree-sitter-fold-range-ruby-method)
-    (comment . (lambda (node offset)
-                 (tree-sitter-fold-range-line-comment node offset "#")))))
+  '((class  . tree-sitter-fold-range-ruby-method)
+    (method . tree-sitter-fold-range-ruby-method)
+    (array  . tree-sitter-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (tree-sitter-fold-range-line-comment node offset "#")))))
 
 (defun tree-sitter-fold-parsers-rust ()
   "Rule sets for Rust."
