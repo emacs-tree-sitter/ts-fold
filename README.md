@@ -82,7 +82,7 @@ To enable this automatically whenever `tree-sitter-mode` is enabled:
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-fold-indicators-mode)
 ```
 
-To switch to `right-frange`: (Default is `left-fringe`)
+To switch to left/right fringe: (Default is `left-fringe`)
 
 ```el
 (setq tree-sitter-fold-indicators-fringe 'right-fringe)
@@ -94,7 +94,20 @@ To lower/higher the fringe overlays: (Default is `30`)
 (setq tree-sitter-fold-indicators-priority 30)
 ```
 
-<!-- TODO: .. -->
+To apply different face depends on some conditions: (Default is `nil`)
+
+For example, to coordinate [line-reminder](https://github.com/emacs-vs/line-reminder)
+with this plugin.
+
+```el
+(setq tree-sitter-fold-indicators-face-function
+      (lambda (pos &rest _)
+        (let ((ln (line-number-at-pos pos)))
+          (cond
+           ((memq ln line-reminder--change-lines) 'line-reminder-modified-sign-face)
+           ((memq ln line-reminder--saved-lines) 'line-reminder-saved-sign-face)
+           (t nil)))))
+```
 
 ## Summary
 
