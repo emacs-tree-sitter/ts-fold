@@ -61,7 +61,7 @@ then in Emacs:
 * HTML
 * Ruby
 
-## Contribution
+## 🔰 Contribution
 
 Enable `tree-sitter-mode` first, then `tree-sitter-query-builder` is useful to test
 out queries that determine what syntax nodes should be foldable and how to fold
