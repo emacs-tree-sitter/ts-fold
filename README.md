@@ -68,7 +68,7 @@ out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
 
-## Indicators Mode
+## ⚖️ Indicators Mode
 
 You can enable this manually by doing the folloiwng
 
@@ -109,7 +109,7 @@ with this plugin.
            (t nil)))))
 ```
 
-## Summary
+## 📝 Summary
 
 This plugin automatically extract summary from the comment/document string,
 so you can have a nice way to peek what's inside the fold range.
