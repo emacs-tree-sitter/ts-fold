@@ -88,6 +88,10 @@ has an excellent documentation on how to write `tree-sitter` queries.
 
 ## ⚖️ Indicators Mode
 
+<p align="center">
+  <img src="./etc/indicators-mode.gif" width="80%" height="80%"/>
+</p>
+
 You can enable this manually by doing the folloiwng
 
 ```
