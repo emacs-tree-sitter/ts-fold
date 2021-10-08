@@ -58,7 +58,10 @@
 (defun tree-sitter-fold-parsers-bash ()
   "Rule sets for Bash."
   '((compound_statement . tree-sitter-fold-range-seq)
-    (expansion          . tree-sitter-fold-range-seq)))
+    (expansion          . tree-sitter-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (tree-sitter-fold-range-line-comment node offset "#")))))
 
 (defun tree-sitter-fold-parsers-c ()
   "Rule sets for C."
