@@ -76,7 +76,7 @@ You can enable this manually by doing the folloiwng
 M-x tree-sitter-fold-indicators-mode
 ```
 
-To enable this automatically whenever `tree-sitter-mode' is enabled:
+To enable this automatically whenever `tree-sitter-mode` is enabled:
 
 ```el
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-fold-indicators-mode)
