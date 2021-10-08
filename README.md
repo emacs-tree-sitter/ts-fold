@@ -8,7 +8,9 @@
 tree-sitter-fold builds on top of [elisp-tree-sitter](https://github.com/emacs-tree-sitter/elisp-tree-sitter)
 to provide code folding base on the tree-sitter syntax tree.
 
-![screenshot](./etc/screenshot.png)
+<p align="center">
+  <img src="./etc/screenshot.png" width="80%" height="80%"/>
+</p>
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
