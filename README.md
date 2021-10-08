@@ -67,3 +67,28 @@ Enable `tree-sitter-mode` first, then `tree-sitter-query-builder` is useful to t
 out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
+
+## Indicators Mode
+
+You can enable this manually by doing the folloiwng
+
+```
+M-x tree-sitter-fold-indicators-mode
+```
+
+To enable this automatically whenever `tree-sitter-mode' is enabled:
+
+```el
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-fold-indicators-mode)
+```
+
+## Summary
+
+This plugin automatically extract summary from the comment/document string,
+so you can have a nice way to peek what's inside the fold range.
+
+If you don't want this to happens, do: (Default is `t`)
+
+```el
+(setq tree-sitter-fold-summary-show nil)
+```
