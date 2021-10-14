@@ -77,7 +77,7 @@
   "...XX..." "...XX..." "...XX..." "...XX..." "...XX..."
   "...XX..." "...XX..." "...XX..." "...XX..." "...XX..."
   "...XX..." "...XX..." "...XX..." "...XX..." "...XX..."
-  "...XX...")
+  "...XX..." "...XX..." "...XX...")
 
 (fringe-helper-define 'tree-sitter-fold-indicators-fr-end-left nil
   "...XX..." "...XX..." "...XX..." "...XX..." "...XX..."
