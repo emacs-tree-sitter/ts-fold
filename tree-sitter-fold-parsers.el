@@ -101,7 +101,8 @@
 (defun tree-sitter-fold-parsers-css ()
   "Rule sets for CSS."
   '((keyframe_block_list . tree-sitter-fold-range-seq)
-    (block               . tree-sitter-fold-range-seq)))
+    (block               . tree-sitter-fold-range-seq)
+    (comment             . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-go ()
   "Rule sets for Go."

@@ -199,6 +199,7 @@ type of content by checking the word boundary's existence."
     (c-mode            . tree-sitter-fold-summary-c)
     (c++-mode          . tree-sitter-fold-summary-c)
     (csharp-mode       . tree-sitter-fold-summary-csharp)
+    (css-mode          . tree-sitter-fold-summary-javadoc)
     (go-mode           . tree-sitter-fold-summary-go)
     (html-mode         . tree-sitter-fold-summary-xml)
     (java-mode         . tree-sitter-fold-summary-javadoc)
