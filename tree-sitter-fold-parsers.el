@@ -33,8 +33,6 @@
 ;; (@* "Externals" )
 ;;
 
-(declare-function tree-sitter-fold--multi-line "tree-sitter-fold.el")
-
 (declare-function tree-sitter-fold-range-seq "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-line-comment "tree-sitter-fold.el")
 (declare-function tree-sitter-fold-range-block-comment "tree-sitter-fold.el")
@@ -199,11 +197,7 @@
   '((import_selectors . tree-sitter-fold-range-seq)
     (template_body    . tree-sitter-fold-range-seq)
     (block            . tree-sitter-fold-range-seq)
-    (comment
-     . (lambda (node offset)
-         (if (tree-sitter-fold--multi-line node)
-             (tree-sitter-fold-range-block-comment node offset)
-           (tree-sitter-fold-range-line-comment node offset "///"))))))
+    (comment          . tree-sitter-fold-range-c-like-comment)))
 
 (defun tree-sitter-fold-parsers-swift ()
   "Rule sets for Swift."
