@@ -1,13 +1,13 @@
 (source gnu)
 (source melpa)
 
-(package-file "tree-sitter-fold.el")
+(package-file "ts-fold.el")
 
 (files
- "tree-sitter-fold.el"
- "tree-sitter-fold-parsers.el"
- "tree-sitter-fold-summary.el"
- "tree-sitter-fold-indicators.el"
- "tree-sitter-fold-util.el")
+ "ts-fold.el"
+ "ts-fold-parsers.el"
+ "ts-fold-summary.el"
+ "ts-fold-indicators.el"
+ "ts-fold-util.el")
 
 (depends-on "tree-sitter")

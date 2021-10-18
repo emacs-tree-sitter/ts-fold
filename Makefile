@@ -3,9 +3,9 @@ SHELL := /usr/bin/env bash
 EMACS ?= emacs
 CASK ?= cask
 
-PKG-FILES := tree-sitter-fold.el
+PKG-FILES := ts-fold.el
 
-TEST-FILES := $(shell ls test/tree-sitter-fold-*.el)
+TEST-FILES := $(shell ls test/ts-fold-*.el)
 
 .PHONY: clean checkdoc lint unix-build unix-compile	unix-test
 
