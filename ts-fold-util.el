@@ -1,4 +1,4 @@
-;;; tree-sitter-fold-util.el --- Utility module  -*- lexical-binding: t; -*-
+;;; ts-fold-util.el --- Utility module  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shen, Jen-Chieh
 ;; Created date 2021-10-04 20:19:42
@@ -29,7 +29,7 @@
 ;; (@* "Cons" )
 ;;
 
-(defun tree-sitter-fold-util--cons-add (c1 c2)
+(defun ts-fold-util--cons-add (c1 c2)
   "Addition for two cons C1 and C2."
   (cons (+ (car c1) (car c2)) (+ (cdr c1) (cdr c2))))
 
@@ -37,7 +37,7 @@
 ;; (@* "Overlay" )
 ;;
 
-(defun tree-sitter-fold-util--overlays-in (prop name &optional beg end)
+(defun ts-fold-util--overlays-in (prop name &optional beg end)
   "Return overlays with PROP of NAME, from region BEG to END."
   (unless beg (setq beg (point-min))) (unless end (setq end (point-max)))
   (let ((lst '()) (ovs (overlays-in beg end)))
@@ -50,7 +50,7 @@
 ;; (@* "Face" )
 ;;
 
-(defvar tree-sitter-fold-util--doc-faces
+(defvar ts-fold-util--doc-faces
   '(font-lock-doc-face
     font-lock-comment-face
     font-lock-comment-delimiter-face
@@ -59,32 +59,32 @@
     hl-todo)
   "List of face that apply for document string.")
 
-(defun tree-sitter-fold-util--get-face (obj trim)
+(defun ts-fold-util--get-face (obj trim)
   "Return face name from OBJ.
 If argument TRIM is non-nil, trim the OBJ."
   (get-text-property 0 'face (if trim (string-trim obj) obj)))
 
-(defun tree-sitter-fold-util--is-face (obj lst-face &optional trim)
+(defun ts-fold-util--is-face (obj lst-face &optional trim)
   "Return non-nil if OBJ's face is define inside list LST-FACE.
-Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
+Optional argument TRIM, see function `ts-fold-util--get-face'."
   (unless (listp lst-face) (setq lst-face (list lst-face)))
-  (let ((faces (tree-sitter-fold-util--get-face obj trim)))
+  (let ((faces (ts-fold-util--get-face obj trim)))
     (cond ((listp faces)
            (cl-some (lambda (face) (memq face lst-face)) faces))
           (t (memq faces lst-face)))))
 
-(defun tree-sitter-fold-util--doc-faces-p (obj &optional trim)
-  "Return non-nil if face at OBJ is within `tree-sitter-fold-util--doc-faces' list.
-Optional argument TRIM, see function `tree-sitter-fold-util--get-face'."
-  (tree-sitter-fold-util--is-face obj tree-sitter-fold-util--doc-faces trim))
+(defun ts-fold-util--doc-faces-p (obj &optional trim)
+  "Return non-nil if face at OBJ is within `ts-fold-util--doc-faces' list.
+Optional argument TRIM, see function `ts-fold-util--get-face'."
+  (ts-fold-util--is-face obj ts-fold-util--doc-faces trim))
 
 ;;
 ;; (@* "Math" )
 ;;
 
-(defun tree-sitter-fold-util--in-range-p (in-val in-min in-max)
+(defun ts-fold-util--in-range-p (in-val in-min in-max)
   "Check to see if IN-VAL is between IN-MIN and IN-MAX."
   (and (<= in-min in-val) (<= in-val in-max)))
 
-(provide 'tree-sitter-fold-util)
-;;; tree-sitter-fold-util.el ends here
+(provide 'ts-fold-util)
+;;; ts-fold-util.el ends here
