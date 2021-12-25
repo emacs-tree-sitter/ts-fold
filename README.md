@@ -83,7 +83,10 @@ then in Emacs:
 * Emacs Lisp
 * XML (upstream)
 
-## 🔰 Contribution
+## 🔰 Contribute
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Elisp styleguide](https://img.shields.io/badge/elisp-style%20guide-purple)](https://github.com/bbatsov/emacs-lisp-style-guide)
 
 Enable `tree-sitter-mode` first, then `tree-sitter-query-builder` is useful to test
 out queries that determine what syntax nodes should be foldable and how to fold
