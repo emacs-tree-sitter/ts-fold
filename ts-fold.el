@@ -147,6 +147,7 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
   (when (bound-and-true-p evil-fold-list)
     (add-to-list 'evil-fold-list
                  '((ts-fold-mode)
+		   :toggle ts-fold-toggle
                    :open ts-fold-open
                    :close ts-fold-close
                    :open-rec ts-fold-open-recursively
