@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-    unix-test:
+    test-unix:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -36,7 +36,7 @@ jobs:
               run:
                 make ci
 
-    windows-test:
+    test-windows:
         runs-on: windows-latest
         strategy:
             matrix:
