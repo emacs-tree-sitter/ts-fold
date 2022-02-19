@@ -33,7 +33,7 @@ jobs:
 
             - name: Run tests
               run:
-                make unix-ci
+                make ci
 
     windows-test:
         runs-on: windows-latest
@@ -61,4 +61,4 @@ jobs:
 
             - name: Run tests
               run:
-                make windows-ci
+                make ci
