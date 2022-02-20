@@ -99,8 +99,9 @@
     (c          . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
                    "block.outer" "comment.outer" "statement.inner"))
     (c-sharp    . ("class.inner" "function.inner" "loop.inner" "conditional.inner"
-                   "block.inner"))
-    (cpp        . ())
+                   "block.inner" "comment.outer"))
+    (cpp        . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
+                   "block.outer" "comment.outer" "statement.inner"))
     (go         . ())
     (html       . ())
     (java       . ())
