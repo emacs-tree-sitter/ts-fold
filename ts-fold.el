@@ -95,27 +95,23 @@
   (setf (map-elt ts-fold-major-mode-language-alist major-mode) lang-symbol))
 
 (defcustom ts-fold-groups-alist
-  '((sh-mode           . ())
-    (shell-script-mode . ())
-    (c-mode            . ())
-    (csharp-mode       . ("class.inner" "function .inner" "loop .inner" "conditional .inner" "block.inner"))
-    (c++-mode          . ())
-    (go-mode           . ())
-    (html-mode         . ())
-    (java-mode         . ())
-    (javascript-mode   . ())
-    (js-mode           . ())
-    (js2-mode          . ())
-    (js3-mode          . ())
-    (julia-mode        . ())
-    (php-mode          . ())
-    (python-mode       . ())
-    (rjsx-mode         . ())
-    (ruby-mode         . ())
-    (rust-mode         . ())
-    (rustic-mode       . ())
-    (typescript-mode   . ()))
-  ""
+  '((bash       . ("function.inner" "conditional.inner" "loop.inner" "comment.outer"))
+    (c          . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
+                   "block.outer" "comment.outer" "statement.inner"))
+    (c-sharp    . ("class.inner" "function.inner" "loop.inner" "conditional.inner"
+                   "block.inner"))
+    (cpp        . ())
+    (go         . ())
+    (html       . ())
+    (java       . ())
+    (javascript . ())
+    (julia      . ())
+    (php        . ())
+    (python     . ())
+    (ruby       . ())
+    (rust       . ())
+    (typescript . ()))
+  "Alist of language symbol and groups."
   :type 'list
   :group 'ts-fold)
 
@@ -300,7 +296,8 @@ instead of the builtin query set."
 (defun ts-fold--get-fold-range ()
   "Return fold range."
   (when-let* ((pt (point))
-              (groups (alist-get major-mode ts-fold-groups-alist))
+              (lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
+              (groups (alist-get (intern lang-name) ts-fold-groups-alist))
               (interned-groups (mapcar #'intern groups))
               (range (ts-fold--range 1 interned-groups)))
     (when (and (<= (car range) pt) (<= pt (cdr range)))
@@ -379,9 +376,9 @@ If the current node is not folded or not foldable, do nothing."
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (beg (tsc-node-start-position node))
-                (end (tsc-node-end-position node)))
+    (when-let* ((range (ts-fold--get-fold-range))
+                (beg (car range))
+                (end (cdr range)))
       (thread-last (overlays-in beg end)
         (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
         (mapc #'delete-overlay)))))
@@ -391,6 +388,7 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
+    ;; TODO: ..
     (let* ((node (tsc-root-node tree-sitter-tree))
            (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
                                  (alist-get major-mode ts-fold-foldable-node-alist)
