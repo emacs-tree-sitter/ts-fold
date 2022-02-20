@@ -1,6 +1,6 @@
 ;;; ts-fold-indicators.el --- Display indicators for folding range  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 ;; Created date 2021-10-04 20:03:12
 
 ;; This file is NOT part of GNU Emacs.
@@ -93,6 +93,10 @@
   "........" "........" "........" "........" "........"
   "........" "........" "........" "........" "........")
 
+(defun ts-fold--after-command (&rest _)
+  "Function call after interactive commands."
+  (ts-fold-indicators-refresh))
+
 ;;
 ;; (@* "Entry" )
 ;;
@@ -108,12 +112,16 @@
   "Enable `ts-fold-indicators' mode."
   (if (ts-fold-mode 1)  ; Enable `ts-fold-mode' automatically
       (progn
+        (dolist (cmd ts-fold-interactive-commands)
+          (advice-add cmd :after #'ts-fold--after-command))
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
+  (dolist (cmd ts-fold-interactive-commands)
+    (advice-remove cmd #'ts-fold--after-command))
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
   (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
   (ts-fold-indicators--remove-overlays))

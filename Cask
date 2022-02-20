@@ -5,7 +5,6 @@
 
 (files
  "ts-fold.el"
- "ts-fold-parsers.el"
  "ts-fold-summary.el"
  "ts-fold-indicators.el"
  "ts-fold-util.el")
