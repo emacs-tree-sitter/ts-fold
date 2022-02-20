@@ -261,10 +261,12 @@ head (first line) of the region."
 
 (defun ts-fold-indicators--create (node)
   "Create indicators using NODE."
-  (when-let* ((range (ts-fold--get-fold-range node))
-              (beg (car range)) (end (cdr range)))
-    (let ((folded (ts-fold-overlay-at node)))
-      (ts-fold-indicators--create-overlays beg end folded))))
+  ;; TODO:
+  ;; (when-let* ((range (ts-fold--get-fold-range node))
+  ;;             (beg (car range)) (end (cdr range)))
+  ;;   (let ((folded (ts-fold-overlay-at node)))
+  ;;     (ts-fold-indicators--create-overlays beg end folded)))
+  )
 
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)

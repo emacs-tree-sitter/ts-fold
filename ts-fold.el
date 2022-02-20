@@ -98,7 +98,7 @@
   '((sh-mode           . ())
     (shell-script-mode . ())
     (c-mode            . ())
-    (csharp-mode       . ("class .inner" "function .inner" "loop .inner" "conditional .inner" "block.inner"))
+    (csharp-mode       . ("class.inner" "function .inner" "loop .inner" "conditional .inner" "block.inner"))
     (c++-mode          . ())
     (go-mode           . ())
     (html-mode         . ())
@@ -192,9 +192,7 @@
   "Get tree sitter query for LANGUAGE.
 TOP-LEVEL is used to mention if we should load optional inherits."
   (with-temp-buffer
-    (when-let* ((filename (concat ts-fold--queries-dir
-                                  ;;language "/fold.scm"))  ; TODO: replace this?
-                                  language "/textobjects.scm"))
+    (when-let* ((filename (concat ts-fold--queries-dir language "/fold.scm"))
                 ((file-exists-p filename)))
       (insert-file-contents filename)
       (goto-char (point-min))
@@ -301,16 +299,12 @@ instead of the builtin query set."
 
 (defun ts-fold--get-fold-range ()
   "Return fold range."
-  (if-let* ((pt (point))
-            (group (alist-get major-mode ts-fold-groups-alist))
-            (groups (if (eq (type-of group) 'string)
-                        (list group)
-                      group))
-            (interned-groups (mapcar #'intern groups))
-            (range (ts-fold--range 1 interned-groups)))
-      (when (and (<= (car range) pt) (<= pt (cdr range)))
-        range)
-    (message "[INFO] No region found, `%s`" group)))
+  (when-let* ((pt (point))
+              (groups (alist-get major-mode ts-fold-groups-alist))
+              (interned-groups (mapcar #'intern groups))
+              (range (ts-fold--range 1 interned-groups)))
+    (when (and (<= (car range) pt) (<= pt (cdr range)))
+      (cons (1+ (car range)) (1- (cdr range))))))
 
 ;;
 ;; (@* "Overlays" )
@@ -318,15 +312,14 @@ instead of the builtin query set."
 
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
-  (when range
-    (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
-      (overlay-put ov 'creator 'ts-fold)
-      (overlay-put ov 'invisible 'ts-fold)
-      (overlay-put ov 'display (or (and ts-fold-summary-show
-                                        (ts-fold-summary--get (buffer-substring beg end)))
-                                   ts-fold-replacement))
-      (overlay-put ov 'face 'ts-fold-replacement-face)
-      (overlay-put ov 'isearch-open-invisible #'ts-fold--isearch-open))))
+  (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
+    (overlay-put ov 'creator 'ts-fold)
+    (overlay-put ov 'invisible 'ts-fold)
+    (overlay-put ov 'display (or (and ts-fold-summary-show
+                                      (ts-fold-summary--get (buffer-substring beg end)))
+                                 ts-fold-replacement))
+    (overlay-put ov 'face 'ts-fold-replacement-face)
+    (overlay-put ov 'isearch-open-invisible #'ts-fold--isearch-open)))
 
 (defun ts-fold--isearch-open (ov)
   "Open overlay OV during `isearch' session."
@@ -349,7 +342,7 @@ Return nil otherwise."
 (defmacro ts-fold--ensure-ts (&rest body)
   "Run BODY only if `tree-sitter-mode` is enabled."
   (declare (indent 0))
-  `(if (bound-and-true-p tree-sitter-mode) ,@body
+  `(if (bound-and-true-p tree-sitter-mode) (progn ,@body)
      (user-error "Ignored, tree-sitter-mode is not enable in the current buffer")))
 
 (defconst ts-fold-interactive-commands
@@ -363,15 +356,12 @@ Return nil otherwise."
 
 ;;;###autoload
 (defun ts-fold-close ()
-  "Fold the syntax node at `point` if it is foldable.
-
-Foldable nodes are defined in `ts-fold-foldable-node-alist' for the
-current `major-mode'.  If no foldable NODE is found in point, do nothing."
+  "Fold the syntax node at `point` if it is foldable."
   (interactive)
   (ts-fold--ensure-ts
     (when-let ((range (ts-fold--get-fold-range)))
       ;; make sure I do not create multiple overlays for the same fold
-      (when-let* ((ov (ts-fold-overlay-at range))) (delete-overlay ov))
+      (when-let ((ov (ts-fold-overlay-at range))) (delete-overlay ov))
       (ts-fold--create-overlay range))))
 
 ;;;###autoload
