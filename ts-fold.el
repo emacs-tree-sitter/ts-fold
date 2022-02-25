@@ -378,7 +378,7 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
+    (when-let ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
       (thread-last nodes-to-fold
         (mapc #'ts-fold-close)))))
 
