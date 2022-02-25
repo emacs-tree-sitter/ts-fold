@@ -9,7 +9,7 @@
 ;;         Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; Description: Code folding using tree-sitter
 ;; Keyword: folding tree-sitter
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1") (ht "2.0"))
 ;; URL: https://github.com/jcs090218/ts-fold
 
