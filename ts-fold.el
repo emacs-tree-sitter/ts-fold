@@ -10,7 +10,7 @@
 ;; Description: Code folding using tree-sitter
 ;; Keyword: folding tree-sitter
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1"))
+;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1") (ht "2.0"))
 ;; URL: https://github.com/jcs090218/ts-fold
 
 ;; This file is NOT part of GNU Emacs.
@@ -42,6 +42,7 @@
 (require 'seq)
 (require 'subr-x)
 
+(require 'ht)
 (require 's)
 (require 'tree-sitter)
 
@@ -94,6 +95,7 @@
         (typescript-mode   . "typescript"))))
   (setf (map-elt ts-fold-major-mode-language-alist major-mode) lang-symbol))
 
+;; TODO: We need to upgrade our queries.
 (defcustom ts-fold-groups-alist
   '((bash       . ("function.inner" "conditional.inner" "loop.inner" "comment.outer"))
     (c          . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
@@ -135,6 +137,12 @@
   '((t ()))
   "Face used to display fringe contents."
   :group 'ts-fold)
+
+(defvar ts-fold--query-cache (ht-create)
+  "Hashmap of `lang-symbol' and it's query file string.")
+
+(defvar ts-fold-debug nil
+  "Set to non-nil to enable debug mode.")
 
 ;;
 ;; (@* "Externals" )
@@ -216,7 +224,7 @@ TOP-LEVEL is used to mention if we should load optional inherits."
 ;;
 
 (defun ts-fold--get-groups ()
-  ""
+  "Return the current groups from `ts-fold-groups-alist'."
   (let* ((lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
          (groups (alist-get (intern lang-name) ts-fold-groups-alist))
          (interned-groups (mapcar #'intern groups)))
@@ -257,8 +265,9 @@ They will be order with captures with point inside them first then the
 ones that follow.  If a `QUERY' alist is provided, we make use of that
 instead of the builtin query set."
   (let* ((lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
-         (debugging-query (if query (alist-get major-mode query)
-                            (ts-fold--get-query lang-name t)))
+         (debugging-query (or (ht-get ts-fold--query-cache lang-name)
+                              (if query (alist-get major-mode query)
+                                (ts-fold--get-query lang-name t))))
          (root-node (tsc-root-node tree-sitter-tree))
          (query (tsc-make-query tree-sitter-language debugging-query))
          (captures (tsc-query-captures query root-node #'tsc--buffer-substring-no-properties))
@@ -266,6 +275,8 @@ instead of the builtin query set."
                                                 (member (car x) group))
                                               captures))
          (nodes (seq-map #'cdr filtered-captures)))
+    (ht-set ts-fold--query-cache lang-name debugging-query)
+    (when ts-fold-debug (ts-fold-clear-cache))
     (cl-remove-duplicates
      nodes
      :test (lambda (x y)
@@ -286,7 +297,7 @@ instead of the builtin query set."
   (ts-fold--get-within-and-after (ts-fold--get-groups) 1 nil))
 
 (defun ts-fold--range (nodes)
-  ""
+  "Return the range from NODES."
   (let* ((range-min (apply #'min
                            (seq-map (lambda (x)
                                       (car (tsc-node-byte-range x)))
@@ -361,8 +372,8 @@ Foldable nodes are defined in `ts-fold-groups-alist' for the current
 `major-mode'.  If no foldable NODE is found in point, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let ((node (or node (ts-fold--current-node)))
-               (range (ts-fold--get-fold-range node)))
+    (when-let* ((node (or node (ts-fold--current-node)))
+                (range (ts-fold--get-fold-range node)))
       ;; make sure I do not create multiple overlays for the same fold
       (when-let ((ov (ts-fold-overlay-at range))) (delete-overlay ov))
       (ts-fold--create-overlay range))))
@@ -416,10 +427,16 @@ If the current node is not folded or not foldable, do nothing."
 If the current syntax node is not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (if-let* ((range (ts-fold--get-fold-range))
+    (if-let* ((node (ts-fold--current-node))
+              (range (ts-fold--get-fold-range node))
               (ov (ts-fold-overlay-at range)))
         (progn (delete-overlay ov) t)
       (ts-fold-close))))
+
+(defun ts-fold-clear-cache ()
+  "Clean up the query cache."
+  (interactive)
+  (ht-clear ts-fold--query-cache))
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here

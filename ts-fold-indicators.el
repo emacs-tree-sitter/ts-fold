@@ -230,8 +230,8 @@ head (first line) of the region."
 (defun ts-fold-indicators--get-end-fringe ()
   "Return end fringe bitmap according to variable `ts-fold-indicators-fringe'."
   (cl-case ts-fold-indicators-fringe
-    (left-fringe 'ts-fold-indicators-fr-end-left)
-    (right-fringe 'ts-fold-indicators-fr-end-right)
+    (`left-fringe 'ts-fold-indicators-fr-end-left)
+    (`right-fringe 'ts-fold-indicators-fr-end-right)
     (t (user-error "Invalid indicators fringe type: %s" ts-fold-indicators-fringe))))
 
 (defun ts-fold-indicators--update-overlays (ov-lst folded)
@@ -261,28 +261,19 @@ head (first line) of the region."
 
 (defun ts-fold-indicators--create (node)
   "Create indicators using NODE."
-  ;; TODO:
-  ;; (when-let* ((range (ts-fold--get-fold-range node))
-  ;;             (beg (car range)) (end (cdr range)))
-  ;;   (let ((folded (ts-fold-overlay-at node)))
-  ;;     (ts-fold-indicators--create-overlays beg end folded)))
-  )
+  (when-let* ((range (ts-fold--get-fold-range node))
+              (beg (car range)) (end (cdr range)))
+    (ts-fold-indicators--create-overlays beg end (ts-fold-overlay-at range))))
 
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
-      (when-let* ((node (tsc-root-node tree-sitter-tree))
-                  (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                        (alist-get major-mode ts-fold-foldable-node-alist)
-                                        'vector))
-                  (query (ignore-errors
-                           (tsc-make-query tree-sitter-language patterns)))
-                  (nodes-to-fold (tsc-query-captures query node #'ignore)))
+      (when-let* ((groups (ts-fold--get-groups))
+                  (nodes-to-fold (ts-fold--get-nodes groups nil)))
         (ts-fold-indicators--remove-overlays)
         (thread-last nodes-to-fold
-          (mapcar #'cdr)
           (mapc #'ts-fold-indicators--create))))))
 
 (defun ts-fold-indicators--remove-overlays ()
