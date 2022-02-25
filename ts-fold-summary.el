@@ -93,7 +93,7 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--generic (doc-str sym)
   "Generic DOC-STR extraction using SYM."
-  (when (ts-fold-util--doc-faces-p doc-str)
+  (when (ts-fold--doc-faces-p doc-str)
     (ts-fold-summary--doc-extract doc-str sym)))
 
 (defun ts-fold-summary-batch (doc-str)
@@ -138,9 +138,9 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary-c-macro (doc-str)
   "Parse C macro summary from DOC-STR."
-  (when (ts-fold-util--is-face doc-str
-                               '(font-lock-preprocessor-face
-                                 preproc-font-lock-preprocessor-background))
+  (when (ts-fold--is-face doc-str
+                          '(font-lock-preprocessor-face
+                            preproc-font-lock-preprocessor-background))
     (ts-fold-summary--doc-extract doc-str "")))
 
 (defun ts-fold-summary-c (doc-str)

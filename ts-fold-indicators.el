@@ -152,8 +152,8 @@
       (mouse-set-point event)
       (beginning-of-line)
       (setq cur-ln (line-number-at-pos (point)))
-      (setq ovs (append (ts-fold-util--overlays-in 'type 'ts-fold-indicators-fr-plus)
-                        (ts-fold-util--overlays-in 'type 'ts-fold-indicators-fr-minus-tail)))
+      (setq ovs (append (ts-fold--overlays-in 'type 'ts-fold-indicators-fr-plus)
+                        (ts-fold--overlays-in 'type 'ts-fold-indicators-fr-minus-tail)))
       (when ovs
         (setq ov (cl-some
                   (lambda (ov) (= cur-ln (line-number-at-pos (overlay-start ov))))
