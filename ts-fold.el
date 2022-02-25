@@ -110,7 +110,7 @@
     (javascript . ())
     (julia      . ())
     (php        . ())
-    (python     . ())
+    (python     . ("class.outer" "function.outer" "loop.outer" "block.outer"))
     (ruby       . ())
     (rust       . ())
     (typescript . ()))
