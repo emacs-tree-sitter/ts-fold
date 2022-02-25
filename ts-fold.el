@@ -215,6 +215,13 @@ TOP-LEVEL is used to mention if we should load optional inherits."
 ;; (@* "Core" )
 ;;
 
+(defun ts-fold--get-groups ()
+  ""
+  (let* ((lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
+         (groups (alist-get (intern lang-name) ts-fold-groups-alist))
+         (interned-groups (mapcar #'intern groups)))
+    interned-groups))
+
 (defun ts-fold--nodes-before (nodes)
   "NODES which contain the current after them."
   (cl-remove-if-not (lambda (x)
@@ -274,35 +281,29 @@ instead of the builtin query set."
     (when (> (length filtered-nodes) 0)
       (cl-subseq filtered-nodes 0 count))))
 
-(defun ts-fold--range (count ts-group &optional query)
-  "Get the range of the closeset item of type `TS-GROUP'.
-`COUNT' is supported even thought it does not actually make sense in
-most cases as if we do 3-in-func the selections will not be continues,
-but we can only provide the start and end as of now which is what we
-are doing.  If a `QUERY' alist is provided, we make use of that
-instead of the builtin query set."
-  (when-let ((nodes (ts-fold--get-within-and-after ts-group count query)))
-    (let ((range-min (apply #'min
-                            (seq-map (lambda (x)
-                                       (car (tsc-node-byte-range x)))
-                                     nodes)))
-          (range-max (apply #'max
-                            (seq-map (lambda (x)
-                                       (cdr (tsc-node-byte-range x)))
-                                     nodes))))
-      ;; Have to compute min and max like this as we might have nested functions
-      ;; We have to use `cl-callf byte-to-position` ot the positioning might be off for unicode chars
-      (cons (cl-callf byte-to-position range-min) (cl-callf byte-to-position range-max)))))
+(defun ts-fold--current-node ()
+  "Return the current foldable node."
+  (ts-fold--get-within-and-after (ts-fold--get-groups) 1 nil))
 
-(defun ts-fold--get-fold-range ()
+(defun ts-fold--range (nodes)
+  ""
+  (let* ((range-min (apply #'min
+                           (seq-map (lambda (x)
+                                      (car (tsc-node-byte-range x)))
+                                    nodes)))
+         (range-max (apply #'max
+                           (seq-map (lambda (x)
+                                      (cdr (tsc-node-byte-range x)))
+                                    nodes)))
+         (min (cl-callf byte-to-position range-min))
+         (max (cl-callf byte-to-position range-max)))
+    ;; Have to compute min and max like this as we might have nested functions
+    ;; We have to use `cl-callf byte-to-position` ot the positioning might be off for unicode chars
+    (cons (1+ min) (1- max))))
+
+(defun ts-fold--get-fold-range (node)
   "Return fold range."
-  (when-let* ((pt (point))
-              (lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
-              (groups (alist-get (intern lang-name) ts-fold-groups-alist))
-              (interned-groups (mapcar #'intern groups))
-              (range (ts-fold--range 1 interned-groups)))
-    (when (and (<= (car range) pt) (<= pt (cdr range)))
-      (cons (1+ (car range)) (1- (cdr range))))))
+  (ts-fold--range (if (listp node) node (list node))))
 
 ;;
 ;; (@* "Overlays" )
@@ -353,11 +354,15 @@ Return nil otherwise."
   "List of interactive commands.")
 
 ;;;###autoload
-(defun ts-fold-close ()
-  "Fold the syntax node at `point` if it is foldable."
+(defun ts-fold-close (&optional node)
+  "Fold the syntax node at `point` if it is foldable.
+
+Foldable nodes are defined in `ts-fold-groups-alist' for the current
+`major-mode'.  If no foldable NODE is found in point, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let ((range (ts-fold--get-fold-range)))
+    (when-let ((node (or node (ts-fold--current-node)))
+               (range (ts-fold--get-fold-range node)))
       ;; make sure I do not create multiple overlays for the same fold
       (when-let ((ov (ts-fold-overlay-at range))) (delete-overlay ov))
       (ts-fold--create-overlay range))))
@@ -368,7 +373,8 @@ Return nil otherwise."
 If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((range (ts-fold--get-fold-range))
+    (when-let* ((node (ts-fold--current-node))
+                (range (ts-fold--get-fold-range node))
                 (ov (ts-fold-overlay-at range)))
       (delete-overlay ov))))
 
@@ -377,7 +383,8 @@ If the current node is not folded or not foldable, do nothing."
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((range (ts-fold--get-fold-range))
+    (when-let* ((node (ts-fold--current-node))
+                (range (ts-fold--get-fold-range node))
                 (beg (car range))
                 (end (cdr range)))
       (thread-last (overlays-in beg end)
@@ -389,15 +396,9 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    ;; TODO: ..
-    (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                 (alist-get major-mode ts-fold-foldable-node-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
+    (let* ((groups (ts-fold--get-groups))
+           (nodes-to-fold (ts-fold--get-nodes groups nil)))
       (thread-last nodes-to-fold
-        (mapcar #'cdr)
         (mapc #'ts-fold-close)))))
 
 ;;;###autoload
