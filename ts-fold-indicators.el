@@ -270,8 +270,7 @@ head (first line) of the region."
   "Refresh indicators for all folding range."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
-      (when-let* ((groups (ts-fold--get-groups))
-                  (nodes-to-fold (ts-fold--get-nodes groups nil)))
+      (when-let* ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
         (ts-fold-indicators--remove-overlays)
         (thread-last nodes-to-fold
           (mapc #'ts-fold-indicators--create))))))
