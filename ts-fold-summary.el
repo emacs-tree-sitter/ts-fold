@@ -87,9 +87,10 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--doc-extract (doc-str sym)
   "Default way to extract the doc summary from DOC-STR."
-  (let* ((lines (ts-fold-summary--extract-summary doc-str sym)) (summary (nth 0 lines)))
-    (when summary (setq summary (string-trim summary)))
-    (if (string-empty-p summary) nil summary)))
+  (when-let* ((lines (ts-fold-summary--extract-summary doc-str sym))
+              (summary (nth 0 lines))
+              (summary (string-trim summary)))
+    (unless (string-empty-p summary) summary)))
 
 (defun ts-fold-summary--generic (doc-str sym)
   "Generic DOC-STR extraction using SYM."
@@ -183,15 +184,14 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--get (doc-str)
   "Extract summary from DOC-STR in order to display ontop of the overlay."
-  (let ((parser (cdr (ts-fold-summary--parser))) summary)
-    (when parser
-      (setq summary (funcall parser doc-str))
+  (when-let ((parser (cdr (ts-fold-summary--parser))))
+    (let ((summary (funcall parser doc-str)))
       (when (integerp ts-fold-summary-max-length)
         (setq summary (ts-fold-summary--keep-length summary)))
       (when summary
         (setq summary (ts-fold-summary--apply-format summary)
-              summary (propertize summary 'face 'ts-fold-replacement-face))))
-    summary))
+              summary (propertize summary 'face 'ts-fold-replacement-face)))
+      summary)))
 
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode . ts-fold-summary-javadoc)
