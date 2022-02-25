@@ -197,7 +197,7 @@
   "Get tree sitter query for LANGUAGE.
 TOP-LEVEL is used to mention if we should load optional inherits."
   (with-temp-buffer
-    (when-let* ((filename (concat ts-fold--queries-dir language "/fold.scm"))
+    (when-let* ((filename (concat ts-fold--queries-dir language "/folds.scm"))
                 ((file-exists-p filename)))
       (insert-file-contents filename)
       (goto-char (point-min))
