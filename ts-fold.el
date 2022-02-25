@@ -284,7 +284,8 @@ instead of the builtin query set."
                   (= (cdr (tsc-node-byte-range x)) (cdr (tsc-node-byte-range y))))))))
 
 (defun ts-fold--get-within-and-after (group count query)
-  "Given a `GROUP' `QUERY' find `COUNT' number of nodes within in and after current point."
+  "Given a `GROUP' `QUERY' find `COUNT' number of nodes within in and after
+current point."
   (let* ((nodes (ts-fold--get-nodes group query))
          (nodes-within (ts-fold--nodes-within nodes))
          (nodes-after (ts-fold--nodes-after nodes))
