@@ -95,29 +95,6 @@
         (typescript-mode   . "typescript"))))
   (setf (map-elt ts-fold-major-mode-language-alist major-mode) lang-symbol))
 
-;; TODO: We need to upgrade our queries.
-(defcustom ts-fold-groups-alist
-  '((bash       . ("function.inner" "conditional.inner" "loop.inner" "comment.outer"))
-    (c          . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
-                   "block.outer" "comment.outer" "statement.inner"))
-    (c-sharp    . ("class.inner" "function.inner" "loop.inner" "conditional.inner"
-                   "block.inner" "comment.outer"))
-    (cpp        . ("function.inner" "class.inner" "conditional.inner" "loop.inner"
-                   "block.outer" "comment.outer" "statement.inner"))
-    (go         . ())
-    (html       . ())
-    (java       . ())
-    (javascript . ())
-    (julia      . ())
-    (php        . ())
-    (python     . ("class.outer" "function.outer" "loop.outer" "block.outer"))
-    (ruby       . ())
-    (rust       . ())
-    (typescript . ()))
-  "Alist of language symbol and groups."
-  :type 'list
-  :group 'ts-fold)
-
 (defcustom ts-fold-mode-hook nil
   "Hook to run when enabling `ts-fold-mode`."
   :type 'hook
@@ -223,13 +200,6 @@ TOP-LEVEL is used to mention if we should load optional inherits."
 ;; (@* "Core" )
 ;;
 
-(defun ts-fold--get-groups ()
-  "Return the current groups from `ts-fold-groups-alist'."
-  (let* ((lang-name (alist-get major-mode ts-fold-major-mode-language-alist))
-         (groups (alist-get (intern lang-name) ts-fold-groups-alist))
-         (interned-groups (mapcar #'intern groups)))
-    interned-groups))
-
 (defun ts-fold--nodes-before (nodes)
   "NODES which contain the current after them."
   (cl-remove-if-not (lambda (x)
@@ -295,7 +265,7 @@ current point."
 
 (defun ts-fold--current-node ()
   "Return the current foldable node."
-  (ts-fold--get-within-and-after (ts-fold--get-groups) 1 nil))
+  (ts-fold--get-within-and-after '(fold comment) 1 nil))
 
 (defun ts-fold--range (nodes)
   "Return the range from NODES."
@@ -408,8 +378,7 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((groups (ts-fold--get-groups))
-           (nodes-to-fold (ts-fold--get-nodes groups nil)))
+    (let* ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
       (thread-last nodes-to-fold
         (mapc #'ts-fold-close)))))
 

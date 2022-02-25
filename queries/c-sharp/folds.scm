@@ -15,4 +15,4 @@ initializer: [
 (block) @fold
 
 ;; comments
-(comment) @comment.outer
+(comment) @comment
