@@ -387,9 +387,9 @@ If the current node is not folded or not foldable, do nothing."
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-   (thread-last (overlays-in (point-min) (point-max))
-                (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-                (mapc #'delete-overlay))))
+    (thread-last (overlays-in (point-min) (point-max))
+                 (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                 (mapc #'delete-overlay))))
 
 ;;;###autoload
 (defun ts-fold-toggle ()
