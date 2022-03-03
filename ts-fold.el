@@ -147,7 +147,7 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
   (when (bound-and-true-p evil-fold-list)
     (add-to-list 'evil-fold-list
                  '((ts-fold-mode)
-		   :toggle ts-fold-toggle
+                   :toggle ts-fold-toggle
                    :open ts-fold-open
                    :close ts-fold-close
                    :open-rec ts-fold-open-recursively
@@ -230,11 +230,11 @@ Return nil otherwise."
               ((memq (tsc-node-type node) foldable-types))
               (range (ts-fold--get-fold-range node)))
     (thread-last (overlays-in (car range) (cdr range))
-      (seq-filter (lambda (ov)
-                    (and (eq (overlay-get ov 'invisible) 'ts-fold)
-                         (= (overlay-start ov) (car range))
-                         (= (overlay-end ov) (cdr range)))))
-      car)))
+                 (seq-filter (lambda (ov)
+                               (and (eq (overlay-get ov 'invisible) 'ts-fold)
+                                    (= (overlay-start ov) (car range))
+                                    (= (overlay-end ov) (cdr range)))))
+                 car)))
 
 ;;
 ;; (@* "Commands" )
@@ -255,11 +255,11 @@ Foldable nodes are defined in `ts-fold-foldable-node-alist' for the
 current `major-mode'.  If no foldable NODE is found in point, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (let ((node (or node (ts-fold--foldable-node-at-pos))))
-      ;; make sure I do not create multiple overlays for the same fold
-      (when-let* ((ov (ts-fold-overlay-at node)))
-        (delete-overlay ov))
-      (ts-fold--create-overlay (ts-fold--get-fold-range node)))))
+   (let ((node (or node (ts-fold--foldable-node-at-pos))))
+     ;; make sure I do not create multiple overlays for the same fold
+     (when-let* ((ov (ts-fold-overlay-at node)))
+       (delete-overlay ov))
+     (ts-fold--create-overlay (ts-fold--get-fold-range node)))))
 
 ;;;###autoload
 (defun ts-fold-open ()
@@ -267,45 +267,45 @@ current `major-mode'.  If no foldable NODE is found in point, do nothing."
 If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (ov (ts-fold-overlay-at node)))
-      (delete-overlay ov))))
+   (when-let* ((node (ts-fold--foldable-node-at-pos))
+               (ov (ts-fold-overlay-at node)))
+     (delete-overlay ov))))
 
 ;;;###autoload
 (defun ts-fold-open-recursively ()
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (beg (tsc-node-start-position node))
-                (end (tsc-node-end-position node)))
-      (thread-last (overlays-in beg end)
-        (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-        (mapc #'delete-overlay)))))
+   (when-let* ((node (ts-fold--foldable-node-at-pos))
+               (beg (tsc-node-start-position node))
+               (end (tsc-node-end-position node)))
+     (thread-last (overlays-in beg end)
+                  (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                  (mapc #'delete-overlay)))))
 
 ;;;###autoload
 (defun ts-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                 (alist-get major-mode ts-fold-foldable-node-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
-      (thread-last nodes-to-fold
-        (mapcar #'cdr)
-        (mapc #'ts-fold-close)))))
+   (let* ((node (tsc-root-node tree-sitter-tree))
+          (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
+                                (alist-get major-mode ts-fold-foldable-node-alist)
+                                'vector))
+          (query (tsc-make-query tree-sitter-language patterns))
+          (nodes-to-fold (tsc-query-captures query node #'ignore)))
+     (thread-last nodes-to-fold
+                  (mapcar #'cdr)
+                  (mapc #'ts-fold-close)))))
 
 ;;;###autoload
 (defun ts-fold-open-all ()
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (thread-last (overlays-in (point-min) (point-max))
-      (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-      (mapc #'delete-overlay))))
+   (thread-last (overlays-in (point-min) (point-max))
+                (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                (mapc #'delete-overlay))))
 
 ;;;###autoload
 (defun ts-fold-toggle ()
@@ -313,10 +313,10 @@ If the current node is not folded or not foldable, do nothing."
 If the current syntax node is not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (if-let* ((node (ts-fold--foldable-node-at-pos (point)))
-              (ov (ts-fold-overlay-at node)))
-        (progn (delete-overlay ov) t)
-      (ts-fold-close))))
+   (if-let* ((node (ts-fold--foldable-node-at-pos (point)))
+             (ov (ts-fold-overlay-at node)))
+       (progn (delete-overlay ov) t)
+     (ts-fold-close))))
 
 (defun ts-fold--after-command (&rest _)
   "Function call after interactive commands."
@@ -355,7 +355,7 @@ in backward direction."
             line (car (tsc-node-start-point iter-node))
             line-range (1+ (s-count-matches "\n" text))
             max-line-range (max line-range last-line-range))
-      (if (and (ts-fold-util--in-range-p line (- last-line max-line-range) (+ last-line max-line-range))
+      (if (and (ts-fold--in-range-p line (- last-line max-line-range) (+ last-line max-line-range))
                (string-prefix-p prefix text))
           (setq last-node iter-node last-line line
                 last-line-range (1+ (s-count-matches "\n" text)))
@@ -369,7 +369,7 @@ in backward direction."
 Argument OFFSET can be used to tweak the final beginning and end position."
   (let ((beg (1+ (tsc-node-start-position node)))
         (end (1- (tsc-node-end-position node))))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-line-comment (node offset prefix)
   "Define fold range for line comment.
@@ -383,14 +383,14 @@ Argument PREFIX is the comment prefix in string."
               (prefix-len (length prefix))
               (beg (+ (tsc-node-start-position first-node) prefix-len))
               (end (tsc-node-end-position last-node)))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-block-comment (node offset)
   "Define fold range for block comment.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (ts-fold-range-seq node (ts-fold-util--cons-add '(1 . -1) offset)))
+  (ts-fold-range-seq node (ts-fold--cons-add '(1 . -1) offset)))
 
 (defun ts-fold-range-c-like-comment (node offset)
   "Define fold range for C-like comemnt."
@@ -411,7 +411,7 @@ more information."
          (else (tsc-get-child-by-field node :alternative))
          (beg (tsc-node-end-position named-node))
          (end (1- (tsc-node-start-position else))))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-ifdef (node offset)
   "Define fold range for `ifdef' and `ifndef' preprocessor."
@@ -419,7 +419,7 @@ more information."
               (else (tsc-get-child-by-field node :alternative))
               (beg (tsc-node-end-position named-node))
               (end (1- (tsc-node-start-position else))))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-elif (node offset)
   "Define fold range for `elif' preprocessor."
@@ -427,7 +427,7 @@ more information."
               (else (tsc-get-child-by-field node :alternative))
               (beg (tsc-node-end-position named-node))
               (end (1- (tsc-node-start-position else))))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-else (node offset)
   "Define fold range for `else' preprocessor."
@@ -435,14 +435,14 @@ more information."
               (len (length target))
               (beg (+ (tsc-node-start-position node) len))
               (end (tsc-node-end-position node)))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-html (node offset)
   "Define fold range for tag in HTML."
   (let* ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
          (end-node (tsc-get-nth-child node (1- (tsc-count-children node))))
          (end (tsc-node-start-position end-node)))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-python (node offset)
   "Define fold range for `function_definition' and `class_definition'.
@@ -456,7 +456,7 @@ more information."
               ;; the colon is an anonymous node after return_type or parameters node
               (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
               (end (tsc-node-end-position node)))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ruby (node offset)
   "Define fold range for `method' and `class' in Ruby.
@@ -468,7 +468,7 @@ more information."
                               (tsc-get-child-by-field node :name)))
               (beg (tsc-node-end-position named-node))
               (end (tsc-node-end-position node)))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rust-macro (node offset)
   "Return the fold range for `macro_definition' NODE in Rust.
@@ -480,7 +480,7 @@ more information."
               (first_bracket (tsc-get-nth-child node 2))
               (beg (tsc-node-start-position first_bracket))
               (end (1+ (tsc-node-start-position last_bracket))))
-    (ts-fold-util--cons-add (cons beg end) offset)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
