@@ -82,6 +82,7 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 ;; (@* "Math" )
 ;;
 
+
 (defun ts-folde--with-in-range (range)
   "Return non-nil if point is inside the range."
   (and (<= (car range) (point)) (<= (point) (cdr range))))
