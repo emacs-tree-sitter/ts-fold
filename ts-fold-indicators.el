@@ -263,17 +263,17 @@ head (first line) of the region."
   "Refresh indicators for all folding range."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
-     (when-let* ((node (tsc-root-node tree-sitter-tree))
-                 (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                       (alist-get major-mode ts-fold-foldable-node-alist)
-                                       'vector))
-                 (query (ignore-errors
-                          (tsc-make-query tree-sitter-language patterns)))
-                 (nodes-to-fold (tsc-query-captures query node #'ignore)))
-       (ts-fold-indicators--remove-overlays)
-       (thread-last nodes-to-fold
-                    (mapcar #'cdr)
-                    (mapc #'ts-fold-indicators--create))))))
+      (when-let* ((node (tsc-root-node tree-sitter-tree))
+                  (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
+                                        (alist-get major-mode ts-fold-foldable-node-alist)
+                                        'vector))
+                  (query (ignore-errors
+                           (tsc-make-query tree-sitter-language patterns)))
+                  (nodes-to-fold (tsc-query-captures query node #'ignore)))
+        (ts-fold-indicators--remove-overlays)
+        (thread-last nodes-to-fold
+                     (mapcar #'cdr)
+                     (mapc #'ts-fold-indicators--create))))))
 
 (defun ts-fold-indicators--remove-overlays ()
   "Remove all indicators overlays."
