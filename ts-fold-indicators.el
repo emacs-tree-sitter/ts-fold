@@ -1,6 +1,6 @@
 ;;; ts-fold-indicators.el --- Display indicators for folding range  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 ;; Created date 2021-10-04 20:03:12
 
 ;; This file is NOT part of GNU Emacs.
@@ -93,6 +93,10 @@
   "........" "........" "........" "........" "........"
   "........" "........" "........" "........" "........")
 
+(defun ts-fold--after-command (&rest _)
+  "Function call after interactive commands."
+  (ts-fold-indicators-refresh))
+
 ;;
 ;; (@* "Entry" )
 ;;
@@ -108,12 +112,16 @@
   "Enable `ts-fold-indicators' mode."
   (if (ts-fold-mode 1)  ; Enable `ts-fold-mode' automatically
       (progn
+        (dolist (cmd ts-fold-interactive-commands)
+          (advice-add cmd :after #'ts-fold--after-command))
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
+  (dolist (cmd ts-fold-interactive-commands)
+    (advice-remove cmd #'ts-fold--after-command))
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
   (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
   (ts-fold-indicators--remove-overlays))
@@ -222,8 +230,8 @@ head (first line) of the region."
 (defun ts-fold-indicators--get-end-fringe ()
   "Return end fringe bitmap according to variable `ts-fold-indicators-fringe'."
   (cl-case ts-fold-indicators-fringe
-    (left-fringe 'ts-fold-indicators-fr-end-left)
-    (right-fringe 'ts-fold-indicators-fr-end-right)
+    (`left-fringe 'ts-fold-indicators-fr-end-left)
+    (`right-fringe 'ts-fold-indicators-fr-end-right)
     (t (user-error "Invalid indicators fringe type: %s" ts-fold-indicators-fringe))))
 
 (defun ts-fold-indicators--update-overlays (ov-lst folded)
@@ -255,25 +263,17 @@ head (first line) of the region."
   "Create indicators using NODE."
   (when-let* ((range (ts-fold--get-fold-range node))
               (beg (car range)) (end (cdr range)))
-    (let ((folded (ts-fold-overlay-at node)))
-      (ts-fold-indicators--create-overlays beg end folded))))
+    (ts-fold-indicators--create-overlays beg end (ts-fold-overlay-at range))))
 
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
-      (when-let* ((node (tsc-root-node tree-sitter-tree))
-                  (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                        (alist-get major-mode ts-fold-foldable-node-alist)
-                                        'vector))
-                  (query (ignore-errors
-                           (tsc-make-query tree-sitter-language patterns)))
-                  (nodes-to-fold (tsc-query-captures query node #'ignore)))
+      (when-let ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
         (ts-fold-indicators--remove-overlays)
         (thread-last nodes-to-fold
-                     (mapcar #'cdr)
-                     (mapc #'ts-fold-indicators--create))))))
+          (mapc #'ts-fold-indicators--create))))))
 
 (defun ts-fold-indicators--remove-overlays ()
   "Remove all indicators overlays."

@@ -1,6 +1,6 @@
 ;;; ts-fold-util.el --- Utility module  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 ;; Created date 2021-10-04 20:19:42
 
 ;; This file is NOT part of GNU Emacs.
@@ -81,6 +81,11 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 ;;
 ;; (@* "Math" )
 ;;
+
+
+(defun ts-folde--with-in-range (range)
+  "Return non-nil if point is inside the range."
+  (and (<= (car range) (point)) (<= (point) (cdr range))))
 
 (defun ts-fold--in-range-p (in-val in-min in-max)
   "Check to see if IN-VAL is between IN-MIN and IN-MAX."
