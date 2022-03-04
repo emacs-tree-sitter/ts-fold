@@ -14,5 +14,4 @@ initializer: [
 
 (block) @fold
 
-;; comments
 (comment) @comment
