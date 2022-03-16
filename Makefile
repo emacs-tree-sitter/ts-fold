@@ -1,25 +1,21 @@
 SHELL := /usr/bin/env bash
 
 EMACS ?= emacs
-CASK ?= cask
+EASK ?= eask
 
 PKG-FILES := ts-fold.el
 
 TEST-FILES := $(shell ls test/ts-fold-*.el)
 
-.PHONY: clean checkdoc lint build compile unix-test
+.PHONY: clean checkdoc lint install compile unix-test
 
-ci: clean build compile
+ci: clean install compile
 
-build:
-	$(CASK) install
+install:
+	$(EASK) install
 
 compile:
-	@echo "Compiling..."
-	@$(CASK) $(EMACS) -Q --batch \
-		-L . \
-		--eval '(setq byte-compile-error-on-warn t)' \
-		-f batch-byte-compile $(PKG-FILES)
+	$(EASK) compile
 
 unix-test:
 	@echo "Testing..."

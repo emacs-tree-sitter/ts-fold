@@ -1,5 +1,5 @@
-(source gnu)
-(source melpa)
+(source "gnu")
+(source "melpa")
 
 (package-file "ts-fold.el")
 
