@@ -7,9 +7,15 @@ PKG-FILES := ts-fold.el
 
 TEST-FILES := $(shell ls test/ts-fold-*.el)
 
-.PHONY: clean checkdoc lint install compile unix-test
+.PHONY: clean checkdoc lint package install compile unix-test
 
-ci: clean install compile
+ci: clean package install compile
+
+package:
+	@echo "Packaging..."
+	$(EASK) autoloads
+	$(EASK) pkg-file
+	$(EASK) package
 
 install:
 	$(EASK) install
