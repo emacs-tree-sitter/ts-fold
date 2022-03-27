@@ -13,8 +13,6 @@ ci: clean package install compile
 
 package:
 	@echo "Packaging..."
-	$(EASK) autoloads
-	$(EASK) pkg-file
 	$(EASK) package
 
 install:
@@ -25,7 +23,7 @@ compile:
 
 unix-test:
 	@echo "Testing..."
-	$(CASK) exec ert-runner -L . $(LOAD-TEST-FILES) -t '!no-win' -t '!org'
+	$(EASK) exec ert-runner -L . $(LOAD-TEST-FILES) -t '!no-win' -t '!org'
 
 clean:
 	rm -rf .cask *.elc
