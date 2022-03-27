@@ -3,11 +3,9 @@ SHELL := /usr/bin/env bash
 EMACS ?= emacs
 EASK ?= eask
 
-PKG-FILES := ts-fold.el
-
 TEST-FILES := $(shell ls test/ts-fold-*.el)
 
-.PHONY: clean checkdoc lint package install compile unix-test
+.PHONY: clean checkdoc lint package install compile test
 
 ci: clean package install compile
 
@@ -16,12 +14,14 @@ package:
 	$(EASK) package
 
 install:
+	@echo "Installing..."
 	$(EASK) install
 
 compile:
+	@echo "Compiling..."
 	$(EASK) compile
 
-unix-test:
+test:
 	@echo "Testing..."
 	$(EASK) exec ert-runner -L . $(LOAD-TEST-FILES) -t '!no-win' -t '!org'
 
