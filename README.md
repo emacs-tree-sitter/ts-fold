@@ -34,7 +34,7 @@ to provide code folding base on the tree-sitter syntax tree.
 
 ```el
 (use-package ts-fold
-  :straight (host github repo "jcs090218/ts-fold"))
+  :straight (ts-fold :type git :host github :repo "jcs090218/ts-fold"))
 ```
 
 ### 🔍 Methods 2. Manual
