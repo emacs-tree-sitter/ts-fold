@@ -11,7 +11,7 @@
 ;; Keyword: folding tree-sitter
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1"))
-;; URL: https://github.com/jcs090218/ts-fold
+;; URL: https://github.com/jcs-elpa/ts-fold
 
 ;; This file is NOT part of GNU Emacs.
 
