@@ -1,4 +1,9 @@
-(package "ts-fold" "0.1.0" "Code folding using tree-sitter")
+(package "ts-fold"
+         "0.1.0"
+         "Code folding using tree-sitter")
+
+(website-url "https://github.com/jcs-elpa/ts-fold")
+(keywords "folding" "tree-sitter")
 
 (package-file "ts-fold.el")
 (files "*.el")
