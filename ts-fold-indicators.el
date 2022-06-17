@@ -121,7 +121,7 @@
 ;;;###autoload
 (define-minor-mode ts-fold-indicators-mode
   "Minor mode for indicators mode."
-  :group 'ts-fold-indicators
+  :group 'ts-fold
   :lighter nil
   :keymap ts-fold-indicators-mode-map
   :init-value nil
