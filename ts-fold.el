@@ -10,7 +10,7 @@
 ;; URL: https://github.com/jcs-elpa/ts-fold
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.1") (s "1.9.0") (fringe-helper "1.0.1"))
-;; Keywords: folding tree-sitter
+;; Keywords: convenience folding tree-sitter
 
 ;; This file is NOT part of GNU Emacs.
 
