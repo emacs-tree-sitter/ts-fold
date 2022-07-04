@@ -3,7 +3,7 @@
          "Code folding using tree-sitter")
 
 (website-url "https://github.com/jcs-elpa/ts-fold")
-(keywords "folding" "tree-sitter")
+(keywords "convenience" "folding" "tree-sitter")
 
 (package-file "ts-fold.el")
 (files "*.el")
