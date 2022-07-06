@@ -271,7 +271,7 @@ Let's see the implementation,
 ```elisp
 (defun ts-fold-summary-javadoc (doc-str)
   "..."
-  (ts-fold-summary--generic doc-str "*"))
+  (ts-fold-summary--generic doc-str "*"))  ; strip all asterisk
 ```
 
 The above summary parser for Javadoc simply remove `*` from any given point.
