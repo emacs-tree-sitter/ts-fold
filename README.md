@@ -27,6 +27,7 @@ to provide code folding base on the tree-sitter syntax tree.
     - [🔰 Contribute](#🔰-contribute)
         - [How to write a parser?](#how-to-write-a-parser)
             - [Where can I look for tree-sitter node?](#where-can-i-look-for-tree-sitter-node)
+            - [How do I create the function for the corresponding node?](#how-do-i-create-the-function-for-the-corresponding-node)
 
 <!-- markdown-toc end -->
 
@@ -216,5 +217,7 @@ Function takes 2 arguments, `node` and `offset`.
 
 * `node` - the targeting tree-sitter node; in this example, `block` will be the
 targeting node.
-* `offset` - (optiona) a cons consist of two integer. This is handy when you have
-similar rule with little of positioning adjustment.
+* `offset` - (optiona) a cons consist of two integers. This is handy when you have
+a similar rule with little of positioning adjustment. (`tree-sitter-[lang]`
+parsers are generally integrated with different authors, hence their naming
+and ruling are slightly different (+1/-1 position).)
