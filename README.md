@@ -26,9 +26,9 @@ to provide code folding base on the tree-sitter syntax tree.
     - [📝 Summary](#📝-summary)
     - [🔰 Contribute](#🔰-contribute)
         - [❓ How to write a parser?](#❓-how-to-write-a-parser)
-            - [Where can I look for tree-sitter node?](#where-can-i-look-for-tree-sitter-node)
-            - [How do I create the function for the corresponding node?](#how-do-i-create-the-function-for-the-corresponding-node)
-            - [🎉 Register to parsers alist!](#🎉-register-to-parsers-alist)
+            - [🔍 Where can I look for tree-sitter node?](#🔍-where-can-i-look-for-tree-sitter-node)
+            - [🔍 How do I create the function for the corresponding node?](#🔍-how-do-i-create-the-function-for-the-corresponding-node)
+            - [🔍 Register to parsers alist!](#🔍-register-to-parsers-alist)
 
 <!-- markdown-toc end -->
 
@@ -199,7 +199,7 @@ that will return the folding range.
 
 Let's move into details,
 
-#### Where can I look for tree-sitter node?
+#### 🔍 Where can I look for tree-sitter node?
 
 To look for the correct node, you should look at the `tree-sitter-[lang]/grammar.js`
 implementation. In the above example, `block` node is defined in the
@@ -212,7 +212,7 @@ implementation. In the above example, `block` node is defined in the
 > under [tree-sitter-langs](https://github.com/emacs-tree-sitter/tree-sitter-langs)'s
 > using the git submodule. Some tree-sitter module aren't using the latest version!
 
-#### How do I create the function for the corresponding node?
+#### 🔍 How do I create the function for the corresponding node?
 
 Function takes 2 arguments, `node` and `offset`.
 
@@ -234,9 +234,9 @@ Let's look at function `ts-fold-range-seq` for better understanding,
     (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
 ```
 
-#### 🎉 Register to parsers alist!
+#### 🔍 Register to parsers alist!
 
-Don't get to add your parsers to entry alist.
+Don't forget to add your parser to entry alist.
 
 ```elisp
 (defcustom ts-fold-range-alist
