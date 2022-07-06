@@ -25,10 +25,11 @@ to provide code folding base on the tree-sitter syntax tree.
     - [⚖️ Indicators Mode](#⚖️-indicators-mode)
     - [📝 Summary](#📝-summary)
     - [🔰 Contribute](#🔰-contribute)
-        - [❓ How to write a parser?](#❓-how-to-write-a-parser)
+        - [❓ How to create a folding parser?](#❓-how-to-create-a-folding-parser)
             - [🔍 Where can I look for tree-sitter node?](#🔍-where-can-i-look-for-tree-sitter-node)
             - [🔍 How do I create the function for the corresponding node?](#🔍-how-do-i-create-the-function-for-the-corresponding-node)
-            - [🔍 Register to parsers alist!](#🔍-register-to-parsers-alist)
+            - [🔍 Register to folding parsers alist!](#🔍-register-to-folding-parsers-alist)
+        - [❓ How to create a summary parser?](#❓-how-to-create-a-summary-parser)
 
 <!-- markdown-toc end -->
 
@@ -176,11 +177,11 @@ out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
 
-### ❓ How to write a parser?
+### ❓ How to create a folding parser?
 
 Parsers are ruled in the `ts-fold-parsers.el` file. Parser function follow
 with the prefix `ts-fold-parsers-` plus the `language name`. For example, if
-you want to create a parser for `C` programming language. It should be named:
+you want to create a parser for `C` programming language. It should be named
 `ts-fold-parsers-c`.
 
 The parser is consist of an association list (alist), each item is consist
@@ -234,9 +235,10 @@ Let's look at function `ts-fold-range-seq` for better understanding,
     (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
 ```
 
-#### 🔍 Register to parsers alist!
+#### 🔍 Register to folding parsers alist!
 
-Don't forget to add your parser to entry alist.
+Don't forget to add your parser to the entry alist with the corresponding
+`major-mode`.
 
 ```elisp
 (defcustom ts-fold-range-alist
@@ -248,3 +250,27 @@ Don't forget to add your parser to entry alist.
 ```
 
 This variable is defined in package main file, `ts-fold.el`.
+
+### ❓ How to create a summary parser?
+
+`ts-fold-summary.el` module is use to extract and display a short description
+from the comment/docstring.
+
+To create summary parser, you would just have to create a function that could
+remove comment syntax correctly, then register it to `ts-fold-summary-parsers-alist`
+defined in `ts-fold-summary.el`. The display and shortening will be handled
+by the module itself.
+
+Function should follow with prefix `ts-fold-summary-` and the `style name`.
+For example, to create summary parser for Javadoc style, then it should be
+named `ts-fold-summary-javadoc`.
+
+Let's see the implementation,
+
+```elisp
+(defun ts-fold-summary-javadoc (doc-str)
+  "..."
+  (ts-fold-summary--generic doc-str "*"))
+```
+
+The above summary parser for Javadoc simply remove `*` from any given point.
