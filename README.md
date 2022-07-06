@@ -25,10 +25,10 @@ to provide code folding base on the tree-sitter syntax tree.
     - [⚖️ Indicators Mode](#⚖️-indicators-mode)
     - [📝 Summary](#📝-summary)
     - [🔰 Contribute](#🔰-contribute)
-        - [How to write a parser?](#how-to-write-a-parser)
+        - [❓ How to write a parser?](#❓-how-to-write-a-parser)
             - [Where can I look for tree-sitter node?](#where-can-i-look-for-tree-sitter-node)
             - [How do I create the function for the corresponding node?](#how-do-i-create-the-function-for-the-corresponding-node)
-            - [Register to parsers alist!](#register-to-parsers-alist)
+            - [🎉 Register to parsers alist!](#🎉-register-to-parsers-alist)
 
 <!-- markdown-toc end -->
 
@@ -176,7 +176,7 @@ out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
 
-### How to write a parser?
+### ❓ How to write a parser?
 
 Parsers are ruled in the `ts-fold-parsers.el` file. Parser function follow
 with the prefix `ts-fold-parsers-` plus the `language name`. For example, if
@@ -234,7 +234,7 @@ Let's look at function `ts-fold-range-seq` for better understanding,
     (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
 ```
 
-#### Register to parsers alist!
+#### 🎉 Register to parsers alist!
 
 Don't get to add your parsers to entry alist.
 
