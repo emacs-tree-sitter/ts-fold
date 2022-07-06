@@ -24,7 +24,9 @@ to provide code folding base on the tree-sitter syntax tree.
     - [🔨 Supported languages](#🔨-supported-languages)
     - [⚖️ Indicators Mode](#⚖️-indicators-mode)
     - [📝 Summary](#📝-summary)
-    - [🔰 Contribution](#🔰-contribution)
+    - [🔰 Contribute](#🔰-contribute)
+        - [How to write a parser?](#how-to-write-a-parser)
+            - [Where can I look for tree-sitter node?](#where-can-i-look-for-tree-sitter-node)
 
 <!-- markdown-toc end -->
 
@@ -207,3 +209,12 @@ implementation. In the above example, `block` node is defined in the
 > Make sure you look into the correct repository. Repositories are managed
 > under [tree-sitter-langs](https://github.com/emacs-tree-sitter/tree-sitter-langs)'s
 > using the git submodule. Some tree-sitter module aren't using the latest version!
+
+#### How do I create the function for the corresponding node?
+
+Function takes 2 arguments, `node` and `offset`.
+
+* `node` - the targeting tree-sitter node; in this example, `block` will be the
+targeting node.
+* `offset` - (optiona) a cons consist of two integer. This is handy when you have
+similar rule with little of positioning adjustment.
