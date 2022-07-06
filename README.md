@@ -171,3 +171,39 @@ Enable `tree-sitter-mode` first, then `tree-sitter-query-builder` is useful to t
 out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
+
+### How to write a parser?
+
+Parsers are ruled in the `ts-fold-parsers.el` file. Parser function follow
+with the prefix `ts-fold-parsers-` plus the `language name`. For example, if
+you want to create a parser for `C` programming language. It should be named:
+`ts-fold-parsers-c`.
+
+The parser is consist of an association list (alist), each item is consist
+of tree-sitter `node` and a function that returns the folding range. See
+the following example:
+
+```elisp
+(defun ts-fold-parsers-csharp ()
+  "Rule sets for C#."
+  '((block . ts-fold-range-seq)
+    ...))
+```
+
+`block` is the tree-sitter node, and `ts-fold-range-seq` is the function
+that will return the folding range.
+
+Let's move into details,
+
+#### Where can I look for tree-sitter node?
+
+To look for the correct node, you should look at the `tree-sitter-[lang]/grammar.js`
+implementation. In the above example, `block` node is defined in the
+[tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp)'s
+`grammar.js` file.
+
+> ⚠️ Warning
+>
+> Make sure you look into the correct repository. Repositories are managed
+> under [tree-sitter-langs](https://github.com/emacs-tree-sitter/tree-sitter-langs)'s
+> using the git submodule. Some tree-sitter module aren't using the latest version!
