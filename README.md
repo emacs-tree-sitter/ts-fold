@@ -218,6 +218,7 @@ Function takes 2 arguments, `node` and `offset`.
 * `node` - the targeting tree-sitter node; in this example, `block` will be the
 targeting node.
 * `offset` - (optiona) a cons consist of two integers. This is handy when you have
-a similar rule with little of positioning adjustment. (`tree-sitter-[lang]`
-parsers are generally integrated with different authors, hence their naming
-and ruling are slightly different (+1/-1 position).)
+a similar rule with little of positioning adjustment.
+
+> `tree-sitter-[lang]` parsers are generally integrated with different authors,
+> hence their naming and ruling are slightly different (+1/-1 position).
