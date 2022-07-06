@@ -30,6 +30,7 @@ to provide code folding base on the tree-sitter syntax tree.
             - [🔍 How do I create the function for the corresponding node?](#🔍-how-do-i-create-the-function-for-the-corresponding-node)
             - [🔍 Register to folding parsers alist!](#🔍-register-to-folding-parsers-alist)
         - [❓ How to create a summary parser?](#❓-how-to-create-a-summary-parser)
+            - [🔍 Register to summary parsers alist!](#🔍-register-to-summary-parsers-alist)
 
 <!-- markdown-toc end -->
 
@@ -274,3 +275,17 @@ Let's see the implementation,
 ```
 
 The above summary parser for Javadoc simply remove `*` from any given point.
+
+#### 🔍 Register to summary parsers alist!
+
+Like folding parsers, you should register your summary parser to the entry alist
+with the corresponding `major-mode`.
+
+```elisp
+(defcustom ts-fold-summary-parsers-alist
+  `((actionscript-mode . ts-fold-summary-javadoc)
+    (bat-mode          . ts-fold-summary-batch)
+    (c-mode            . ts-fold-summary-c)
+    (c++-mode          . ts-fold-summary-c)
+    ...
+```
