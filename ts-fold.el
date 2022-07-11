@@ -87,7 +87,8 @@ The alist is in form of (major-mode . (foldable-node-type)).")
     (rustic-mode     . ,(ts-fold-parsers-rust))
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
-    (typescript-mode . ,(ts-fold-parsers-typescript)))
+    (typescript-mode . ,(ts-fold-parsers-typescript))
+    (elixir-mode     . ,(ts-fold-parsers-elixir)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
@@ -481,5 +482,16 @@ more information."
               (end (1+ (tsc-node-start-position last_bracket))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-elixir (node offset)
+  "Return the fold range for `function' `module' NODE in Elixir.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((children (tsc-count-children node))
+              (end_child (tsc-get-nth-child node (- children 1)))
+              (do_child (tsc-get-nth-child node 1))
+              (beg (tsc-node-start-position do_child))
+              (end (tsc-node-start-position end_child)))
+    (ts-fold--cons-add (cons beg end) offset)))
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
