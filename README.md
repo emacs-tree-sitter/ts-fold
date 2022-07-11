@@ -69,10 +69,13 @@ then in Emacs:
 
 ## 🔨 Supported languages
 
-> These languages are fairly complete:
+> ⚠️ Please sort these two lists alphabetically!
+
+These languages are fairly complete:
 
 * Bash
 * C / C++ / C# / CSS
+* Elixir
 * Go
 * HTML
 * Java / JavaScript / JSX / JSON
@@ -81,9 +84,8 @@ then in Emacs:
 * R / Ruby / Rust
 * Scala / Swift
 * TypeScript / TSX
-* Elixir
 
-> These languages are in development:
+These languages are in development:
 
 * Agda
 * Elm
