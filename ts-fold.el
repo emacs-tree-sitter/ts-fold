@@ -61,6 +61,8 @@
 
 The alist is in form of (major-mode . (foldable-node-type)).")
 
+;; TODO(everyone): This is a bit messy, but try to keep this alist
+;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
     (sh-mode         . ,(ts-fold-parsers-bash))

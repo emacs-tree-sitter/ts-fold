@@ -33,6 +33,8 @@
 ;; (@* "Externals" )
 ;;
 
+;; TODO(everyone): keep the forward declared alphabetically sorted
+
 (declare-function ts-fold-range-seq "ts-fold.el")
 (declare-function ts-fold-range-line-comment "ts-fold.el")
 (declare-function ts-fold-range-block-comment "ts-fold.el")
@@ -50,6 +52,8 @@
 ;;
 ;; (@* "Parsers" )
 ;;
+
+;; TODO(everyone): keep the function alphabetically sorted
 
 (defun ts-fold-parsers-agda ()
   "Rule sets for Agda."
