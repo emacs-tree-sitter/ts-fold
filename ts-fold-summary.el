@@ -1,6 +1,6 @@
 ;;; ts-fold-summary.el --- Extract summary from fold region  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 ;; Created date 2021-10-04 16:59:22
 
 ;; This file is NOT part of GNU Emacs.
@@ -193,6 +193,7 @@ type of content by checking the word boundary's existence."
               summary (propertize summary 'face 'ts-fold-replacement-face))))
     summary))
 
+;; TODO(everyone): keep this alist alphabetically sorted
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode . ts-fold-summary-javadoc)
     (bat-mode          . ts-fold-summary-batch)

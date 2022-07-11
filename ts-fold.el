@@ -1,7 +1,7 @@
 ;;; ts-fold.el --- Code folding using tree-sitter  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Junyi Hou
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 
 ;; Created date 2021-08-11 14:12:37
 
@@ -61,6 +61,8 @@
 
 The alist is in form of (major-mode . (foldable-node-type)).")
 
+;; TODO(everyone): This is a bit messy, but try to keep this alist
+;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
     (sh-mode         . ,(ts-fold-parsers-bash))
