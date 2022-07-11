@@ -48,6 +48,7 @@
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
+(declare-function ts-fold-range-elixir "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -217,6 +218,14 @@
 (defun ts-fold-parsers-typescript ()
   "Rule sets for TypeScript."
   (append (ts-fold-parsers-javascript)))
-
+(defun ts-fold-parsers-elixir ()
+  "Rules sets for Elixir."
+  '((list . ts-fold-range-seq)
+    (map . ts-fold-range-seq)
+    (tuple . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))
+    (do_block .ts-fold-range-elixir)))
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

@@ -65,7 +65,7 @@ The alist is in form of (major-mode . (foldable-node-type)).")
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
-    (sh-mode         . ,(ts-fold-parsers-bash))
+    (elixir-mode     . ,(ts-fold-parsers-elixir))
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
@@ -87,6 +87,7 @@ The alist is in form of (major-mode . (foldable-node-type)).")
     (ruby-mode       . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
     (rustic-mode     . ,(ts-fold-parsers-rust))
+    (sh-mode         . ,(ts-fold-parsers-bash))
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
     (typescript-mode . ,(ts-fold-parsers-typescript)))
@@ -483,5 +484,16 @@ more information."
               (end (1+ (tsc-node-start-position last_bracket))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-elixir (node offset)
+  "Return the fold range for `function' `module' NODE in Elixir.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((children (tsc-count-children node))
+              (end_child (tsc-get-nth-child node (- children 1)))
+              (do_child (tsc-get-nth-child node 1))
+              (beg (tsc-node-start-position do_child))
+              (end (tsc-node-start-position end_child)))
+    (ts-fold--cons-add (cons beg end) offset)))
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
