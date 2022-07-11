@@ -65,11 +65,11 @@ The alist is in form of (major-mode . (foldable-node-type)).")
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
-    (elixir-mode     . ,(ts-fold-parsers-elixir))
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
+    (elixir-mode     . ,(ts-fold-parsers-elixir))
     (ess-r-mode      . ,(ts-fold-parsers-r))
     (go-mode         . ,(ts-fold-parsers-go))
     (html-mode       . ,(ts-fold-parsers-html))

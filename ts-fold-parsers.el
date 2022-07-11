@@ -107,6 +107,16 @@
     (block               . ts-fold-range-seq)
     (comment             . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-elixir ()
+  "Rules sets for Elixir."
+  '((list . ts-fold-range-seq)
+    (map . ts-fold-range-seq)
+    (tuple . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))
+    (do_block .ts-fold-range-elixir)))
+
 (defun ts-fold-parsers-go ()
   "Rule sets for Go."
   '((block   . ts-fold-range-seq)
@@ -218,14 +228,6 @@
 (defun ts-fold-parsers-typescript ()
   "Rule sets for TypeScript."
   (append (ts-fold-parsers-javascript)))
-(defun ts-fold-parsers-elixir ()
-  "Rules sets for Elixir."
-  '((list . ts-fold-range-seq)
-    (map . ts-fold-range-seq)
-    (tuple . ts-fold-range-seq)
-    (comment
-     . (lambda (node offset)
-         (ts-fold-range-line-comment node offset "#")))
-    (do_block .ts-fold-range-elixir)))
+
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

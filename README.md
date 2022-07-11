@@ -73,6 +73,7 @@ then in Emacs:
 
 * Bash
 * C / C++ / C# / CSS
+* Elixir
 * Go
 * HTML
 * Java / JavaScript / JSX / JSON
@@ -81,7 +82,6 @@ then in Emacs:
 * R / Ruby / Rust
 * Scala / Swift
 * TypeScript / TSX
-* Elixir
 
 > These languages are in development:
 
