@@ -65,7 +65,7 @@ The alist is in form of (major-mode . (foldable-node-type)).")
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
-    (sh-mode         . ,(ts-fold-parsers-bash))
+    (elixir-mode     . ,(ts-fold-parsers-elixir))
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
@@ -87,10 +87,10 @@ The alist is in form of (major-mode . (foldable-node-type)).")
     (ruby-mode       . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
     (rustic-mode     . ,(ts-fold-parsers-rust))
+    (sh-mode         . ,(ts-fold-parsers-bash))
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
-    (typescript-mode . ,(ts-fold-parsers-typescript))
-    (elixir-mode     . ,(ts-fold-parsers-elixir)))
+    (typescript-mode . ,(ts-fold-parsers-typescript)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
