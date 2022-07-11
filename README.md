@@ -90,6 +90,8 @@ then in Emacs:
 * Emacs Lisp
 * XML (upstream)
 
+> ⚠️ Please sort these two lists alphabetically!
+
 ## ⚖️ Indicators Mode
 
 <p align="center">
