@@ -1,6 +1,6 @@
 ;;; ts-fold-parsers.el --- Adapter layer to Tree-Sitter  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shen, Jen-Chieh
+;; Copyright (C) 2021-2022  Shen, Jen-Chieh
 ;; Created date 2021-10-04 17:45:48
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,6 +33,8 @@
 ;; (@* "Externals" )
 ;;
 
+;; TODO(everyone): keep the forward declared alphabetically sorted
+
 (declare-function ts-fold-range-seq "ts-fold.el")
 (declare-function ts-fold-range-line-comment "ts-fold.el")
 (declare-function ts-fold-range-block-comment "ts-fold.el")
@@ -51,6 +53,8 @@
 ;;
 ;; (@* "Parsers" )
 ;;
+
+;; TODO(everyone): keep the function alphabetically sorted
 
 (defun ts-fold-parsers-agda ()
   "Rule sets for Agda."
