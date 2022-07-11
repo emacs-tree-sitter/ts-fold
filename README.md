@@ -81,12 +81,12 @@ then in Emacs:
 * R / Ruby / Rust
 * Scala / Swift
 * TypeScript / TSX
+* Elixir
 
 > These languages are in development:
 
 * Agda
 * Elm
-* Elixir
 * Emacs Lisp
 * XML (upstream)
 
