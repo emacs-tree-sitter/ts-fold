@@ -276,14 +276,16 @@ current point."
   "Return the current foldable node."
   (ts-fold--get-within-and-after '(fold comment delimiter) 1 nil))
 (defun ts-fold--calculate-start-delimiter (min)
-  "Using  `emacs' to get the start delimiter for non `c-style' languages"
+  "Given a `MIN' node postion to get the end delimiter for non `c-style' languages."
   (goto-char min)
   (end-of-line)
   (point))
 (defun ts-fold--calculate-end-delimiter (max)
-  "Using  `emacs' to get the end delimiter for non `c-style' languages"
+  "Given a `MAX' node postion to get the end delimiter for non `c-style' languages."
   (goto-char max)
-  (forward-line -1)
+  ;for python maybe refactor to add more styles
+  (when (not (string= major-mode "python-mode"))
+  (forward-line -1))
   (end-of-line)
   (point))
 (defun ts-fold--range (nodes)
