@@ -81,6 +81,7 @@
         (c-mode            . "c")
         (csharp-mode       . "c-sharp")
         (c++-mode          . "cpp")
+        (elixir-mode       . "elixir")
         (go-mode           . "go")
         (html-mode         . "html")
         (java-mode         . "java")
