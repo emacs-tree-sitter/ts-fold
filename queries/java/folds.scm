@@ -3,4 +3,5 @@
  (block)
  (interface_body)
  (switch_block)
+ (enum_body)
  ] @fold
