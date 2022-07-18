@@ -70,6 +70,9 @@
   :type '(alist :key-type symbol :value-type string)
   :group 'ts-fold)
 
+(defvar-local ts-fold--query-cursor nil)
+(defvar-local ts-fold--c-style nil)
+
 (pcase-dolist
     (`(,major-mode . ,lang-symbol)
      (reverse
@@ -78,6 +81,7 @@
         (c-mode            . "c")
         (csharp-mode       . "c-sharp")
         (c++-mode          . "cpp")
+        (elixir-mode       . "elixir")
         (go-mode           . "go")
         (html-mode         . "html")
         (java-mode         . "java")
@@ -229,6 +233,11 @@ TOP-LEVEL is used to mention if we should load optional inherits."
                       (> (byte-to-position (car (tsc-node-byte-range x))) (point)))
                     nodes))
 
+(defun ts-fold--get-query-cursor()
+  "CURSOR to enhance the performance when querying tree-sitter."
+  (unless ts-fold--query-cursor
+    (setq ts-fold--query-cursor (tsc-make-query-cursor))))
+
 (defun ts-fold--get-nodes (group query)
   "Get a list of viable nodes based on `GROUP' value.
 They will be order with captures with point inside them first then the
@@ -240,11 +249,13 @@ instead of the builtin query set."
                                 (ts-fold--get-query lang-name t))))
          (root-node (tsc-root-node tree-sitter-tree))
          (query (tsc-make-query tree-sitter-language debugging-query))
-         (captures (tsc-query-captures query root-node #'tsc--buffer-substring-no-properties))
+         (cursor (ts-fold--get-query-cursor))
+         (captures (tsc-query-captures query root-node #'tsc--buffer-substring-no-properties cursor))
          (filtered-captures (cl-remove-if-not (lambda (x)
                                                 (member (car x) group))
                                               captures))
          (nodes (seq-map #'cdr filtered-captures)))
+    (setq ts-fold--c-style (seq-some (lambda(x) (string-equal "fold" (car x))) captures))
     (ht-set ts-fold--query-cache lang-name debugging-query)
     (when ts-fold-debug (ts-fold-clear-cache))
     (cl-remove-duplicates
@@ -252,7 +263,6 @@ instead of the builtin query set."
      :test (lambda (x y)
              (and (= (car (tsc-node-byte-range x)) (car (tsc-node-byte-range y)))
                   (= (cdr (tsc-node-byte-range x)) (cdr (tsc-node-byte-range y))))))))
-
 (defun ts-fold--get-within-and-after (group count query)
   "Given a `GROUP' `QUERY' find `COUNT' number of nodes within in and after
 current point."
@@ -265,8 +275,20 @@ current point."
 
 (defun ts-fold--current-node ()
   "Return the current foldable node."
-  (ts-fold--get-within-and-after '(fold comment) 1 nil))
-
+  (ts-fold--get-within-and-after '(fold comment delimiter) 1 nil))
+(defun ts-fold--calculate-start-delimiter (min)
+  "Given a `MIN' node postion to get the end delimiter for non `c-style' languages."
+  (goto-char min)
+  (end-of-line)
+  (point))
+(defun ts-fold--calculate-end-delimiter (max)
+  "Given a `MAX' node postion to get the end delimiter for non `c-style' languages."
+  (goto-char max)
+  ;for python maybe refactor to add more styles
+  (when (not (string= major-mode "python-mode"))
+  (forward-line -1))
+  (end-of-line)
+  (point))
 (defun ts-fold--range (nodes)
   "Return the range from NODES."
   (let* ((range-min (apply #'min
@@ -281,7 +303,9 @@ current point."
          (max (cl-callf byte-to-position range-max)))
     ;; Have to compute min and max like this as we might have nested functions
     ;; We have to use `cl-callf byte-to-position` ot the positioning might be off for unicode chars
-    (cons (1+ min) (1- max))))
+    (if ts-fold--c-style
+        (cons (1+ min) (1- max))
+      (cons (ts-fold--calculate-start-delimiter min) (ts-fold--calculate-end-delimiter max)))))
 
 (defun ts-fold--get-fold-range (node)
   "Return fold range."
@@ -310,11 +334,11 @@ current point."
   "Return the ts-fold overlay at NODE if NODE is foldable and folded.
 Return nil otherwise."
   (thread-last (overlays-in (car range) (cdr range))
-    (seq-filter (lambda (ov)
-                  (and (eq (overlay-get ov 'invisible) 'ts-fold)
-                       (= (overlay-start ov) (car range))
-                       (= (overlay-end ov) (cdr range)))))
-    car))
+               (seq-filter (lambda (ov)
+                             (and (eq (overlay-get ov 'invisible) 'ts-fold)
+                                  (= (overlay-start ov) (car range))
+                                  (= (overlay-end ov) (cdr range)))))
+               car))
 
 ;;
 ;; (@* "Commands" )
@@ -370,17 +394,17 @@ If the current node is not folded or not foldable, do nothing."
                 (beg (car range))
                 (end (cdr range)))
       (thread-last (overlays-in beg end)
-        (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-        (mapc #'delete-overlay)))))
+                   (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                   (mapc #'delete-overlay)))))
 
 ;;;###autoload
 (defun ts-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let ((nodes-to-fold (ts-fold--get-nodes '(fold comment) nil)))
+    (when-let ((nodes-to-fold (ts-fold--get-nodes '(fold comment delimiter) nil)))
       (thread-last nodes-to-fold
-        (mapc #'ts-fold-close)))))
+                   (mapc #'ts-fold-close)))))
 
 ;;;###autoload
 (defun ts-fold-open-all ()

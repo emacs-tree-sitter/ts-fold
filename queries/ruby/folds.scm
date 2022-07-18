@@ -9,4 +9,4 @@
   (do_block)
   (singleton_class)
   (lambda)
-] @fold
+] @delimiter
