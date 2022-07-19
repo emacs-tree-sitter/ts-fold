@@ -115,7 +115,7 @@
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))
-    (do_block .ts-fold-range-elixir)))
+    (do_block . ts-fold-range-elixir)))
 
 (defun ts-fold-parsers-go ()
   "Rule sets for Go."
