@@ -45,6 +45,7 @@
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
+(declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
@@ -170,6 +171,13 @@
          (if (string-prefix-p "#" (tsc-node-text node))
              (ts-fold-range-line-comment node offset "#")
            (ts-fold-range-c-like-comment node offset))))))
+
+(defun ts-fold-parsers-ocaml ()
+  "Rule sets for OCaml."
+  '((comment             . ts-fold-range-ocaml-comment)
+    (module_definition   . ts-fold-range-ocaml-module-definition)
+    (type_definition     . ts-fold-range-ocaml-type-definition)
+    (value_definition    . ts-fold-range-ocaml-value-definition)))
 
 (defun ts-fold-parsers-python ()
   "Rule sets for Python."
