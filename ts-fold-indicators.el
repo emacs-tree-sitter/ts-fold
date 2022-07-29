@@ -110,7 +110,7 @@
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
-        (ts-fold-indicators-refresh))
+        (ignore-errors (ts-fold-indicators-refresh)))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
