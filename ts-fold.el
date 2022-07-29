@@ -395,7 +395,10 @@ more information."
   (ts-fold-range-seq node (ts-fold--cons-add '(1 . -1) offset)))
 
 (defun ts-fold-range-c-like-comment (node offset)
-  "Define fold range for C-like comemnt."
+  "Define fold range for C-like comemnt.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (let ((text (tsc-node-text node)))
     (if (and (string-match-p "\n" text) (string-prefix-p "/*" text))
         (ts-fold-range-block-comment node offset)
@@ -408,7 +411,10 @@ more information."
 ;;
 
 (defun ts-fold-range-c-preproc-if (node offset)
-  "Define fold range for `if' preprocessor."
+  "Define fold range for `if' preprocessor.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (let* ((named-node (tsc-get-child-by-field node :condition))
          (else (tsc-get-child-by-field node :alternative))
          (beg (tsc-node-end-position named-node))
@@ -416,7 +422,10 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-ifdef (node offset)
-  "Define fold range for `ifdef' and `ifndef' preprocessor."
+  "Define fold range for `ifdef' and `ifndef' preprocessor.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (when-let* ((named-node (tsc-get-child-by-field node :name))
               (else (tsc-get-child-by-field node :alternative))
               (beg (tsc-node-end-position named-node))
@@ -424,7 +433,10 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-elif (node offset)
-  "Define fold range for `elif' preprocessor."
+  "Define fold range for `elif' preprocessor.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
               (else (tsc-get-child-by-field node :alternative))
               (beg (tsc-node-end-position named-node))
@@ -432,7 +444,10 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-else (node offset)
-  "Define fold range for `else' preprocessor."
+  "Define fold range for `else' preprocessor.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (when-let* ((target "#else")
               (len (length target))
               (beg (+ (tsc-node-start-position node) len))
@@ -440,7 +455,10 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-html (node offset)
-  "Define fold range for tag in HTML."
+  "Define fold range for tag in HTML.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (let* ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
          (end-node (tsc-get-nth-child node (1- (tsc-count-children node))))
          (end (tsc-node-start-position end-node)))

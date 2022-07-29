@@ -213,7 +213,9 @@ head (first line) of the region."
         (t nil)))))
 
 (defun ts-fold-indicators--active-ov (folded ov bitmap)
-  "SHOW the indicator OV with BITMAP."
+  "SHOW the indicator OV with BITMAP.
+
+Argument FOLDED holds folding state; it's a boolean."
   (when (overlayp ov)
     (overlay-put ov 'ts-fold-indicators-active folded)
     (overlay-put ov 'type bitmap)
@@ -228,7 +230,7 @@ head (first line) of the region."
     (t (user-error "Invalid indicators fringe type: %s" ts-fold-indicators-fringe))))
 
 (defun ts-fold-indicators--update-overlays (ov-lst folded)
-  "SHOW indicators overlays OV-LST."
+  "SHOW indicators overlays OV-LST depends on FOLDED."
   (when-let* ((len (length ov-lst))
               ((> len 1))
               (len-1 (1- len))

@@ -57,11 +57,11 @@
 ;; TODO(everyone): keep the function alphabetically sorted
 
 (defun ts-fold-parsers-agda ()
-  "Rule sets for Agda."
+  "Rule set for Agda."
   '(()))
 
 (defun ts-fold-parsers-bash ()
-  "Rule sets for Bash."
+  "Rule set for Bash."
   '((compound_statement . ts-fold-range-seq)
     (expansion          . ts-fold-range-seq)
     (comment
@@ -69,7 +69,7 @@
          (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-c ()
-  "Rule sets for C."
+  "Rule set for C."
   '((compound_statement     . ts-fold-range-seq)
     (declaration_list       . ts-fold-range-seq)
     (enumerator_list        . ts-fold-range-seq)
@@ -81,11 +81,11 @@
     (comment                . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-c++ ()
-  "Rule sets for C++."
+  "Rule set for C++."
   (append (ts-fold-parsers-c)))
 
 (defun ts-fold-parsers-csharp ()
-  "Rule sets for C#."
+  "Rule set for C#."
   '((block                                . ts-fold-range-seq)
     (accessor_list                        . ts-fold-range-seq)
     (enum_member_declaration_list         . ts-fold-range-seq)
@@ -102,13 +102,13 @@
     (comment                              . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-css ()
-  "Rule sets for CSS."
+  "Rule set for CSS."
   '((keyframe_block_list . ts-fold-range-seq)
     (block               . ts-fold-range-seq)
     (comment             . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-elixir ()
-  "Rules sets for Elixir."
+  "Rules set for Elixir."
   '((list . ts-fold-range-seq)
     (map . ts-fold-range-seq)
     (tuple . ts-fold-range-seq)
@@ -118,17 +118,17 @@
     (do_block . ts-fold-range-elixir)))
 
 (defun ts-fold-parsers-go ()
-  "Rule sets for Go."
+  "Rule set for Go."
   '((block   . ts-fold-range-seq)
     (comment . ts-fold-range-seq)))
 
 (defun ts-fold-parsers-html ()
-  "Rule sets for HTML."
+  "Rule set for HTML."
   '((element . ts-fold-range-html)
     (comment . (ts-fold-range-seq 1 -1))))
 
 (defun ts-fold-parsers-java ()
-  "Rule sets for Java."
+  "Rule set for Java."
   '((switch_block                    . ts-fold-range-seq)
     (block                           . ts-fold-range-seq)
     (element_value_array_initializer . ts-fold-range-seq)
@@ -142,24 +142,24 @@
     (comment                         . (ts-fold-range-seq 1 -1))))
 
 (defun ts-fold-parsers-javascript ()
-  "Rule sets for JavaScript."
+  "Rule set for JavaScript."
   '((export_clause   . ts-fold-range-seq)
     (statement_block . ts-fold-range-seq)
     (comment         . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-json ()
-  "Rule sets for JSON."
+  "Rule set for JSON."
   '((object . ts-fold-range-seq)
     (array  . ts-fold-range-seq)))
 
 (defun ts-fold-parsers-nix ()
-  "Rule sets for Nix."
+  "Rule set for Nix."
   '((attrset       . ts-fold-range-seq)
     (interpolation . ts-fold-range-seq)
     (list          . ts-fold-range-seq)))
 
 (defun ts-fold-parsers-php ()
-  "Rule sets for PHP."
+  "Rule set for PHP."
   '((namespace_use_group . ts-fold-range-seq)
     (declaration_list    . ts-fold-range-seq)
     (use_list            . ts-fold-range-seq)
@@ -172,7 +172,7 @@
            (ts-fold-range-c-like-comment node offset))))))
 
 (defun ts-fold-parsers-python ()
-  "Rule sets for Python."
+  "Rule set for Python."
   '((function_definition . ts-fold-range-python)
     (class_definition    . ts-fold-range-python)
     (list                . ts-fold-range-seq)
@@ -181,11 +181,11 @@
          (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-r ()
-  "Rule sets for R."
+  "Rule set for R."
   '((brace_list . ts-fold-range-seq)))
 
 (defun ts-fold-parsers-ruby ()
-  "Rule sets for Ruby."
+  "Rule set for Ruby."
   '((class  . ts-fold-range-ruby)
     (method . ts-fold-range-ruby)
     (array  . ts-fold-range-seq)
@@ -194,7 +194,7 @@
          (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-rust ()
-  "Rule sets for Rust."
+  "Rule set for Rust."
   '((declaration_list       . ts-fold-range-seq)
     (enum_variant_list      . ts-fold-range-seq)
     (field_declaration_list . ts-fold-range-seq)
@@ -208,14 +208,14 @@
     (block_comment          . ts-fold-range-block-comment)))
 
 (defun ts-fold-parsers-scala ()
-  "Rule sets for Scala."
+  "Rule set for Scala."
   '((import_selectors . ts-fold-range-seq)
     (template_body    . ts-fold-range-seq)
     (block            . ts-fold-range-seq)
     (comment          . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-swift ()
-  "Rule sets for Swift."
+  "Rule set for Swift."
   '((switch_statement      . ts-fold-range-seq)
     (function_declaration  . ts-fold-range-seq)
     (enum_declaration      . ts-fold-range-seq)
@@ -226,7 +226,7 @@
     (comment               . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-typescript ()
-  "Rule sets for TypeScript."
+  "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
 
 (provide 'ts-fold-parsers)

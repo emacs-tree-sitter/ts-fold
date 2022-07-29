@@ -75,7 +75,7 @@ type of content by checking the word boundary's existence."
   line)
 
 (defun ts-fold-summary--extract-summary (doc-str sym)
-  "Extract only document summary from DOC-STR using SYM"
+  "Extract only document summary from DOC-STR using SYM."
   (let ((lines (split-string doc-str "\n")) new-lines)
     (dolist (line lines)
       (setq line (string-trim line))
@@ -86,7 +86,7 @@ type of content by checking the word boundary's existence."
     (reverse new-lines)))
 
 (defun ts-fold-summary--doc-extract (doc-str sym)
-  "Default way to extract the doc summary from DOC-STR."
+  "Default way to extract the doc summary from DOC-STR using SYM."
   (let* ((lines (ts-fold-summary--extract-summary doc-str sym)) (summary (nth 0 lines)))
     (when summary (setq summary (string-trim summary)))
     (if (string-empty-p summary) nil summary)))
@@ -223,7 +223,7 @@ type of content by checking the word boundary's existence."
     (swift-mode        . ts-fold-summary-c)
     (typescript-mode   . ts-fold-summary-javadoc)
     (nxml-mode         . ts-fold-summary-xml))
-  "Alist mapping major-mode to doc parser function."
+  "Alist mapping `major-mode' to doc parser function."
   :type 'hook
   :group 'ts-fold)
 
