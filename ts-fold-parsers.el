@@ -159,6 +159,13 @@
     (interpolation . ts-fold-range-seq)
     (list          . ts-fold-range-seq)))
 
+(defun ts-fold-parsers-ocaml ()
+  "Rule set for OCaml."
+  '((comment             . ts-fold-range-ocaml-comment)
+    (module_definition   . ts-fold-range-ocaml-module-definition)
+    (type_definition     . ts-fold-range-ocaml-type-definition)
+    (value_definition    . ts-fold-range-ocaml-value-definition)))
+
 (defun ts-fold-parsers-php ()
   "Rule set for PHP."
   '((namespace_use_group . ts-fold-range-seq)
@@ -171,13 +178,6 @@
          (if (string-prefix-p "#" (tsc-node-text node))
              (ts-fold-range-line-comment node offset "#")
            (ts-fold-range-c-like-comment node offset))))))
-
-(defun ts-fold-parsers-ocaml ()
-  "Rule sets for OCaml."
-  '((comment             . ts-fold-range-ocaml-comment)
-    (module_definition   . ts-fold-range-ocaml-module-definition)
-    (type_definition     . ts-fold-range-ocaml-type-definition)
-    (value_definition    . ts-fold-range-ocaml-value-definition)))
 
 (defun ts-fold-parsers-python ()
   "Rule set for Python."
