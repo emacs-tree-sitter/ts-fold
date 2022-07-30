@@ -100,6 +100,7 @@ These languages are in development:
 * Agda
 * Elm
 * Emacs Lisp
+* OCaml
 * XML (upstream)
 
 ## ⚖️ Indicators Mode
