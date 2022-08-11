@@ -562,6 +562,15 @@ more information."
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons beg (- end 3)) offset)))
 
+(defun ts-fold-range-ruby-if (node offset)
+  "Define fold range for `if' (then), `elsif', and `else' in Ruby.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let ((beg (tsc-node-start-position node))
+             (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-rust-macro (node offset)
   "Return the fold range for `macro_definition' NODE in Rust.
 
