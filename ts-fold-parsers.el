@@ -47,7 +47,8 @@
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
-(declare-function ts-fold-range-ruby "ts-fold.el")
+(declare-function ts-fold-range-ruby-class-def "ts-fold.el")
+(declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
 (declare-function ts-fold-range-elixir "ts-fold.el")
 
@@ -194,9 +195,13 @@
 
 (defun ts-fold-parsers-ruby ()
   "Rule set for Ruby."
-  '((class  . ts-fold-range-ruby)
-    (method . ts-fold-range-ruby)
-    (array  . ts-fold-range-seq)
+  '((class    . ts-fold-range-ruby-class-def)
+    (method   . ts-fold-range-ruby-class-def)
+    (array    . ts-fold-range-seq)
+    (do       . (ts-fold-range-seq 1 -2))  ; match with `end`
+    (do_block . (ts-fold-range-seq 1 -2))  ; match with `end`, in spec file
+    (then     . ts-fold-range-ruby-if)        ; `if` and `elsif` block
+    (else     . (ts-fold-range-ruby-if 4 0))  ; `else` block
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
