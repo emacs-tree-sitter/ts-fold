@@ -167,10 +167,22 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
   (let ((tree-sitter-mode t))
     (ts-fold-open-all)))
 
+(defvar ts-fold-close-keymap-default
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "TAB") 'ts-fold-open)
+    map))
+
+(defvar ts-fold-close-keymap 'ts-fold-close-keymap-default
+  "Keymap used within ts-fold-close overlay.
+It should be set before the overlay is created.")
+
+(make-local-variable 'ts-fold-close-keymap)
+
 ;;;###autoload
 (define-minor-mode ts-fold-mode
   "Folding code using tree sitter."
   :init-value nil
+  :keymap ts-fold-close-keymap
   :lighter "TS-Fold"
   (if ts-fold-mode (ts-fold--enable) (ts-fold--disable)))
 
@@ -218,6 +230,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
     (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'ts-fold)
       (overlay-put ov 'invisible 'ts-fold)
+      (overlay-put ov 'keymap ts-fold-close-keymap-default)
       (overlay-put ov 'display (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
                                    ts-fold-replacement))
