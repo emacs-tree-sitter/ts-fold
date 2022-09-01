@@ -4,7 +4,7 @@
 # ts-fold
 > Code-folding using tree-sitter
 
-[![CI](https://github.com/jcs-elpa/ts-fold/actions/workflows/test.yml/badge.svg)](https://github.com/jcs-elpa/ts-fold/actions/workflows/test.yml)
+[![CI](https://github.com/emacs-tree-sitter/ts-fold/actions/workflows/test.yml/badge.svg)](https://github.com/emacs-tree-sitter/ts-fold/actions/workflows/test.yml)
 
 `ts-fold` builds on top of [elisp-tree-sitter](https://github.com/emacs-tree-sitter/elisp-tree-sitter)
 to provide code folding based on the tree-sitter syntax tree.
@@ -43,13 +43,13 @@ to provide code folding based on the tree-sitter syntax tree.
 
 ```elisp
 (use-package ts-fold
-  :straight (ts-fold :type git :host github :repo "jcs-elpa/ts-fold"))
+  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold"))
 ```
 
 ### 🔍 Method 2. Manual
 
 ```sh
-git clone https://github.com/jcs-elpa/ts-fold /path/to/lib
+git clone https://github.com/emacs-tree-sitter/ts-fold /path/to/lib
 ```
 
 then in Emacs:
@@ -113,7 +113,7 @@ You need to load `ts-fold-indicators-mode`:
 - `use-package`
    ```elisp
    (use-package ts-fold-indicators
-   :straight (ts-fold-indicators :type git :host github :repo "jcs-elpa/ts-fold"))
+   :straight (ts-fold-indicators :type git :host github :repo "emacs-tree-sitter/ts-fold"))
    ```
 
 -
