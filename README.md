@@ -88,7 +88,7 @@ These languages are fairly complete:
 * Elixir
 * Go
 * HTML
-* Java / JavaScript / JSX / JSON
+* Java / JavaScript / JSX / JSON / Julia
 * Nix
 * PHP / Python
 * R / Ruby / Rust
