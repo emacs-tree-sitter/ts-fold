@@ -12,6 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Render indicators once it's mode is enabled (#19)
 * OCaml parser and first functions added (#21)
 * Enhance Ruby parser (#26)
+* Julia language support (#8)
 
 ## 0.1.0
 > Released Oct 18, 2021
