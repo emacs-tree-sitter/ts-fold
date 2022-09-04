@@ -45,6 +45,7 @@
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
+(declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -153,6 +154,21 @@
   "Rule set for JSON."
   '((object . ts-fold-range-seq)
     (array  . ts-fold-range-seq)))
+
+(defun ts-fold-parsers-julia ()
+  "Rule set for Julia."
+  '((block_comment       . (ts-fold-range-seq 1 -1))
+    (for_statement       . (ts-fold-range-seq 2 -2))
+    (function_definition . ts-fold-range-julia)
+    (if_statement        . (ts-fold-range-seq 1 -2))
+    (let_statement       . (ts-fold-range-seq 2 -2))
+    (macro_definition    . ts-fold-range-julia)
+    (module_definition   . ts-fold-range-julia)
+    (quote_statement     . ts-fold-range-julia)
+    (struct_definition   . ts-fold-range-julia)
+    (triple_string       . (ts-fold-range-seq 2 -2))
+    (try_statement       . (ts-fold-range-seq 2 -2))
+    (while_statement     . ts-fold-range-julia)))
 
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."

@@ -160,6 +160,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in XML."
   (ts-fold-summary--generic doc-str "-"))
 
+(defun ts-fold-summary-julia-doc (doc-str)
+  "Extract summary from DOC-STR in julia."
+  (ts-fold-summary--generic doc-str "\"\"\""))
+
 ;;
 ;; (@* "Core" )
 ;;
@@ -208,6 +212,7 @@ type of content by checking the word boundary's existence."
     (js-mode           . ts-fold-summary-javadoc)
     (js2-mode          . ts-fold-summary-javadoc)
     (js3-mode          . ts-fold-summary-javadoc)
+    (julia-mode        . ts-fold-summary-julia-doc)
     (kotlin-mode       . ts-fold-summary-javadoc)
     (lua-mode          . ts-fold-summary-lua-doc)
     (markdown-mode     . ts-fold-summary-markdown)
