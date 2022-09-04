@@ -603,9 +603,10 @@ It excludes the NODE's first child and the `end' keyword. For
 argument OFFSET, see function `ts-fold-range-seq' for more
 information."
   (let* ((identifier (tsc-get-nth-named-child node 0))
-         (range (aref (tsc-node-range identifier) 3))
-         (beg (1- (cdr range))))
-    (ts-fold-range-seq node (ts-fold--cons-add (cons beg -2) offset))))
+         (end-position (byte-to-position (aref (tsc-node-range identifier) 1)))
+         (start-position (byte-to-position (aref (tsc-node-range node) 0)))
+         (fold-begin (1- (- end-position start-position))))
+    (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
