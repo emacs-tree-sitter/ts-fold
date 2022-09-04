@@ -160,6 +160,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in XML."
   (ts-fold-summary--generic doc-str "-"))
 
+(defun ts-fold-summary-julia-doc (doc-str)
+  "Extract summary from DOC-STR in julia."
+  (ts-fold-summary--generic doc-str "\"\"\""))
+
 ;;
 ;; (@* "Core" )
 ;;
@@ -195,37 +199,38 @@ type of content by checking the word boundary's existence."
 
 ;; TODO(everyone): keep this alist alphabetically sorted
 (defcustom ts-fold-summary-parsers-alist
-  `((actionscript-mode . ts-fold-summary-javadoc)
-    (bat-mode          . ts-fold-summary-batch)
-    (c-mode            . ts-fold-summary-c)
-    (c++-mode          . ts-fold-summary-c)
-    (csharp-mode       . ts-fold-summary-csharp)
-    (css-mode          . ts-fold-summary-javadoc)
-    (go-mode           . ts-fold-summary-go)
-    (html-mode         . ts-fold-summary-xml)
-    (java-mode         . ts-fold-summary-javadoc)
-    (javascript-mode   . ts-fold-summary-javadoc)
-    (js-mode           . ts-fold-summary-javadoc)
-    (js2-mode          . ts-fold-summary-javadoc)
-    (js3-mode          . ts-fold-summary-javadoc)
-    (kotlin-mode       . ts-fold-summary-javadoc)
-    (lua-mode          . ts-fold-summary-lua-doc)
-    (markdown-mode     . ts-fold-summary-markdown)
-    (objc-mode         . ts-fold-summary-c)
-    (org-mode          . ts-fold-summary-org)
-    (php-mode          . ts-fold-summary-javadoc)
-    (python-mode       . ts-fold-summary-python-doc)
-    (rjsx-mode         . ts-fold-summary-javadoc)
-    (ruby-mode         . ts-fold-summary-ruby-doc)
-    (rust-mode         . ts-fold-summary-rust-doc)
-    (scala-mode        . ts-fold-summary-javadoc)
-    (sh-mode           . ts-fold-summary-javadoc)
-    (swift-mode        . ts-fold-summary-c)
-    (typescript-mode   . ts-fold-summary-javadoc)
-    (nxml-mode         . ts-fold-summary-xml))
-  "Alist mapping `major-mode' to doc parser function."
-  :type 'hook
-  :group 'ts-fold)
+`((actionscript-mode . ts-fold-summary-javadoc)
+  (bat-mode          . ts-fold-summary-batch)
+  (c-mode            . ts-fold-summary-c)
+  (c++-mode          . ts-fold-summary-c)
+  (csharp-mode       . ts-fold-summary-csharp)
+  (css-mode          . ts-fold-summary-javadoc)
+  (go-mode           . ts-fold-summary-go)
+  (html-mode         . ts-fold-summary-xml)
+  (java-mode         . ts-fold-summary-javadoc)
+  (javascript-mode   . ts-fold-summary-javadoc)
+  (js-mode           . ts-fold-summary-javadoc)
+  (js2-mode          . ts-fold-summary-javadoc)
+  (js3-mode          . ts-fold-summary-javadoc)
+  (julia-mode        . ts-fold-summary-julia-doc)
+  (kotlin-mode       . ts-fold-summary-javadoc)
+  (lua-mode          . ts-fold-summary-lua-doc)
+  (markdown-mode     . ts-fold-summary-markdown)
+  (objc-mode         . ts-fold-summary-c)
+  (org-mode          . ts-fold-summary-org)
+  (php-mode          . ts-fold-summary-javadoc)
+  (python-mode       . ts-fold-summary-python-doc)
+  (rjsx-mode         . ts-fold-summary-javadoc)
+  (ruby-mode         . ts-fold-summary-ruby-doc)
+  (rust-mode         . ts-fold-summary-rust-doc)
+  (scala-mode        . ts-fold-summary-javadoc)
+  (sh-mode           . ts-fold-summary-javadoc)
+  (swift-mode        . ts-fold-summary-c)
+  (typescript-mode   . ts-fold-summary-javadoc)
+  (nxml-mode         . ts-fold-summary-xml))
+"Alist mapping `major-mode' to doc parser function."
+:type 'hook
+:group 'ts-fold)
 
 (provide 'ts-fold-summary)
 ;;; ts-fold-summary.el ends here

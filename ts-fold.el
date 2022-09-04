@@ -81,6 +81,7 @@ The alist is in form of (major-mode . (foldable-node-type)).")
     (js3-mode        . ,(ts-fold-parsers-javascript))
     (json-mode       . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
+    (julia-mode      . ,(ts-fold-parsers-julia))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
     (php-mode        . ,(ts-fold-parsers-php))
@@ -594,5 +595,17 @@ more information."
               (beg (tsc-node-start-position do_child))
               (end (tsc-node-start-position end_child)))
     (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-julia (node offset)
+  "Return the fold range for a NODE in Julia.
+
+It excludes the NODE's first child and the `end' keyword. For
+argument OFFSET, see function `ts-fold-range-seq' for more
+information."
+  (let* ((identifier (tsc-get-nth-named-child node 0))
+         (range (aref (tsc-node-range identifier) 3))
+         (beg (1- (cdr range))))
+    (ts-fold-range-seq node (ts-fold--cons-add (cons beg -2) offset))))
+
 (provide 'ts-fold)
 ;;; ts-fold.el ends here

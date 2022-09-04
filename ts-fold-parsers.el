@@ -242,5 +242,20 @@
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
 
+(defun ts-fold-parsers-julia ()
+  "Rule set for Julia."
+  '((block_comment       . (ts-fold-range-seq 1 -1))
+    (for_statement       . (ts-fold-range-seq 2 -2))
+    (function_definition . ts-fold-range-julia)
+    (if_statement        . (ts-fold-range-seq 1 -2))
+    (let_statement       . (ts-fold-range-seq 2 -2))
+    (macro_definition    . ts-fold-range-julia)
+    (module_definition   . ts-fold-range-julia)
+    (quote_statement     . ts-fold-range-julia)
+    (struct_definition   . ts-fold-range-julia)
+    (triple_string       . (ts-fold-range-seq 2 -2))
+    (try_statement       . (ts-fold-range-seq 2 -2))
+    (while_statement     . ts-fold-range-julia)))
+
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here
