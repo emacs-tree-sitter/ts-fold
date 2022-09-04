@@ -45,6 +45,7 @@
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
+(declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
