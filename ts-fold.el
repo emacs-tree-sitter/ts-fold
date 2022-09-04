@@ -599,7 +599,7 @@ more information."
 (defun ts-fold-range-julia (node offset)
   "Return the fold range for a NODE in Julia.
 
-It excludes the NODE's first child and the `end' keyword. For
+It excludes the NODE's first child and the `end' keyword.  For
 argument OFFSET, see function `ts-fold-range-seq' for more
 information."
   (let* ((identifier (tsc-get-nth-named-child node 0))
