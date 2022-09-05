@@ -250,7 +250,7 @@ Return nil otherwise."
   (declare (indent 0))
   `(if (bound-and-true-p tree-sitter-mode)
        (progn ,@body)
-     (user-error "Ignored, tree-sitter-mode is not enable in the current buffer")))
+     (user-error "Ignored, tree-sitter-mode is not enabled in the current buffer")))
 
 ;;;###autoload
 (defun ts-fold-close (&optional node)
