@@ -229,7 +229,7 @@ type of content by checking the word boundary's existence."
     (typescript-mode   . ts-fold-summary-javadoc)
     (nxml-mode         . ts-fold-summary-xml))
   "Alist mapping `major-mode' to doc parser function."
-  :type 'hook
+  :type '(alist :key-type symbol :value-type function)
   :group 'ts-fold)
 
 (provide 'ts-fold-summary)

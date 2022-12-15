@@ -267,8 +267,8 @@ Argument FOLDED holds folding state; it's a boolean."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
       (when-let* ((node (tsc-root-node tree-sitter-tree))
-                  (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                        (alist-get major-mode ts-fold-foldable-node-alist)
+                  (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                                        (alist-get major-mode ts-fold-range-alist)
                                         'vector))
                   (query (ignore-errors
                            (tsc-make-query tree-sitter-language patterns)))
