@@ -13,6 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * OCaml parser and first functions added (#21)
 * Enhance Ruby parser (#26)
 * Julia language support (#33)
+* Remove redundant fold node alist (#36)
 
 ## 0.1.0
 > Released Oct 18, 2021

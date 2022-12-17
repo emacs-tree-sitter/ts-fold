@@ -182,7 +182,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
          ;; Used for looping
          (current node))
     (while (and current (not (alist-get (tsc-node-type current) mode-ranges)))
-        (setq current (tsc-get-parent current)))
+      (setq current (tsc-get-parent current)))
     current))
 
 (defun ts-fold--get-fold-range (node)
