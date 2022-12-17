@@ -56,11 +56,6 @@
   :group 'tree-sitter
   :prefix "ts-fold-")
 
-(defvar ts-fold-foldable-node-alist nil
-  "Collect a list of foldable node from variable `ts-fold-range-alist'.
-
-The alist is in form of (major-mode . (foldable-node-type)).")
-
 ;; TODO(everyone): This is a bit messy, but try to keep this alist
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
@@ -103,15 +98,6 @@ FOLDABLE-NODE-TYPE) and return the buffer positions of the beginning and end of
 the fold in a cons cell.  See `ts-fold-range-python' for an example."
   :type '(alist :key-type symbol
                 :value-type (alist :key-type symbol :value-type function))
-  :set (lambda (symbol value)
-         (set-default symbol value)
-         (setq ts-fold-foldable-node-alist
-               (let (alist)
-                 (dolist (item ts-fold-range-alist)
-                   (let ((mode (car item)) nodes)
-                     (dolist (rule (cdr item)) (push (car rule) nodes))
-                     (push (cons mode nodes) alist)))
-                 alist)))
   :group 'ts-fold)
 
 (defcustom ts-fold-mode-hook nil
@@ -186,28 +172,27 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 (defun ts-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
 
-Raise `user-error' if no foldable node is found.
+Return nil if no valid node is found.
 
 This function is borrowed from `tree-sitter-node-at-point'."
   (let* ((pos (or pos (point)))
-         (foldable-types (alist-get major-mode ts-fold-foldable-node-alist))
+         (mode-ranges (alist-get major-mode ts-fold-range-alist))
          (root (tsc-root-node tree-sitter-tree))
-         (node (tsc-get-descendant-for-position-range root pos pos)))
-    (let ((current node) result)
-      (while current
-        (if (memq (tsc-node-type current) foldable-types)
-            (setq result current
-                  current nil)
-          (setq current (tsc-get-parent current))))
-      (or result (user-error "No foldable node found at POS")))))
+         (node (tsc-get-descendant-for-position-range root pos pos))
+         ;; Used for looping
+         (current node))
+    (while (and current (not (alist-get (tsc-node-type current) mode-ranges)))
+        (setq current (tsc-get-parent current)))
+    current))
 
 (defun ts-fold--get-fold-range (node)
-  "Return the beginning (as buffer position) of fold for NODE."
+  "Return the beginning (as buffer position) of fold for NODE.
+Return nil if there is no fold to be made."
   (when-let* ((fold-alist (alist-get major-mode ts-fold-range-alist))
-              (item (alist-get (tsc-node-type node) fold-alist)))
-    (cond ((functionp item) (funcall item node (cons 0 0)))
-          ((listp item) (funcall (nth 0 item) node (cons (nth 1 item) (nth 2 item))))
-          (t (user-error "Current node is not found in `ts-fold-range-alist' in %s" major-mode)))))
+              (fold-func (alist-get (tsc-node-type node) fold-alist)))
+    (cond ((functionp fold-func) (funcall fold-func node (cons 0 0)))
+          ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
+          (t (user-error "Bad folding function for node")))))
 
 ;;
 ;; (@* "Overlays" )
@@ -216,7 +201,9 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
   (when range
-    (let* ((beg (car range)) (end (cdr range)) (ov (make-overlay beg end)))
+    (let* ((beg (car range))
+           (end (cdr range))
+           (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'ts-fold)
       (overlay-put ov 'invisible 'ts-fold)
       (overlay-put ov 'display (or (and ts-fold-summary-show
@@ -232,9 +219,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun ts-fold-overlay-at (node)
   "Return the ts-fold overlay at NODE if NODE is foldable and folded.
 Return nil otherwise."
-  (when-let* ((foldable-types (alist-get major-mode ts-fold-foldable-node-alist))
-              ((memq (tsc-node-type node) foldable-types))
-              (range (ts-fold--get-fold-range node)))
+  (when-let* ((range (ts-fold--get-fold-range node)))
     (thread-last (overlays-in (car range) (cdr range))
                  (seq-filter (lambda (ov)
                                (and (eq (overlay-get ov 'invisible) 'ts-fold)
@@ -257,15 +242,18 @@ Return nil otherwise."
 (defun ts-fold-close (&optional node)
   "Fold the syntax node at `point` if it is foldable.
 
-Foldable nodes are defined in `ts-fold-foldable-node-alist' for the
-current `major-mode'.  If no foldable NODE is found in point, do nothing."
+Foldable nodes are defined in `ts-fold-range-alist' for the
+current `major-mode'.
+
+If no NODE is found in point, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (let ((node (or node (ts-fold--foldable-node-at-pos))))
+    (when-let* ((node (or node (ts-fold--foldable-node-at-pos))))
       ;; make sure I do not create multiple overlays for the same fold
       (when-let* ((ov (ts-fold-overlay-at node)))
         (delete-overlay ov))
-      (ts-fold--create-overlay (ts-fold--get-fold-range node)))))
+      (when-let* ((range (ts-fold--get-fold-range node)))
+        (ts-fold--create-overlay range)))))
 
 ;;;###autoload
 (defun ts-fold-open ()
@@ -295,8 +283,8 @@ If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
     (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (type) `(,(list type) @name))
-                                 (alist-get major-mode ts-fold-foldable-node-alist)
+           (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                                 (alist-get major-mode ts-fold-range-alist)
                                  'vector))
            (query (tsc-make-query tree-sitter-language patterns))
            (nodes-to-fold (tsc-query-captures query node #'ignore)))
