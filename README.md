@@ -2,6 +2,7 @@
 [![JCS-ELPA](https://raw.githubusercontent.com/jcs-emacs/badges/master/elpa/v/ts-fold.svg)](https://jcs-emacs.github.io/jcs-elpa/#/ts-fold)
 
 # ts-fold
+
 > Code-folding using tree-sitter
 
 [![CI](https://github.com/emacs-tree-sitter/ts-fold/actions/workflows/test.yml/badge.svg)](https://github.com/emacs-tree-sitter/ts-fold/actions/workflows/test.yml)
@@ -14,26 +15,35 @@ to provide code folding based on the tree-sitter syntax tree.
 </p>
 
 <!-- Markdown is not able to render links with unicode so after refreshing the toc, select it and:
-    `M-x regexp-replace #[^a-zA-Z] <ret> # <ret>` -->
+    `M-x replace-regexp #[^-a-zA-Z] <ret> # <ret>` -->
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
 **Table of Contents**
 
 - [ts-fold](#ts-fold)
-    - [💾 Installation](#-installation)
-        - [🔍 Method 1. with `straight.el` and `use-package`:](#-method-1-with-straightel-and-use-package)
-        - [🔍 Method 2. Manual](#-method-2-manual)
+  - [💾 Installation](#-installation)
+    - [🔍 Method 1. with `straight.el` and `use-package`:](#-method-1-with-straightel-and-use-package)
+    - [🔍 Method 2. Manual](#-method-2-manual)
+  - [🖥 Usage](#-usage)
     - [📇 Commands](#-commands)
     - [🔨 Supported languages](#-supported-languages)
-    - [⚖️ Indicators Mode](#️-indicators-mode)
+  - [📝 Customization](#-customization)
+    - [⚪ Folding on new nodes](#-folding-on-new-nodes)
+      - [❔ Example](#-example)
+      - [↔ Offset](#-offset)
+    - [🔍 Writing new fold functions](#-writing-new-fold-functions)
+  - [🔌 Plugins](#-plugins)
+    - [⚖️ Indicators Mode](#-indicators-mode)
+      - [💾 Installation](#-installation-1)
+      - [🖥 Usage](#-usage-1)
     - [📝 Summary](#-summary)
-    - [🔰 Contribute](#-contribute)
-        - [❓ How to create a folding parser?](#-how-to-create-a-folding-parser)
-            - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
-            - [🔍 How do I create the function for the corresponding node?](#-how-do-i-create-the-function-for-the-corresponding-node)
-            - [🔍 Register in the folding parsers alist!](#-register-in-the-folding-parsers-alist)
-        - [❓ How to create a summary parser?](#-how-to-create-a-summary-parser)
-            - [🔍 Register to summary parsers alist!](#-register-to-summary-parsers-alist)
+      - [🖥 Usage](#-usage-2)
+      - [📝 Customization](#-customization-1)
+  - [🔰 Contribute](#-contribute)
+    - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
+    - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
+    - [❓ How to create a summary parser?](#-how-to-create-a-summary-parser)
 
 <!-- markdown-toc end -->
 
@@ -66,10 +76,14 @@ or
   :load-path "/path/to/lib")
 ```
 
-## 📇 Commands
+## 🖥 Usage
+
+### 📇 Commands
+
+The following are the functions provided by `ts-fold-mode`
 
 | Commands                   | Description                                                                 |
-|----------------------------|-----------------------------------------------------------------------------|
+| -------------------------- | --------------------------------------------------------------------------- |
 | `ts-fold-close`            | fold the current syntax node.                                               |
 | `ts-fold-open`             | open all folds inside the current syntax node.                              |
 | `ts-fold-open-recursively` | open the outmost fold of the current syntax node. Keep the sub-folds close. |
@@ -77,56 +91,290 @@ or
 | `ts-fold-open-all`         | open all folded syntax nodes in the current buffer.                         |
 | `ts-fold-toggle`           | toggle the syntax node at `point'.                                          |
 
-## 🔨 Supported languages
+### 🔨 Supported languages
 
 > ⚠️ Please sort these two lists alphabetically!
 
 These languages are fairly complete:
 
-* Bash
-* C / C++ / C# / CSS
-* Elixir
-* Go
-* HTML
-* Java / JavaScript / JSX / JSON / Julia
-* Nix
-* PHP / Python
-* R / Ruby / Rust
-* Scala / Swift
-* TypeScript / TSX
+- Bash
+- C / C++ / C# / CSS
+- Elixir
+- Go
+- HTML
+- Java / JavaScript / JSX / JSON / Julia
+- Nix
+- PHP / Python
+- R / Ruby / Rust
+- Scala / Swift
+- TypeScript / TSX
 
 These languages are in development:
 
-* Agda
-* Elm
-* Emacs Lisp
-* OCaml
-* XML (upstream)
+- Agda
+- Elm
+- Emacs Lisp
+- OCaml
+- XML (upstream)
 
-## ⚖️ Indicators Mode
+## 📝 Customization
+
+Although ts-fold aims to have good folding out of the box for all supported
+definitions, people will indubitably have their own preferences or desired
+functionality. The following section outlines how to add your own folding
+definitions and folding functions to make ts-fold work for you. If there are any
+improvements you find for existing or new languages, please do raise a PR so
+that others may benefit from better folding in the future!
+
+### ⚪ Folding on new nodes
+
+Ts-fold defines all its folding definitions in the the variable
+`ts-fold-range-alist` which is an alist with the key of the alist being the
+mode and the value being another alist of fold definitions.
+
+```elisp
+;; Example of ts-fold-range-alist's structure
+'((c-mode . c-folding-definitions) ;; <language>-folding-definitions is structured as shown below
+  (css-mode . css-folding-definitions)
+  (go-mode . go-folding-definitions)
+  (scala-mode . scala-folding-definitions)
+  ...)
+
+;; Examle of a folding definition alist
+(setq css-folding-definitions
+    (block . ts-fold-range-seq)
+    (comment . ts-fold-range-c-like-comment))
+```
+
+So you can select whatever node that you want to fold on it.
+
+To find what node you'll want to fold closed, refer to the
+[tree-sitter documentation](https://emacs-tree-sitter.github.io/getting-started/#view-the-syntax-tree)
+about viewing nodes. `tree-sitter-debug` and `tree-sitter-query-builder`
+are both very useful for this.
+
+For the folding functions, ts-fold provides some default
+
+- `ts-fold-range-seq` - Folds from the start of the node to the end of the node
+  leaving a buffer of one character on each side. Usually used for code blocks
+  that have bracketing delimiters.
+
+  ```c++
+  int main() { // <-- start of tree-sitter block node
+      printf("Hello, World\n");
+      return 0;
+  } // <-- end of tree-sitter block node
+
+  // |
+  // | '(block . ts-fold-range-seq)
+  // V
+
+  int main() {...} // Folded node
+  ```
+
+- `ts-fold-range-block-comment` - Folds multi-line comments that are of the form
+  `/*...*/`. Should show a summary if the commentary plugin is turned on.
+
+  ```c++
+  /*
+   * The main function that gets run after program is compiled
+   * Doesn't take any parameters
+   */
+  int main() {
+      printf("Hello, World\n");
+      return 0;
+  }
+
+  // |
+  // | '(comment . ts-fold-range-block-comment)
+  // V
+
+  /* <S> The main function that gets run after program is compiled */
+  int main() {
+      printf("Hello, World\n");
+      return 0;
+  ```
+
+- `ts-fold-range-line-comment` - For languages that have one line comment blocks
+  with the comment delimiter starting each line. Condenses all the comment nodes
+  into a single fold. This folding function requires a lambda (or an externally
+  defined function wrapper) so that the comment delimiter can be specified. You
+  usually don't need to worry about the `node` and `offset` variables, so just
+  pass them through.
+
+  ```sh
+  # show the long form of ls
+  # and also display hidden files
+  alias ll='ls -lah'
+
+  # |
+  # | (comment (lambda (node offset) (ts-fold-range-line-comment node offset "#"))))
+  # V
+
+  # show the long form of ls...
+  alias ll='ls -lah'
+  ```
+
+- `ts-fold-range-c-like-comment` - A shortcut for the large number of languages
+  that have the c style comment structures `/*...*/` and `// ...`. Smartly picks
+  the correct folding style for the comment on the line.
+
+  ```c++
+  /*
+   * The main function that gets run after program is compiled
+   * Doesn't take any parameters
+   */
+  int main() {
+      // print hello world
+      // and a new line
+      printf("Hello, World\n");
+      return 0;
+  }
+
+  // |
+  // | '(comment . ts-fold-range-c-like-comment)
+  // V
+
+  /* <S> The main function that gets run after program is compiled */
+  int main() {
+      // <S> print hello world
+      printf("Hello, World\n");
+      return 0;
+  ```
+
+Now that you know what kinds of folds are easily available in ts-fold, you can
+go ahead and add new fold definitions to `ts-fold-range-alist` and be good to go!
+
+#### ❔ Example
+
+Let's look at a quick example of adding a new folding definition. Lets say you
+want to add folding to `go-mode`'s `field_declaration_list`. The folding
+definition that is needed will be
+`'(field_declaration_list . ts-fold-range-seq)`. To add this to the
+`ts-fold-range-alist`, you can do something like the following.
+
+```emacs-lisp
+(push '(field_declaration_list . ts-fold-range-seq) (alist-get 'go-mode ts-fold-range-alist))
+```
+
+Now the new fold definition should be usable by ts-fold!
+
+#### ↔ Offset
+
+With the functions listed above you'll be able to define most folding behavior
+that you'll want for most languages. However, sometimes you'll have a language
+where the delimiter is a word instead of a single character bracket and you want
+to offset your fold by a certain amount to accommodate it. That's where offsets
+come in. When adding a fold definition to a a language's fold alist, you can
+either provide the folding function directly as you've seen so far:
+
+```elisp
+'(block . ts-fold-range-seq)
+```
+
+Or you can provide the folding function with an offset:
+
+```elisp
+'(block . (ts-fold-range-seq 1 -3))
+```
+
+When a range is provided, it provides extra room on the ends of a fold. The way
+this works is most easily shown using an example. Lets say we want to write a
+fold for bash's `for...do...done` construct to look something like this:
+
+```sh
+for i in 1 2 3 4 5
+do
+   echo "Welcome $i times"
+done
+
+# |
+# | '(do_group . <some folding function>)
+# V
+
+for i in 1 2 3 4 5
+do...done
+```
+
+The `do...done` block is represented in tree-sitter as the node named
+`do_group`. However, if we just use `'(do_group . ts-fold-range-seq)`, then
+we'll get results like the following:
+
+```emacs-lisp
+for i in 1 2 3 4 5
+d...e
+```
+
+which is hard to read. Instead, we can use the definition
+`'(do_group . (ts-fold-range-seq 1 -3))` to offset the fold a bit to get our
+desired result!
+
+### 🔍 Writing new fold functions
+
+If the built in functions don't fit your needs, you can write your own fold
+parser! Folding functions take two parameters:
+
+- `node` - the targeted tree-sitter node; in this example, `block` will be the
+  targeting node.
+- `offset` - (optional) a cons of two integers. This is handy when you have
+  a similar rule with little of positioning adjustment.
+
+Then the function needs to return a position range for the fold overlay in the
+form `'(start-of-fold . end-of-fold)`. If `nil` is returned instead of a range,
+then no fold is created. This can be useful if you want to add extra conditional
+logic onto your fold.
+
+As an example of a folding function, take a look at the definition of the
+basic `ts-fold-range-seq`.
+
+```elisp
+(defun ts-fold-range-seq (node offset)
+  "..."
+  (let ((beg (1+ (tsc-node-start-position node)))  ; node beginning position
+        (end (1- (tsc-node-end-position node))))   ; node end position
+    (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
+```
+
+## 🔌 Plugins
+
+ts-fold comes with a couple of useful little additions that can be used or
+turned off as desired.
+
+### ⚖️ Indicators Mode
 
 <p align="center">
 <img src="./etc/indicators.png" width="40%" height=480%"/>
 </p>
 
-You need to load `ts-fold-indicators-mode`:
+This plugin adds interactive visual markers in the gutter that show where folds
+can be made. They can be clicked on to fold or unfold given nodes.
+
+#### 💾 Installation
+
+`ts-fold-indicator-mode` is loaded when `ts-fold-mode` is and the functionality
+should be auto-loaded in, however if that's not working then you may want to
+explicitly declare the package in in your config.
+
 - `use-package`
-   ```elisp
-   (use-package ts-fold-indicators
-   :straight (ts-fold-indicators :type git :host github :repo "emacs-tree-sitter/ts-fold"))
-   ```
 
--
-   ```elisp
-   (add-to-list 'load-path "/path/to/lib")
-   (require ts-fold)
-   ```
-   or
+  ```elisp
+  (use-package ts-fold-indicators
+  :straight (ts-fold-indicators :type git :host github :repo "emacs-tree-sitter/ts-fold"))
+  ```
 
-   ```elisp
-   (use-package ts-fold-indicators
-      :load-path "/path/to/lib")
-   ```
+- ```elisp
+  (add-to-list 'load-path "/path/to/lib")
+  (require ts-fold)
+  ```
+
+  or
+
+  ```elisp
+  (use-package ts-fold-indicators
+     :load-path "/path/to/lib")
+  ```
+
+#### 🖥 Usage
 
 You can then enable this manually by doing the following
 
@@ -134,40 +382,43 @@ You can then enable this manually by doing the following
 M-x ts-fold-indicators-mode
 ```
 
+Please note that turning on `ts-fold-indicators-mode` automatically turns on
+`ts-fold-mode` as well.
+
 - To enable this automatically whenever `tree-sitter-mode` is enabled:
 
-   ```el
-   (add-hook 'tree-sitter-after-on-hook #ts-fold-indicators-mode)
-   ```
+  ```elisp
+  (add-hook 'tree-sitter-after-on-hook #ts-fold-indicators-mode)
+  ```
 
 - To switch to left/right fringe: (Default is `left-fringe`)
 
-   ```el
-   (setq ts-fold-indicators-fringe 'right-fringe)
-   ```
+  ```elisp
+  (setq ts-fold-indicators-fringe 'right-fringe)
+  ```
 
 - To lower/higher the fringe overlay's priority: (Default is `30`)
 
-   ```el
-   (setq ts-fold-indicators-priority 30)
-   ```
+  ```elisp
+  (setq ts-fold-indicators-priority 30)
+  ```
 
 - To apply different faces depending on some conditions: (Default is `nil`)
 
   For example, to coordinate [line-reminder](https://github.com/emacs-vs/line-reminder)
-with this plugin.
+  with this plugin.
 
-   ```elisp
-   (setq ts-fold-indicators-face-function
-      (lambda (pos &rest _)
-        (let ((ln (line-number-at-pos pos)))
-          (cond
-           ((memq ln line-reminder--change-lines) 'line-reminder-modified-sign-face)
-           ((memq ln line-reminder--saved-lines) 'line-reminder-saved-sign-face)
-           (t nil)))))
-   ```
+  ```elisp
+  (setq ts-fold-indicators-face-function
+     (lambda (pos &rest _)
+       (let ((ln (line-number-at-pos pos)))
+         (cond
+          ((memq ln line-reminder--change-lines) 'line-reminder-modified-sign-face)
+          ((memq ln line-reminder--saved-lines) 'line-reminder-saved-sign-face)
+          (t nil)))))
+  ```
 
-## 📝 Summary
+### 📝 Summary
 
 <p align="center">
 <img src="./etc/summary.gif" width="80%" height="80%"/>
@@ -176,29 +427,52 @@ with this plugin.
 This plugin automatically extracts summary from the comment/document string,
 so you can have a nice way to peek at what's inside the fold range.
 
+#### 🖥 Usage
+
 - If you don't want this to happen, do: (Default is `t`)
 
-   ```elisp
-   (setq ts-fold-summary-show nil)
-   ```
+  ```elisp
+  (setq ts-fold-summary-show nil)
+  ```
 
 - Summary are truncated by length: (Default is `60`)
 
-   ```elisp
-   (setq ts-fold-summary-max-length 60)
-   ```
+  ```elisp
+  (setq ts-fold-summary-max-length 60)
+  ```
 
 - The exceeding string are replace by: (Default is `"..."`)
 
-   ```elisp
-   (setq ts-fold-summary-exceeded-string "...")
-   ```
+  ```elisp
+  (setq ts-fold-summary-exceeded-string "...")
+  ```
 
 - To change summary format: (Default is `" <S> %s "`)
 
-   ```elisp
-   (setq ts-fold-summary-format " <S> %s ")
-   ```
+  ```elisp
+  (setq ts-fold-summary-format " <S> %s ")
+  ```
+
+#### 📝 Customization
+
+Just like with fold definitions, you can create your own summary definitions.
+Summary definitions are defined in `ts-fold-summary-parsers-alist` and has one
+summary function per major mode `'(java-mode . fold-summary-function)`. The
+summary function takes in the doc string which is all the text from a doc node
+and then returns a string to be displayed in its stead. Unlike with the folding
+functions, there aren't a set of general summary functions to fall back on.
+However, there are lots of examples and helper functions present in
+`ts-fold-summary.el`. Let's look at one example here.
+
+```emacs-lisp
+(defun ts-fold-summary-javadoc (doc-str)
+  "Extract summary from DOC-STR in Javadoc."
+  (ts-fold-summary--generic doc-str "*")) ;; strip the '*' and returns the first line
+```
+
+As can be seen `ts-fold-summary--generic` is a very helpful function since it
+removes the provided delimiter and returns the first line. often this will be
+enough.
 
 ## 🔰 Contribute
 
@@ -212,80 +486,38 @@ out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
 
-### ❓ How to create a folding parser?
+### ❓ How to add a folding parser?
 
-Parsers are defined in the `ts-fold-parsers.el` file. Parser functions are named
-with the prefix `ts-fold-parsers-` followed by the `language name`. For example, if
-you want to create a parser for the `C` programming language you should name it
-`ts-fold-parsers-c`.
+When adding a new folding parser, add the folding definition function to
+`ts-fold.el` itself near where the other range functions live and then add the
+parser to `ts-fold-parsers.el` file. Finally, if you are adding support for a
+new language, remember to add it to the `ts-fold-range-alist` variable.
 
-Parsers are association lists (alist) whose items consist
-of tree-sitter `node` and a function that returns the folding range. See
-the following example:
+When creating a new parser, name it `ts-fold-parsers-<language>`.
 
-```elisp
-(defun ts-fold-parsers-csharp ()
-  "Rule sets for C#."
-  '((block . ts-fold-range-seq)
-    ...))
-```
-
-`block` is the tree-sitter node and `ts-fold-range-seq` is the function
-that will return the folding range.
-
-Let's move into details,
+When creating a new folding function, name it
+`ts-fold-range-<language>-<feature>` or something similar.
 
 #### 🔍 Where can I look for tree-sitter node?
 
+Here are some techniques for finding your desired nodes in tree-sitter.
+
 To look for the correct node you have three options:
-- look at the `tree-sitter-[lang]/grammar.js` implementation. In the above example, `block` node is defined in the [tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp)'s
-`grammar.js` file
-- open a file of your language choice in emacs and `M-x tree-sitter-debug-mode`. This will display the whole s-expr representing your file
-- `(message "%S" (tsc-node-to-sexp))` in your function to display what your function is seeing
+
+- look at the `tree-sitter-[lang]/grammar.js` implementation. In the above
+  example, `block` node is defined in the
+  [tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp)'s
+  `grammar.js` file
+- open a file of your language choice in emacs and `M-x tree-sitter-debug-mode`.
+  This will display the whole s-expr representing your file
+- `(message "%S" (tsc-node-to-sexp))` in your function to display what your
+  function is seeing
 
 > ⚠️ Warning
 >
 > Make sure you look into the correct repository. Repositories are managed
 > under [tree-sitter-langs](https://github.com/emacs-tree-sitter/tree-sitter-langs)'s
 > using git submodule. Some tree-sitter module aren't using the latest version!
-
-#### 🔍 How do I create the function for the corresponding node?
-
-Function take 2 arguments, `node` and `offset`.
-
-* `node` - the targeted tree-sitter node; in this example, `block` will be the
-targeting node.
-* `offset` - (optional) a cons of two integers. This is handy when you have
-a similar rule with little of positioning adjustment.
-
-  `tree-sitter-[lang]` parsers are generally integrated by different authors,
-hence their naming and ruling are slightly different (+1/-1 position).
-
-  Let's look at function `ts-fold-range-seq` for better understanding,
-
-   ```elisp
-   (defun ts-fold-range-seq (node offset)
-     "..."
-     (let ((beg (1+ (tsc-node-start-position node)))  ; node beginning position (from Rust layer)
-           (end (1- (tsc-node-end-position node))))   ; node end position (from Rust layer)
-       (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
-   ```
-
-#### 🔍 Register in the folding parsers alist!
-
-Don't forget to add your parser to the entry alist with its corresponding
-`major-mode`.
-
-```elisp
-(defcustom ts-fold-range-alist
-  `((agda-mode       . ,(ts-fold-parsers-agda))
-    (sh-mode         . ,(ts-fold-parsers-bash))
-    (c-mode          . ,(ts-fold-parsers-c))
-    (c++-mode        . ,(ts-fold-parsers-c++))
-    ...
-```
-
-This variable is defined in package main file, `ts-fold.el`.
 
 ### ❓ How to create a summary parser?
 
@@ -297,30 +529,6 @@ extract comment syntax correctly then register this function to
 `ts-fold-summary-parsers-alist` defined in `ts-fold-summary.el`.
 The display and shortening will be handled by the module itself.
 
-Functions should be named with the prefix `ts-fold-summary-` followed by `style name`.
-For example, to create a summary parser for Javadoc style, then it should be
-named `ts-fold-summary-javadoc`.
-
-Let's see the implementation,
-
-```elisp
-(defun ts-fold-summary-javadoc (doc-str)
-  "..."
-  (ts-fold-summary--generic doc-str "*"))  ; strip all asterisks
-```
-
-The above summary parser for Javadoc simply remove `*` from any given point.
-
-#### 🔍 Register to summary parsers alist!
-
-Like folding parsers, you should register your summary parser to the entry alist
-with its corresponding `major-mode`.
-
-```elisp
-(defcustom ts-fold-summary-parsers-alist
-  `((actionscript-mode . ts-fold-summary-javadoc)
-    (bat-mode          . ts-fold-summary-batch)
-    (c-mode            . ts-fold-summary-c)
-    (c++-mode          . ts-fold-summary-c)
-    ...
-```
+Functions should be named with the prefix `ts-fold-summary-` followed by
+`style name`. For example, to create a summary parser for Javadoc style, then it
+should be named `ts-fold-summary-javadoc`.
