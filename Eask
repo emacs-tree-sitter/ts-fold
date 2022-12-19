@@ -6,7 +6,7 @@
 (keywords "convenience" "folding" "tree-sitter")
 
 (package-file "ts-fold.el")
-(files "*.el")
+(files "ts-*.el")
 
 (script "test" "echo \"Error: no test specified\" && exit 1")
 
