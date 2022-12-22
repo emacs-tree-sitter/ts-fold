@@ -82,14 +82,27 @@ or
 
 The following are the functions provided by `ts-fold-mode`
 
-| Commands                   | Description                                                                 |
-| -------------------------- | --------------------------------------------------------------------------- |
-| `ts-fold-close`            | fold the current syntax node.                                               |
-| `ts-fold-open`             | open all folds inside the current syntax node.                              |
-| `ts-fold-open-recursively` | open the outmost fold of the current syntax node. Keep the sub-folds close. |
-| `ts-fold-close-all`        | close all foldable syntax nodes in the current buffer.                      |
-| `ts-fold-open-all`         | open all folded syntax nodes in the current buffer.                         |
-| `ts-fold-toggle`           | toggle the syntax node at `point'.                                          |
+Commands for enabling `ts-fold`:
+
+| Commands                         | Description                                                                                         |
+| -------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ts-fold-mode`                   | enable `ts-fold-mode` in the current buffer.                                                        |
+| `global-ts-fold-mode`            | enable `ts-fold-mode` whenever tree-sitter is turned on and the major mode is supported by ts-fold. |
+| `ts-fold-indicators-mode`        | enable ts-fold with indicators in the current buffer. See [plugins section](#-indicators-mode).     |
+| `global-ts-fold-indicators-mode` | enable ts-fold with indicators globally. See [plugins section](#-indicators-mode).                  |
+
+Commands for using `ts-fold`.
+
+| Commands                   | Description                                                                   |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| `ts-fold-close`            | fold the current syntax node.                                                 |
+| `ts-fold-open`             | open the outermost fold of the current syntax node. Keep the sub-folds close. |
+| `ts-fold-open-recursively` | open all folds inside the current syntax node.                                |
+| `ts-fold-close-all`        | close all foldable syntax nodes in the current buffer.                        |
+| `ts-fold-open-all`         | open all folded syntax nodes in the current buffer.                           |
+| `ts-fold-toggle`           | toggle the syntax node at `point'.                                            |
+
+If evil mode is loaded, then these commands are also added to the evil folding list.
 
 ### 🔨 Supported languages
 
@@ -340,7 +353,7 @@ basic `ts-fold-range-seq`.
 ts-fold comes with a couple of useful little additions that can be used or
 turned off as desired.
 
-### ⚖️ Indicators Mode
+### ⚖ Indicators Mode
 
 <p align="center">
 <img src="./etc/indicators.png" width="40%" height=480%"/>
@@ -376,19 +389,28 @@ explicitly declare the package in in your config.
 
 #### 🖥 Usage
 
-You can then enable this manually by doing the following
+You can then enable this manually by doing either of the following:
 
 ```
 M-x ts-fold-indicators-mode
+
+M-x global-ts-fold-indicators-mode
 ```
 
 Please note that turning on `ts-fold-indicators-mode` automatically turns on
-`ts-fold-mode` as well.
+`ts-fold-mode` as well. Though, turning off `ts-fold-indicators-mode` does not
+turn off `ts-fold-mode`
 
-- To enable this automatically whenever `tree-sitter-mode` is enabled:
+- To enable this automatically whenever `tree-sitter-mode` is enabled, use the global indicator mode:
 
   ```elisp
-  (add-hook 'tree-sitter-after-on-hook #ts-fold-indicators-mode)
+  (global-ts-fold-indicators-mode 1)
+  ```
+
+  Else, a hook can be added to tree-sitter directly.
+
+  ```elisp
+  (add-hook 'tree-sitter-after-on-hook #'ts-fold-indictors-mode)
   ```
 
 - To switch to left/right fringe: (Default is `left-fringe`)
