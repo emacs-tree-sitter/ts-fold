@@ -106,7 +106,7 @@
 
 (defun ts-fold-indicators--enable ()
   "Enable `ts-fold-indicators' mode."
-  (if (ts-fold-mode 1)  ; Enable `ts-fold-mode' automatically
+  (if (or ts-fold-mode (ts-fold-mode 1))  ; Enable `ts-fold-mode' automatically
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
@@ -130,8 +130,20 @@
     (ts-fold-indicators--disable)))
 
 ;;;###autoload
-(define-global-minor-mode global-ts-fold-indicators-mode ts-fold-indicators-mode
-  (lambda () (ts-fold-indicators-mode 1)))
+(define-minor-mode global-ts-fold-indicators-mode
+  "Global minor mode for turning on ts-fold with indicators whenever avaliable."
+  :group 'ts-fold
+  :lighter nil
+  :init-value nil
+  :global t
+  (if global-ts-fold-indicators-mode
+      (progn
+        (add-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
+        (global-ts-fold-mode 1)
+        (dolist (buf (buffer-list))
+          (with-current-buffer buf
+            (when (and ts-fold-mode (not ts-fold-indicators-mode) (ts-fold-indicators-mode))))))
+    (remove-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)))
 
 ;;
 ;; (@* "Events" )
