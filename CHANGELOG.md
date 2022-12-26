@@ -14,6 +14,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Enhance Ruby parser (#26)
 * Julia language support (#33)
 * Remove redundant fold node alist (#36)
+* Change global mode to turn on with tree-sitter (#41)
 
 ## 0.1.0
 > Released Oct 18, 2021
