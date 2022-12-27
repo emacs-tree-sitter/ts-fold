@@ -188,6 +188,30 @@ For the folding functions, ts-fold provides some default
   int main() {...} // Folded node
   ```
 
+- `ts-fold-range-markers` - Folds the node starting from a giving delimiter
+  character. Useful if tree-sitter's node definition doesn't align with the
+  start of the desired folding section.
+
+  **NOTE:** This folding function requires a lambda (or an externally
+  defined function wrapper) so that the delimiter can be specified. You
+  usually don't need to worry about the `node` and `offset` variables, so just
+  pass them through.
+
+```go
+type Dog interface {
+    Bark() (string, error)
+    Beg() (bool, error)
+}
+
+/* | Note: The tree-sitter node starts at the word interface, not at the '{'.
+ * | '(interface_type . (lambda (node offset)
+ * |                      (ts-fold-range-markers node offset "{" "}")))
+ * V
+ */
+
+type Dog interface {...}
+```
+
 - `ts-fold-range-block-comment` - Folds multi-line comments that are of the form
   `/*...*/`. Should show a summary if the commentary plugin is turned on.
 
@@ -213,8 +237,10 @@ For the folding functions, ts-fold provides some default
 
 - `ts-fold-range-line-comment` - For languages that have one line comment blocks
   with the comment delimiter starting each line. Condenses all the comment nodes
-  into a single fold. This folding function requires a lambda (or an externally
-  defined function wrapper) so that the comment delimiter can be specified. You
+  into a single fold.
+
+  **Note:** This folding function requires a lambda (or an externally
+  defined function wrapper) so that the delimiter can be specified. You
   usually don't need to worry about the `node` and `offset` variables, so just
   pass them through.
 
@@ -499,7 +525,7 @@ As can be seen `ts-fold-summary--generic` is a very helpful function since it
 removes the provided delimiter and returns the first line. often this will be
 enough.
 
-### 🌫️ Line-Comment folding
+### 🌫 Line-Comment folding
 
 <p align="center">
 <img src="./etc/line-comment.gif" width="80%" height="80%"/>

@@ -122,8 +122,14 @@
 
 (defun ts-fold-parsers-go ()
   "Rule set for Go."
-  '((block   . ts-fold-range-seq)
-    (comment . ts-fold-range-seq)))
+  '((block                  . ts-fold-range-seq)
+    (comment                . ts-fold-range-seq)
+    (const_declaration      . (lambda (node offset)
+                                (ts-fold-range-markers node offset "(" ")")))
+    (field_declaration_list . ts-fold-range-seq)
+    (import_spec_list       . ts-fold-range-seq)
+    (interface_type         . (lambda (node offset)
+                                (ts-fold-range-markers node offset "{" "}")))))
 
 (defun ts-fold-parsers-html ()
   "Rule set for HTML."
