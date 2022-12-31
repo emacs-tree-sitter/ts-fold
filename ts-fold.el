@@ -1,7 +1,7 @@
 ;;; ts-fold.el --- Code folding using tree-sitter  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Junyi Hou
-;; Copyright (C) 2021-2022  Shen, Jen-Chieh
+;; Copyright (C) 2021-2023  Shen, Jen-Chieh
 
 ;; Created date 2021-08-11 14:12:37
 
