@@ -40,6 +40,8 @@ to provide code folding based on the tree-sitter syntax tree.
     - [📝 Summary](#-summary)
       - [🖥 Usage](#-usage-2)
       - [📝 Customization](#-customization-1)
+    - [🌫️ Line-Comment folding](#-line-comment-folding)
+      - [🖥 Usage](#-usage-3)
   - [🔰 Contribute](#-contribute)
     - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
     - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
@@ -85,11 +87,12 @@ The following are the functions provided by `ts-fold-mode`
 Commands for enabling `ts-fold`:
 
 | Commands                         | Description                                                                                         |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- |
+|----------------------------------|-----------------------------------------------------------------------------------------------------|
 | `ts-fold-mode`                   | enable `ts-fold-mode` in the current buffer.                                                        |
 | `global-ts-fold-mode`            | enable `ts-fold-mode` whenever tree-sitter is turned on and the major mode is supported by ts-fold. |
 | `ts-fold-indicators-mode`        | enable ts-fold with indicators in the current buffer. See [plugins section](#-indicators-mode).     |
 | `global-ts-fold-indicators-mode` | enable ts-fold with indicators globally. See [plugins section](#-indicators-mode).                  |
+| `ts-fold-line-comment-mode`      | enable line comment folding.                                                                        |
 
 Commands for using `ts-fold`.
 
@@ -147,15 +150,15 @@ mode and the value being another alist of fold definitions.
 
 ```elisp
 ;; Example of ts-fold-range-alist's structure
-'((c-mode . c-folding-definitions) ;; <language>-folding-definitions is structured as shown below
-  (css-mode . css-folding-definitions)
-  (go-mode . go-folding-definitions)
+'((c-mode     . c-folding-definitions) ;; <language>-folding-definitions is structured as shown below
+  (css-mode   . css-folding-definitions)
+  (go-mode    . go-folding-definitions)
   (scala-mode . scala-folding-definitions)
   ...)
 
 ;; Examle of a folding definition alist
 (setq css-folding-definitions
-    (block . ts-fold-range-seq)
+    (block   . ts-fold-range-seq)
     (comment . ts-fold-range-c-like-comment))
 ```
 
@@ -495,6 +498,20 @@ However, there are lots of examples and helper functions present in
 As can be seen `ts-fold-summary--generic` is a very helpful function since it
 removes the provided delimiter and returns the first line. often this will be
 enough.
+
+### 🌫️ Line-Comment folding
+
+<p align="center">
+<img src="./etc/line-comment.gif" width="80%" height="80%"/>
+</p>
+
+This plugin makes line comment into foldable range.
+
+#### 🖥 Usage
+
+  ```
+  M-x ts-fold-line-comment-mode
+  ```
 
 ## 🔰 Contribute
 
