@@ -40,6 +40,8 @@ to provide code folding based on the tree-sitter syntax tree.
     - [📝 Summary](#-summary)
       - [🖥 Usage](#-usage-2)
       - [📝 Customization](#-customization-1)
+    - [🌫️ Line-Comment folding](#-line-comment-folding)
+      - [🖥 Usage](#-usage-3)
   - [🔰 Contribute](#-contribute)
     - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
     - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
@@ -497,7 +499,7 @@ As can be seen `ts-fold-summary--generic` is a very helpful function since it
 removes the provided delimiter and returns the first line. often this will be
 enough.
 
-### 📝 Line-Comment folding
+### 🌫️ Line-Comment folding
 
 <p align="center">
 <img src="./etc/line-comment.gif" width="80%" height="80%"/>
