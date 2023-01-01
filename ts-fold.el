@@ -155,8 +155,8 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
     (ts-fold-open-all)))
 
 (defun ts-fold--tree-sitter-trigger ()
-  "Turn `ts-fold-mode' on and off alongside `tree-sitter-mode'
-when in a mode ts-fold can act on."
+  "Turn `ts-fold-mode' on and off alongside `tree-sitter-mode' when in a mode
+ts-fold can act on."
   (if (and tree-sitter-mode (ts-fold-usable-mode-p))
       (ts-fold-mode 1)
     (ts-fold-mode -1)))
@@ -171,7 +171,7 @@ when in a mode ts-fold can act on."
 
 ;;;###autoload
 (define-minor-mode global-ts-fold-mode
-  "Use `ts-fold-mode' wherever possible"
+  "Use `ts-fold-mode' wherever possible."
   :group 'ts-fold
   :init-value nil
   :lighter nil
