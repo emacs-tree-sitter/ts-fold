@@ -410,7 +410,7 @@ turn off `ts-fold-mode`
   Else, a hook can be added to tree-sitter directly.
 
   ```elisp
-  (add-hook 'tree-sitter-after-on-hook #'ts-fold-indictors-mode)
+  (add-hook 'tree-sitter-after-on-hook #'ts-fold-indicators-mode)
   ```
 
 - To switch to left/right fringe: (Default is `left-fringe`)
