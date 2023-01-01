@@ -124,6 +124,7 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 ;; (@* "Externals" )
 ;;
 
+(declare-function ts-fold-indicators-mode "ts-fold-indicators.el")
 (declare-function ts-fold-indicators-refresh "ts-fold-indicators.el")
 
 ;;
@@ -187,6 +188,13 @@ when in a mode ts-fold can act on."
   "Return non-nil if `ts-fold' has defined folds for MODE."
   (let ((mode (or mode major-mode)))
     (alist-get mode ts-fold-range-alist)))
+
+;;;###autoload
+(define-minor-mode ts-fold-line-comment-mode
+  "Enable line comment folding."
+  :group 'ts-fold
+  :init-value nil
+  (when ts-fold-indicators-mode (ts-fold-indicators-refresh)))
 
 ;;
 ;; (@* "Core" )
@@ -399,7 +407,8 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information.
 
 Argument PREFIX is the comment prefix in string."
-  (when-let* ((first-node (ts-fold--continuous-node-prefix node prefix nil))
+  (when-let* ((ts-fold-line-comment-mode)  ; XXX: Check enabled!?
+              (first-node (ts-fold--continuous-node-prefix node prefix nil))
               (last-node (ts-fold--continuous-node-prefix node prefix t))
               (prefix-len (length prefix))
               (beg (+ (tsc-node-start-position first-node) prefix-len))

@@ -85,11 +85,12 @@ The following are the functions provided by `ts-fold-mode`
 Commands for enabling `ts-fold`:
 
 | Commands                         | Description                                                                                         |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- |
+|----------------------------------|-----------------------------------------------------------------------------------------------------|
 | `ts-fold-mode`                   | enable `ts-fold-mode` in the current buffer.                                                        |
 | `global-ts-fold-mode`            | enable `ts-fold-mode` whenever tree-sitter is turned on and the major mode is supported by ts-fold. |
 | `ts-fold-indicators-mode`        | enable ts-fold with indicators in the current buffer. See [plugins section](#-indicators-mode).     |
 | `global-ts-fold-indicators-mode` | enable ts-fold with indicators globally. See [plugins section](#-indicators-mode).                  |
+| `ts-fold-line-comment-mode`      | enable line comment folding.                                                                        |
 
 Commands for using `ts-fold`.
 
@@ -147,15 +148,15 @@ mode and the value being another alist of fold definitions.
 
 ```elisp
 ;; Example of ts-fold-range-alist's structure
-'((c-mode . c-folding-definitions) ;; <language>-folding-definitions is structured as shown below
-  (css-mode . css-folding-definitions)
-  (go-mode . go-folding-definitions)
+'((c-mode     . c-folding-definitions) ;; <language>-folding-definitions is structured as shown below
+  (css-mode   . css-folding-definitions)
+  (go-mode    . go-folding-definitions)
   (scala-mode . scala-folding-definitions)
   ...)
 
 ;; Examle of a folding definition alist
 (setq css-folding-definitions
-    (block . ts-fold-range-seq)
+    (block   . ts-fold-range-seq)
     (comment . ts-fold-range-c-like-comment))
 ```
 
