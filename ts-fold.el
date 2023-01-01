@@ -124,7 +124,8 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 ;; (@* "Externals" )
 ;;
 
-(declare-function ts-fold-indicators-mode "ts-fold-indicators.el")
+(defvar ts-fold-indicators-mode)
+
 (declare-function ts-fold-indicators-refresh "ts-fold-indicators.el")
 
 ;;

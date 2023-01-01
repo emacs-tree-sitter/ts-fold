@@ -497,6 +497,20 @@ As can be seen `ts-fold-summary--generic` is a very helpful function since it
 removes the provided delimiter and returns the first line. often this will be
 enough.
 
+### 📝 Line-Comment folding
+
+<p align="center">
+<img src="./etc/line-comment.gif" width="80%" height="80%"/>
+</p>
+
+This plugin makes line comment into foldable range.
+
+#### 🖥 Usage
+
+  ```
+  M-x ts-fold-line-comment-mode
+  ```
+
 ## 🔰 Contribute
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
