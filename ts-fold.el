@@ -124,8 +124,7 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 ;; (@* "Externals" )
 ;;
 
-(defvar ts-fold-indicators-mode)
-
+(declare-function ts-fold-indicators-mode "ts-fold-indicators.el")
 (declare-function ts-fold-indicators-refresh "ts-fold-indicators.el")
 
 ;;
@@ -195,7 +194,8 @@ ts-fold can act on."
   "Enable line comment folding."
   :group 'ts-fold
   :init-value nil
-  (when ts-fold-indicators-mode (ts-fold-indicators-refresh)))
+  (when (bound-and-true-p ts-fold-indicators-mode)
+    (ts-fold-indicators-refresh)))
 
 ;;
 ;; (@* "Core" )

@@ -278,7 +278,7 @@ Argument FOLDED holds folding state; it's a boolean."
   "Refresh indicators for all folding range."
   (when ts-fold-indicators-mode
     (ts-fold--ensure-ts
-      (when-let* ((node (tsc-root-node tree-sitter-tree))
+      (when-let* ((node (ignore-errors (tsc-root-node tree-sitter-tree)))
                   (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
                                         (alist-get major-mode ts-fold-range-alist)
                                         'vector))
