@@ -15,6 +15,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Julia language support (#33)
 * Remove redundant fold node alist (#36)
 * Change global mode to turn on with tree-sitter (#41)
+* Add minor-mode `ts-fold-line-comment-mode` for line comment folding (#45)
 
 ## 0.1.0
 > Released Oct 18, 2021
