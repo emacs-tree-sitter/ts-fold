@@ -41,7 +41,6 @@
 (require 'subr-x)
 
 (require 's)
-(require 'tree-sitter)
 
 (require 'ts-fold-util)
 (require 'ts-fold-parsers)
@@ -82,7 +81,7 @@
     (php-mode        . ,(ts-fold-parsers-php))
     (python-mode     . ,(ts-fold-parsers-python))
     (rjsx-mode       . ,(ts-fold-parsers-javascript))
-    (ruby-mode       . ,(ts-fold-parsers-ruby))
+    (ruby-ts-mode    . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
     (rustic-mode     . ,(ts-fold-parsers-rust))
     (sh-mode         . ,(ts-fold-parsers-bash))
@@ -200,19 +199,19 @@ Return nil if no valid node is found.
 This function is borrowed from `tree-sitter-node-at-point'."
   (let* ((pos (or pos (point)))
          (mode-ranges (alist-get major-mode ts-fold-range-alist))
-         (root (tsc-root-node tree-sitter-tree))
-         (node (tsc-get-descendant-for-position-range root pos pos))
+         (root (treesit-buffer-root-node))
+         (node (treesit-node-descendant-for-range root pos pos))
          ;; Used for looping
          (current node))
-    (while (and current (not (alist-get (tsc-node-type current) mode-ranges)))
-      (setq current (tsc-get-parent current)))
+    (while (and current (not (alist-get (treesit-node-type current) mode-ranges nil t #'equal)))
+      (setq current (treesit-node-parent current)))
     current))
 
 (defun ts-fold--get-fold-range (node)
   "Return the beginning (as buffer position) of fold for NODE.
 Return nil if there is no fold to be made."
   (when-let* ((fold-alist (alist-get major-mode ts-fold-range-alist))
-              (fold-func (alist-get (tsc-node-type node) fold-alist)))
+              (fold-func (alist-get (treesit-node-type node) fold-alist nil t #'equal)))
     (cond ((functionp fold-func) (funcall fold-func node (cons 0 0)))
           ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
           (t (user-error "Bad folding function for node")))))
@@ -257,9 +256,9 @@ Return nil otherwise."
 (defmacro ts-fold--ensure-ts (&rest body)
   "Run BODY only if `tree-sitter-mode` is enabled."
   (declare (indent 0))
-  `(if (bound-and-true-p tree-sitter-mode)
+  `(if (treesit-buffer-root-node)
        (progn ,@body)
-     (user-error "Ignored, tree-sitter-mode is not enabled in the current buffer")))
+     (user-error "Ignored, cannot parse current buffer with treesit")))
 
 ;;;###autoload
 (defun ts-fold-close (&optional node)
@@ -294,8 +293,8 @@ If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
     (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (beg (tsc-node-start-position node))
-                (end (tsc-node-end-position node)))
+                (beg (treesit-node-start node))
+                (end (treesit-node-end node)))
       (thread-last (overlays-in beg end)
                    (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
                    (mapc #'delete-overlay)))))
@@ -305,14 +304,12 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
-                                 (alist-get major-mode ts-fold-range-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
+    (let* ((node (treesit-buffer-root-node))
+           (patterns (mapconcat (lambda (fold-range) (concat "(" (car fold-range) ") " "@name"))
+                                 (alist-get major-mode ts-fold-range-alist) " "))
+           (query (treesit-query-compile (treesit-node-language node) patterns))
+           (nodes-to-fold (treesit-query-capture node query nil nil t)))
       (thread-last nodes-to-fold
-                   (mapcar #'cdr)
                    (mapc #'ts-fold-close)))))
 
 ;;;###autoload
@@ -356,7 +353,7 @@ If the current syntax node is not foldable, do nothing."
   "Return previous/next sibling node starting from NODE.
 
 If NEXT is non-nil, return next sibling.  Otherwirse, return previouse sibling."
-  (if next (tsc-get-next-sibling node) (tsc-get-prev-sibling node)))
+  (if next (treesit-node-next-sibling node) (treesit-node-prev-sibling node)))
 
 (defun ts-fold--continuous-node-prefix (node prefix next)
   "Iterate through node starting from NODE and compare node-text to PREFIX;
@@ -365,11 +362,11 @@ then return the last iterated node.
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
   (let ((iter-node node) (last-node node)
-        (last-line (car (tsc-node-start-point node))) line text break
+        (last-line (treesit-node-start node)) line text break
         (line-range 1) (last-line-range 1) max-line-range)
     (while (and iter-node (not break))
-      (setq text (tsc-node-text iter-node)
-            line (car (tsc-node-start-point iter-node))
+      (setq text (treesit-node-text iter-node)
+            line (treesit-node-start iter-node)
             line-range (1+ (s-count-matches "\n" text))
             max-line-range (max line-range last-line-range))
       (if (and (ts-fold--in-range-p line (- last-line max-line-range) (+ last-line max-line-range))
@@ -388,8 +385,8 @@ in backward direction."
   "Return the fold range in sequence starting from NODE.
 
 Argument OFFSET can be used to tweak the final beginning and end position."
-  (let ((beg (1+ (tsc-node-start-position node)))
-        (end (1- (tsc-node-end-position node))))
+  (let ((beg (1+ (treesit-node-start node)))
+        (end (1- (treesit-node-end node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-line-comment (node offset prefix)
@@ -402,8 +399,8 @@ Argument PREFIX is the comment prefix in string."
   (when-let* ((first-node (ts-fold--continuous-node-prefix node prefix nil))
               (last-node (ts-fold--continuous-node-prefix node prefix t))
               (prefix-len (length prefix))
-              (beg (+ (tsc-node-start-position first-node) prefix-len))
-              (end (tsc-node-end-position last-node)))
+              (beg (+ (treesit-node-start first-node) prefix-len))
+              (end (treesit-node-end last-node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-block-comment (node offset)
@@ -436,8 +433,8 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (let* ((named-node (tsc-get-child-by-field node :condition))
          (else (tsc-get-child-by-field node :alternative))
-         (beg (tsc-node-end-position named-node))
-         (end (1- (tsc-node-start-position else))))
+         (beg (treesit-node-end named-node))
+         (end (1- (treesit-node-start else))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-ifdef (node offset)
@@ -447,8 +444,8 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((named-node (tsc-get-child-by-field node :name))
               (else (tsc-get-child-by-field node :alternative))
-              (beg (tsc-node-end-position named-node))
-              (end (1- (tsc-node-start-position else))))
+              (beg (treesit-node-end named-node))
+              (end (1- (treesit-node-start else))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-elif (node offset)
@@ -458,8 +455,8 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
               (else (tsc-get-child-by-field node :alternative))
-              (beg (tsc-node-end-position named-node))
-              (end (1- (tsc-node-start-position else))))
+              (beg (treesit-node-end named-node))
+              (end (1- (treesit-node-start else))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-else (node offset)
@@ -469,8 +466,8 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((target "#else")
               (len (length target))
-              (beg (+ (tsc-node-start-position node) len))
-              (end (tsc-node-end-position node)))
+              (beg (+ (treesit-node-start node) len))
+              (end (treesit-node-end node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-html (node offset)
@@ -478,9 +475,9 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (let* ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
+  (let* ((beg (treesit-node-end (tsc-get-nth-child node 0)))
          (end-node (tsc-get-nth-child node (1- (tsc-count-children node))))
-         (end (tsc-node-start-position end-node)))
+         (end (treesit-node-start end-node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 ;;+ OCaml
@@ -494,9 +491,9 @@ more information."
     (when-let*
         ((text  (tsc-node-text node))
          (beg   (if (string-prefix-p "(* " text)
-                    (+ 2 (tsc-node-start-position node))
-                  (+ 3 (tsc-node-start-position node))))
-         (end   (- (tsc-node-end-position node) 2)))
+                    (+ 2 (treesit-node-start node))
+                  (+ 3 (treesit-node-start node))))
+         (end   (- (treesit-node-end node) 2)))
       (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-ocaml-module-definition (node offset)
@@ -509,8 +506,8 @@ more information."
         ((module-binding (tsc-get-nth-named-child node 0))
          (body           (tsc-get-child-by-field module-binding :body))
          ;; body is struct ... end
-         (beg            (+ 6 (tsc-node-start-position body)))
-         (end            (- (tsc-node-end-position node) 3)))
+         (beg            (+ 6 (treesit-node-start body)))
+         (end            (- (treesit-node-end node) 3)))
       (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-ocaml-type-definition (node offset)
@@ -525,12 +522,12 @@ more information."
          (text            (tsc-node-text (tsc-get-nth-child body 0)))
          (beg
           (if (string-equal "{" text)
-              (1+ (tsc-node-start-position body))
-            (tsc-node-end-position (tsc-get-prev-sibling body))))
+              (1+ (treesit-node-start body))
+            (treesit-node-end (tsc-get-prev-sibling body))))
          (end
           (if (string-equal "{" text)
-              (1- (tsc-node-end-position node))
-            (tsc-node-end-position node))))
+              (1- (treesit-node-end node))
+            (treesit-node-end node))))
       (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-ocaml-value-definition (node offset)
@@ -542,8 +539,8 @@ more information."
     (when-let*
         ((let-binding  (tsc-get-nth-named-child node 0))
          (body         (tsc-get-child-by-field let-binding :body))
-         (beg          (tsc-node-end-position (tsc-get-prev-sibling body)))
-         (end          (tsc-node-end-position node)))
+         (beg          (treesit-node-end (tsc-get-prev-sibling body)))
+         (end          (treesit-node-end node)))
       (ts-fold--cons-add (cons beg end) offset))))
 
 ;;- OCaml
@@ -558,8 +555,8 @@ more information."
                               (tsc-get-child-by-field node :parameters)
                               (tsc-get-child-by-field node :name)))
               ;; the colon is an anonymous node after return_type or parameters node
-              (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
-              (end (tsc-node-end-position node)))
+              (beg (treesit-node-end (tsc-get-next-sibling named-node)))
+              (end (treesit-node-end node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ruby-class-def (node offset)
@@ -567,11 +564,11 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((named-node (or (tsc-get-child-by-field node :superclass)
-                              (tsc-get-child-by-field node :parameters)
-                              (tsc-get-child-by-field node :name)))
-              (beg (tsc-node-end-position named-node))
-              (end (tsc-node-end-position node)))
+  (when-let* ((named-node (or (treesit-node-child-by-field-name node "superclass")
+                              (treesit-node-child-by-field-name node "parameters")
+                              (treesit-node-child-by-field-name node "name")))
+              (beg (treesit-node-end named-node))
+              (end (treesit-node-end node)))
     (ts-fold--cons-add (cons beg (- end 3)) offset)))
 
 (defun ts-fold-range-ruby-if (node offset)
@@ -579,8 +576,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let ((beg (tsc-node-start-position node))
-             (end (tsc-node-end-position node)))
+  (when-let ((beg (treesit-node-start node))
+             (end (treesit-node-end node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rust-macro (node offset)
@@ -591,8 +588,8 @@ more information."
   (when-let* ((children (tsc-count-children node))
               (last_bracket (tsc-get-nth-child node (- children 1)))
               (first_bracket (tsc-get-nth-child node 2))
-              (beg (tsc-node-start-position first_bracket))
-              (end (1+ (tsc-node-start-position last_bracket))))
+              (beg (treesit-node-start first_bracket))
+              (end (1+ (treesit-node-start last_bracket))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elixir (node offset)
@@ -603,8 +600,8 @@ more information."
   (when-let* ((children (tsc-count-children node))
               (end_child (tsc-get-nth-child node (- children 1)))
               (do_child (tsc-get-nth-child node 1))
-              (beg (tsc-node-start-position do_child))
-              (end (tsc-node-start-position end_child)))
+              (beg (treesit-node-start do_child))
+              (end (treesit-node-start end_child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-julia (node offset)
