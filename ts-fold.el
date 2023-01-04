@@ -445,7 +445,8 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (let* ((named-node (tsc-get-child-by-field node :condition))
-         (else (tsc-get-child-by-field node :alternative))
+         (else (or (tsc-get-child-by-field node :alternative)
+                   (car (ts-fold-find-children node "#endif"))))
          (beg (tsc-node-end-position named-node))
          (end (1- (tsc-node-start-position else))))
     (ts-fold--cons-add (cons beg end) offset)))
@@ -467,9 +468,10 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
-              (else (tsc-get-child-by-field node :alternative))
+              (next (or (tsc-get-child-by-field node :alternative)
+                        (car (ts-fold-find-children (tsc-get-parent node) "#endif"))))
               (beg (tsc-node-end-position named-node))
-              (end (1- (tsc-node-start-position else))))
+              (end (1- (tsc-node-start-position next))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-c-preproc-else (node offset)
@@ -477,9 +479,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((target "#else")
-              (len (length target))
-              (beg (+ (tsc-node-start-position node) len))
+  (when-let* ((else-str (car (split-string (tsc-node-text node) "\n")))
+              (beg (+ (tsc-node-start-position node) (length else-str)))
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
@@ -501,12 +502,10 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (unless (ts-fold--one-liner-node node)
-    (when-let*
-        ((text  (tsc-node-text node))
-         (beg   (if (string-prefix-p "(* " text)
-                    (+ 2 (tsc-node-start-position node))
-                  (+ 3 (tsc-node-start-position node))))
-         (end   (- (tsc-node-end-position node) 2)))
+    (when-let* ((text (tsc-node-text node))
+                (beg  (+ (if (string-prefix-p "(* " text) 2 3)
+                         (tsc-node-start-position node)))
+                (end  (- (tsc-node-end-position node) 2)))
       (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-ocaml-module-definition (node offset)

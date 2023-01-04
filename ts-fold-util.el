@@ -26,6 +26,14 @@
 ;;; Code:
 
 ;;
+;; (@* "Util" )
+;;
+
+(defun ts-fold-2-str (object)
+  "Convert OBJECT to string."
+  (format "%s" object))
+
+;;
 ;; (@* "Cons" )
 ;;
 
@@ -85,6 +93,46 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 (defun ts-fold--in-range-p (in-val in-min in-max)
   "Check to see if IN-VAL is between IN-MIN and IN-MAX."
   (and (<= in-min in-val) (<= in-val in-max)))
+
+;;
+;; (@* "TS node" )
+;;
+
+(defun ts-fold--compare-type (node type)
+  "Compare NODE's type to TYPE."
+  (string= (ts-fold-2-str (tsc-node-type node)) type))
+
+(defun ts-fold-children (node)
+  "Return children from NODE."
+  (let (children)
+    (dotimes (index (tsc-count-children node))
+      (push (tsc-get-nth-child node index) children))
+    (reverse children)))
+
+(defun ts-fold-children-traverse (node)
+  "Return children from NODE but traverse it."
+  (let (nodes)
+    (tsc-traverse-mapc (lambda (next) (push next nodes)) node)
+    (reverse nodes)))
+
+(defun ts-fold-find-children (node type)
+  "Search node TYPE from children; this return a list."
+  (cl-remove-if-not (lambda (next) (ts-fold--compare-type next type))
+                    (ts-fold-children node)))
+
+(defun ts-fold-find-children-traverse (node type)
+  "Like function `ts-fold-find-children' but traverse it."
+  (cl-remove-if-not (lambda (next) (ts-fold--compare-type next type))
+                    (ts-fold-children-traverse node)))
+
+(defun ts-fold-find-parent (node type)
+  "Find the TYPE of parent from NODE."
+  (let ((parent (tsc-get-parent node))
+        (break))
+    (while (and parent (not break))
+      (setq break (ts-fold--compare-type parent type)
+            parent (tsc-get-parent parent)))
+    parent))
 
 (provide 'ts-fold-util)
 ;;; ts-fold-util.el ends here
