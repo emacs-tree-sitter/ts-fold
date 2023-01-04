@@ -130,8 +130,9 @@ Optional argument TRIM, see function `ts-fold--get-face'."
   (let ((parent (tsc-get-parent node))
         (break))
     (while (and parent (not break))
-      (setq break (ts-fold--compare-type parent type)
-            parent (tsc-get-parent parent)))
+      (setq break (ts-fold--compare-type parent type))
+      (unless break
+        (setq parent (tsc-get-parent parent))))
     parent))
 
 (provide 'ts-fold-util)

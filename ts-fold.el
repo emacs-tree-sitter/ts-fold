@@ -457,7 +457,8 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((named-node (tsc-get-child-by-field node :name))
-              (else (tsc-get-child-by-field node :alternative))
+              (else (or (tsc-get-child-by-field node :alternative)
+                        (car (ts-fold-find-children node "#endif"))))
               (beg (tsc-node-end-position named-node))
               (end (1- (tsc-node-start-position else))))
     (ts-fold--cons-add (cons beg end) offset)))
@@ -468,8 +469,10 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((named-node (tsc-get-child-by-field node :condition))
+              (parent (or (ts-fold-find-parent node "preproc_if")
+                          (ts-fold-find-parent node "preproc_ifdef")))
               (next (or (tsc-get-child-by-field node :alternative)
-                        (car (ts-fold-find-children (tsc-get-parent node) "#endif"))))
+                        (car (ts-fold-find-children parent "#endif"))))
               (beg (tsc-node-end-position named-node))
               (end (1- (tsc-node-start-position next))))
     (ts-fold--cons-add (cons beg end) offset)))
@@ -480,8 +483,11 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((else-str (car (split-string (tsc-node-text node) "\n")))
+              (parent (or (ts-fold-find-parent node "preproc_if")
+                          (ts-fold-find-parent node "preproc_ifdef")))
+              (next (car (ts-fold-find-children parent "#endif")))
               (beg (+ (tsc-node-start-position node) (length else-str)))
-              (end (tsc-node-end-position node)))
+              (end (1- (tsc-node-start-position next))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-html (node offset)
