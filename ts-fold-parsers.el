@@ -192,7 +192,7 @@
     (compound_statement  . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
-         (if (string-prefix-p "#" (tsc-node-text node))
+         (if (string-prefix-p "#" (treesit-node-text node))
              (ts-fold-range-line-comment node offset "#")
            (ts-fold-range-c-like-comment node offset))))))
 
