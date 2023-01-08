@@ -47,6 +47,25 @@
     lst))
 
 ;;
+;; (@* "Treesitter")
+;;
+
+(defun ts-fold--get-nth-child (node index)
+  (aref (treesit-node-children node) index))
+
+(defun ts-fold--get-nth-named-child (node index)
+  (aref (treesit-node-children node t) index))
+
+;;
+;; (@* "Folds" )
+;;
+
+(defun ts-fold--get-fold-func (node)
+  (let ((fold-alist (alist-get major-mode ts-fold-range-alist))
+        (node-symbol (intern (treesit-node-type node))))
+  (alist-get node-symbol fold-alist)))
+
+;;
 ;; (@* "Face" )
 ;;
 
