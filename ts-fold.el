@@ -401,6 +401,26 @@ Argument OFFSET can be used to tweak the final beginning and end position."
         (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-markers (node offset start-seq &optional end-seq)
+  "Returns the fold range for NODE with an OFFSET where the range starts at
+the end of the first occurence of START-SEQ and ends at the end of the node
+or the start of the last occurence of the optional parameter LAST-SEQ.
+
+START-SEQ and LAST-SEQ can be named tree-sitter nodes or anonomous nodes.
+
+If no occurence is found for START-SEQ or END-SEQ or the
+occurences overlap, then the range returned is nil."
+  (when start-seq
+    (when-let ((beg-node (car (ts-fold-find-children node start-seq)))
+               (end-node (if end-seq
+                             (car (last (ts-fold-find-children node end-seq)))
+                           node))
+               (beg (tsc-node-end-position beg-node))
+               (end (if end-seq
+                        (tsc-node-start-position end-node)
+                      (1- (tsc-node-end-position node)))))
+      (unless (> beg end) (ts-fold--cons-add (cons beg end) offset)))))
+
 (defun ts-fold-range-line-comment (node offset prefix)
   "Define fold range for line comment.
 

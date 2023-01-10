@@ -26,14 +26,6 @@
 ;;; Code:
 
 ;;
-;; (@* "Util" )
-;;
-
-(defun ts-fold-2-str (object)
-  "Convert OBJECT to string."
-  (format "%s" object))
-
-;;
 ;; (@* "Cons" )
 ;;
 
@@ -100,30 +92,33 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 
 (defun ts-fold--compare-type (node type)
   "Compare NODE's type to TYPE."
-  (string= (ts-fold-2-str (tsc-node-type node)) type))
+  ;; tsc-node-type returns a symbol or a string and `string=' automatically
+  ;; converts symbols to strings
+  (string= (tsc-node-type node) type))
 
-(defun ts-fold-children (node)
-  "Return children from NODE."
+(defun ts-fold-get-children (node)
+  "Get list of direct children of NODE."
   (let (children)
     (dotimes (index (tsc-count-children node))
       (push (tsc-get-nth-child node index) children))
     (reverse children)))
 
-(defun ts-fold-children-traverse (node)
+(defun ts-fold-get-children-traverse (node)
   "Return children from NODE but traverse it."
   (let (nodes)
-    (tsc-traverse-mapc (lambda (next) (push next nodes)) node)
+    (tsc-traverse-mapc (lambda (child) (push child nodes)) node)
     (reverse nodes)))
 
 (defun ts-fold-find-children (node type)
-  "Search node TYPE from children; this return a list."
-  (cl-remove-if-not (lambda (next) (ts-fold--compare-type next type))
-                    (ts-fold-children node)))
+  "Search through the children of NODE to find all with type equal to TYPE;
+then return that list."
+  (cl-remove-if-not (lambda (child) (ts-fold--compare-type child type))
+                    (ts-fold-get-children node)))
 
 (defun ts-fold-find-children-traverse (node type)
   "Like function `ts-fold-find-children' but traverse it."
-  (cl-remove-if-not (lambda (next) (ts-fold--compare-type next type))
-                    (ts-fold-children-traverse node)))
+  (cl-remove-if-not (lambda (child) (ts-fold--compare-type child type))
+                    (ts-fold-get-children-traverse node)))
 
 (defun ts-fold-find-parent (node type)
   "Find the TYPE of parent from NODE."
