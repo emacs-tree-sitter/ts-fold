@@ -163,7 +163,9 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 (defun ts-fold--tree-sitter-trigger ()
   "Turn `ts-fold-mode' on and off alongside `treesit'
 when in a mode ts-fold can act on."
-  (if (and (treesit-buffer-root-node) (ts-fold-usable-mode-p))
+  (if (and (functionp 'treesit-buffer-root-node)
+           (treesit-buffer-root-node)
+           (ts-fold-usable-mode-p))
       (ts-fold-mode 1)
     (ts-fold-mode -1)))
 
@@ -264,10 +266,13 @@ Return nil otherwise."
 
 (defmacro ts-fold--ensure-ts (&rest body)
   "Run BODY only if `tree-sitter-mode` is enabled."
-  (declare (indent 0))
-  `(if (treesit-buffer-root-node)
-       (progn ,@body)
-     (user-error "Ignored, cannot parse current buffer with treesit")))
+  (declare (indent 0)
+           (debug (&rest form)))
+  `(if (and (functionp 'treesit-buffer-root-node) (treesit-buffer-root-node))
+       (progn
+         (message "treesit is enabled!")
+         ,@body)
+     (message "ts-fold: ignoring, because cannot parse current buffer with treesit")))
 
 ;;;###autoload
 (defun ts-fold-close (&optional node)
