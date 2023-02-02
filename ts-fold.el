@@ -269,9 +269,7 @@ Return nil otherwise."
   (declare (indent 0)
            (debug (&rest form)))
   `(if (and (functionp 'treesit-buffer-root-node) (treesit-buffer-root-node))
-       (progn
-         (message "treesit is enabled!")
-         ,@body)
+       (progn ,@body)
      (message "ts-fold: ignoring, because cannot parse current buffer with treesit")))
 
 ;;;###autoload
