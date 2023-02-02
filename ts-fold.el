@@ -163,11 +163,12 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 (defun ts-fold--tree-sitter-trigger ()
   "Turn `ts-fold-mode' on and off alongside `treesit'
 when in a mode ts-fold can act on."
-  (if (and (functionp 'treesit-buffer-root-node)
-           (treesit-buffer-root-node)
-           (ts-fold-usable-mode-p))
-      (ts-fold-mode 1)
-    (ts-fold-mode -1)))
+  (condition-case nil
+      (if (and (treesit-buffer-root-node)
+               (ts-fold-usable-mode-p))
+          (ts-fold-mode 1)
+        (ts-fold-mode -1))
+    (error nil)))
 
 ;;;###autoload
 (define-minor-mode ts-fold-mode
