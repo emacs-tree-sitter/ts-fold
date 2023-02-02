@@ -319,7 +319,7 @@ If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
     (let* ((node (treesit-buffer-root-node))
-           (patterns (mapconcat (lambda (fold-range) (concat "(" (car fold-range) ") " "@name"))
+           (patterns (mapconcat (lambda (fold-range) (concat "(" (symbol-name (car fold-range)) ") " "@name"))
                                  (alist-get major-mode ts-fold-range-alist) " "))
            (query (treesit-query-compile (treesit-node-language node) patterns))
            (nodes-to-fold (treesit-query-capture node query nil nil t)))
