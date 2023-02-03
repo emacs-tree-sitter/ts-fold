@@ -51,10 +51,10 @@
 ;;
 
 (defun ts-fold--get-nth-child (node index)
-  (aref (treesit-node-children node) index))
+  (nth index (treesit-node-children node)))
 
 (defun ts-fold--get-nth-named-child (node index)
-  (aref (treesit-node-children node t) index))
+  (nth index (treesit-node-children node t)))
 
 ;;
 ;; (@* "Folds" )

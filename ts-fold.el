@@ -630,5 +630,18 @@ information."
          (fold-begin (1- (- end-position start-position))))
     (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
 
+(defun ts-fold-range-yaml-object (node offset)
+  "Define fold range for YAML object.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information.
+
+Excludes the NODE's first child, which is the key."
+  (let* ((beg (treesit-node-end (ts-fold--get-nth-child node 0)))
+         (end (treesit-node-end node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+
+
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
