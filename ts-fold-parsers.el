@@ -258,5 +258,11 @@
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
 
+(defun ts-fold-parsers-yaml ()
+  "Rule set for YAML."
+  '((block_mapping_pair . ts-fold-range-seq)
+    (block_sequence  . ts-fold-range-seq)))
+
+
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

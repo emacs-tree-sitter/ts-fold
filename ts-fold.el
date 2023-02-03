@@ -96,6 +96,8 @@
     (tsx-ts-mode     . ,(ts-fold-parsers-typescript))
     (typescript-mode . ,(ts-fold-parsers-typescript))
     (typescript-ts-mode . ,(ts-fold-parsers-typescript))
+    (yaml-mode       . ,(ts-fold-parsers-yaml))
+    (yaml-ts-mode    . ,(ts-fold-parsers-yaml))
     )
   "An alist of (major-mode . (foldable-node-type . function)).
 
