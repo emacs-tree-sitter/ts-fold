@@ -460,13 +460,28 @@ turn off `ts-fold-mode`
   with this plugin.
 
   ```elisp
-  (setq ts-fold-indicators-face-function
-     (lambda (pos &rest _)
-       (let ((ln (line-number-at-pos pos)))
-         (cond
-          ((memq ln line-reminder--change-lines) 'line-reminder-modified-sign-face)
-          ((memq ln line-reminder--saved-lines) 'line-reminder-saved-sign-face)
-          (t nil)))))
+(defmacro fold-line-reminder (symbols where &rest body)
+  "Global advice-add utility."
+  (declare (indent 2))
+  `(cond ((listp ,symbols)
+          (dolist (symbol ,symbols)
+            (advice-add symbol ,where (lambda (&optional arg0 &rest args) ,@body))))
+         (t (advice-add ,symbols ,where (lambda (&optional arg0 &rest args) ,@body)))))
+
+(use-package ts-fold
+  :hook (tree-sitter-after-on . ts-fold-line-comment-mode)
+  :hook (tree-sitter-after-on . ts-fold-indicators-mode)
+  :init
+  (setq ts-fold-indicators-fringe 'left-fringe
+        ts-fold-indicators-face-function
+        (lambda (pos &rest _)
+          ;; Return the face of it's function.
+          (line-reminder--get-face (line-number-at-pos pos t))))
+  :config
+  (require 'line-reminder)
+  (fold-line-reminder 'line-reminder-transfer-to-saved-lines :after
+    ;; Refresh indicators for package `ts-fold'.
+    (ts-fold-indicators-refresh)))
   ```
 
 ### 📝 Summary
