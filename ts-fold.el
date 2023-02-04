@@ -60,7 +60,9 @@
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
     (c-mode          . ,(ts-fold-parsers-c))
+    (c-ts-mode       . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
+    (c++-ts-mode     . ,(ts-fold-parsers-c++))
     (caml-mode       . ,(ts-fold-parsers-ocaml))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
@@ -71,15 +73,18 @@
     (java-mode       . ,(ts-fold-parsers-java))
     (javascript-mode . ,(ts-fold-parsers-javascript))
     (js-mode         . ,(ts-fold-parsers-javascript))
+    (js-ts-mode      . ,(ts-fold-parsers-javascript))
     (js2-mode        . ,(ts-fold-parsers-javascript))
     (js3-mode        . ,(ts-fold-parsers-javascript))
     (json-mode       . ,(ts-fold-parsers-json))
+    (json-ts-mode    . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
     (julia-mode      . ,(ts-fold-parsers-julia))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
     (php-mode        . ,(ts-fold-parsers-php))
     (python-mode     . ,(ts-fold-parsers-python))
+    (python-ts-mode  . ,(ts-fold-parsers-python))
     (rjsx-mode       . ,(ts-fold-parsers-javascript))
     (ruby-ts-mode    . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
@@ -88,9 +93,12 @@
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
+    (tsx-ts-mode     . ,(ts-fold-parsers-typescript))
+    (typescript-mode . ,(ts-fold-parsers-typescript))
     (typescript-ts-mode . ,(ts-fold-parsers-typescript))
-    (tsx-ts-mode . ,(ts-fold-parsers-typescript))
-    (typescript-mode . ,(ts-fold-parsers-typescript)))
+    (yaml-mode       . ,(ts-fold-parsers-yaml))
+    (yaml-ts-mode    . ,(ts-fold-parsers-yaml))
+    )
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
@@ -156,9 +164,12 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 (defun ts-fold--tree-sitter-trigger ()
   "Turn `ts-fold-mode' on and off alongside `treesit'
 when in a mode ts-fold can act on."
-  (if (and (treesit-buffer-root-node) (ts-fold-usable-mode-p))
-      (ts-fold-mode 1)
-    (ts-fold-mode -1)))
+  (condition-case nil
+      (if (and (treesit-buffer-root-node)
+               (ts-fold-usable-mode-p))
+          (ts-fold-mode 1)
+        (ts-fold-mode -1))
+    (error nil)))
 
 ;;;###autoload
 (define-minor-mode ts-fold-mode
@@ -257,10 +268,11 @@ Return nil otherwise."
 
 (defmacro ts-fold--ensure-ts (&rest body)
   "Run BODY only if `tree-sitter-mode` is enabled."
-  (declare (indent 0))
-  `(if (treesit-buffer-root-node)
+  (declare (indent 0)
+           (debug (&rest form)))
+  `(if (and (functionp 'treesit-buffer-root-node) (treesit-buffer-root-node))
        (progn ,@body)
-     (user-error "Ignored, cannot parse current buffer with treesit")))
+     (message "ts-fold: ignoring, because cannot parse current buffer with treesit")))
 
 ;;;###autoload
 (defun ts-fold-close (&optional node)
@@ -307,7 +319,7 @@ If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
     (let* ((node (treesit-buffer-root-node))
-           (patterns (mapconcat (lambda (fold-range) (concat "(" (car fold-range) ") " "@name"))
+           (patterns (mapconcat (lambda (fold-range) (concat "(" (symbol-name (car fold-range)) ") " "@name"))
                                  (alist-get major-mode ts-fold-range-alist) " "))
            (query (treesit-query-compile (treesit-node-language node) patterns))
            (nodes-to-fold (treesit-query-capture node query nil nil t)))
@@ -617,6 +629,19 @@ information."
          (start-position (treesit-node-start node))
          (fold-begin (1- (- end-position start-position))))
     (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
+
+(defun ts-fold-range-yaml-object (node offset)
+  "Define fold range for YAML object.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information.
+
+Excludes the NODE's first child, which is the key."
+  (let* ((beg (treesit-node-end (ts-fold--get-nth-child node 0)))
+         (end (treesit-node-end node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here

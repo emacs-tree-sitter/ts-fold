@@ -52,6 +52,7 @@
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
 (declare-function ts-fold-range-elixir "ts-fold.el")
+(declare-function ts-fold-range-yaml-object "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -257,6 +258,11 @@
 (defun ts-fold-parsers-typescript ()
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
+
+(defun ts-fold-parsers-yaml ()
+  "Rule set for YAML."
+  '((block_mapping_pair . ts-fold-range-yaml-object)))
+
 
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

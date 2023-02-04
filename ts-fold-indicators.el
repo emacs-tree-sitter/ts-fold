@@ -283,7 +283,8 @@ Argument FOLDED holds folding state; it's a boolean."
                                         (alist-get major-mode ts-fold-range-alist)
                                         'vector))
                   (query (ignore-errors
-                           treesit-query-compile (treesit-node-language node) patterns))
+                           (treesit-query-compile (treesit-node-language node)
+                                                  (append patterns nil))))
                   (nodes-to-fold (treesit-query-capture node query nil nil t)))
         (ts-fold-indicators--remove-overlays)
         (thread-last nodes-to-fold
