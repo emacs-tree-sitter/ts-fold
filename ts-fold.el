@@ -89,7 +89,8 @@
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
-    (typescript-mode . ,(ts-fold-parsers-typescript)))
+    (typescript-mode . ,(ts-fold-parsers-typescript))
+    (yaml-mode       . ,(ts-fold-parsers-yaml)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
