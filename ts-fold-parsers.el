@@ -66,7 +66,7 @@
 (defun ts-fold-parsers-bash ()
   "Rule set for Bash."
   '((compound_statement . ts-fold-range-seq)
-    (expansion          . ts-fold-range-seq)
+    (do_group           . (ts-fold-range-seq 1 -3))
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
@@ -148,12 +148,14 @@
     (annotation_type_body            . ts-fold-range-seq)
     (interface_body                  . ts-fold-range-seq)
     (array_initializer               . ts-fold-range-seq)
-    (comment                         . (ts-fold-range-seq 1 -1))))
+    (block_comment                   . (ts-fold-range-seq 1 -1))))
 
 (defun ts-fold-parsers-javascript ()
   "Rule set for JavaScript."
   '((export_clause   . ts-fold-range-seq)
     (statement_block . ts-fold-range-seq)
+    (object          . ts-fold-range-seq)
+    (array           . ts-fold-range-seq)
     (comment         . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-json ()
@@ -207,6 +209,7 @@
   '((function_definition . ts-fold-range-python)
     (class_definition    . ts-fold-range-python)
     (list                . ts-fold-range-seq)
+    (dictionary          . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
@@ -263,6 +266,11 @@
 (defun ts-fold-parsers-typescript ()
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
+
+(defun ts-fold-parsers-yaml ()
+  "Rule set for YAML."
+  '((comment . (lambda (node offset) (ts-fold-range-line-comment node offset "#")))
+    (block_mapping_pair . ((lambda (node offset) (ts-fold-range-markers node offset ":")) 0 1))))
 
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here
