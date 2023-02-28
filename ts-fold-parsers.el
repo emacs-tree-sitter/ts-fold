@@ -46,6 +46,8 @@
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
+(declare-function ts-fold-range-lua-comment "ts-fold.el")
+(declare-function ts-fold-range-lua-function "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -177,6 +179,12 @@
     (triple_string       . (ts-fold-range-seq 2 -2))
     (try_statement       . (ts-fold-range-seq 2 -2))
     (while_statement     . ts-fold-range-julia)))
+
+(defun ts-fold-parsers-lua ()
+  "Rule set for Lua."
+  '((expression_list      . ts-fold-range-seq)
+    (function_declaration . ts-fold-range-lua-function)
+    (comment              . ts-fold-range-lua-comment)))
 
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."

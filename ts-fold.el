@@ -77,6 +77,7 @@
     (json-mode       . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
     (julia-mode      . ,(ts-fold-parsers-julia))
+    (lua-mode        . ,(ts-fold-parsers-lua))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
     (php-mode        . ,(ts-fold-parsers-php))
@@ -654,6 +655,25 @@ information."
          (start-position (byte-to-position (aref (tsc-node-range node) 0)))
          (fold-begin (1- (- end-position start-position))))
     (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
+
+(defun ts-fold-range-lua-comment (node offset)
+  "Define fold range for Lua comemnt.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let ((text (tsc-node-text node)))
+    (if (and (string-match-p "\n" text) (string-prefix-p "--[[" text))
+        (ts-fold-range-block-comment node
+                                     ;; XXX: Add 2 to for ]] at the end
+                                     (ts-fold--cons-add (cons 2 0) offset))
+      (ts-fold-range-line-comment node offset "--"))))
+
+(defun ts-fold-range-lua-function (node offset)
+  "Define fold range for Lua function."
+  (let* ((params (tsc-get-child-by-field node :parameters))
+         (beg (tsc-node-end-position params))
+         (end (- (tsc-node-end-position node) 3)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
