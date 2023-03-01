@@ -457,6 +457,12 @@ more information."
           (ts-fold-range-line-comment node offset "///")
         (ts-fold-range-line-comment node offset "//")))))
 
+(defun ts-fold-point-before-line-break (pos)
+  "Go to POS then find previous line break, and return its position."
+  (save-excursion
+    (goto-char pos)
+    (max 1 (1- (line-beginning-position)))))
+
 ;;
 ;; (@* "Languages" )
 ;;
@@ -690,6 +696,7 @@ more information."
          (end (if next
                   (tsc-node-start-position (car next))
                 (- (tsc-node-end-position node) 3))))
+    (setq end (ts-fold-point-before-line-break end))  ; display nicely
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-elseif (node offset)
@@ -703,6 +710,17 @@ more information."
          (end (if next
                   (tsc-node-start-position next)
                 (tsc-node-end-position node))))
+    (setq end (ts-fold-point-before-line-break end))  ; display nicely
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-else (node offset)
+  "Define fold range for Lua else statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (+ (tsc-node-start-position node) 4))  ; fit `else', 4 letters
+         (next (tsc-get-next-sibling node))          ; the `end' node
+         (end (tsc-node-start-position next)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
