@@ -116,7 +116,10 @@ then return that list."
                     (ts-fold-get-children node)))
 
 (defun ts-fold-find-children-traverse (node type)
-  "Like function `ts-fold-find-children' but traverse it."
+  "Like function `ts-fold-find-children' but traverse it.
+
+For arguments NODE and TYPE, see function `ts-fold-find-children' for more
+information."
   (cl-remove-if-not (lambda (child) (ts-fold--compare-type child type))
                     (ts-fold-get-children-traverse node)))
 

@@ -282,12 +282,12 @@ current `major-mode'.
 If no NODE is found in point, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (or node (ts-fold--foldable-node-at-pos))))
-      ;; make sure I do not create multiple overlays for the same fold
-      (when-let* ((ov (ts-fold-overlay-at node)))
-        (delete-overlay ov))
-      (when-let* ((range (ts-fold--get-fold-range node)))
-        (ts-fold--create-overlay range)))))
+   (when-let* ((node (or node (ts-fold--foldable-node-at-pos))))
+     ;; make sure I do not create multiple overlays for the same fold
+     (when-let* ((ov (ts-fold-overlay-at node)))
+       (delete-overlay ov))
+     (when-let* ((range (ts-fold--get-fold-range node)))
+       (ts-fold--create-overlay range)))))
 
 ;;;###autoload
 (defun ts-fold-open ()
@@ -295,45 +295,45 @@ If no NODE is found in point, do nothing."
 If the current node is not folded or not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (ov (ts-fold-overlay-at node)))
-      (delete-overlay ov))))
+   (when-let* ((node (ts-fold--foldable-node-at-pos))
+               (ov (ts-fold-overlay-at node)))
+     (delete-overlay ov))))
 
 ;;;###autoload
 (defun ts-fold-open-recursively ()
   "Open recursively folded syntax NODE that are contained in the node at point."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let* ((node (ts-fold--foldable-node-at-pos))
-                (beg (tsc-node-start-position node))
-                (end (tsc-node-end-position node)))
-      (thread-last (overlays-in beg end)
-                   (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-                   (mapc #'delete-overlay)))))
+   (when-let* ((node (ts-fold--foldable-node-at-pos))
+               (beg (tsc-node-start-position node))
+               (end (tsc-node-end-position node)))
+     (thread-last (overlays-in beg end)
+                  (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                  (mapc #'delete-overlay)))))
 
 ;;;###autoload
 (defun ts-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
-                                 (alist-get major-mode ts-fold-range-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
-      (thread-last nodes-to-fold
-                   (mapcar #'cdr)
-                   (mapc #'ts-fold-close)))))
+   (let* ((node (tsc-root-node tree-sitter-tree))
+          (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                                (alist-get major-mode ts-fold-range-alist)
+                                'vector))
+          (query (tsc-make-query tree-sitter-language patterns))
+          (nodes-to-fold (tsc-query-captures query node #'ignore)))
+     (thread-last nodes-to-fold
+                  (mapcar #'cdr)
+                  (mapc #'ts-fold-close)))))
 
 ;;;###autoload
 (defun ts-fold-open-all ()
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (thread-last (overlays-in (point-min) (point-max))
-                 (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-                 (mapc #'delete-overlay))))
+   (thread-last (overlays-in (point-min) (point-max))
+                (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
+                (mapc #'delete-overlay))))
 
 ;;;###autoload
 (defun ts-fold-toggle ()
@@ -341,10 +341,10 @@ If the current node is not folded or not foldable, do nothing."
 If the current syntax node is not foldable, do nothing."
   (interactive)
   (ts-fold--ensure-ts
-    (if-let* ((node (ts-fold--foldable-node-at-pos (point)))
-              (ov (ts-fold-overlay-at node)))
-        (progn (delete-overlay ov) t)
-      (ts-fold-close))))
+   (if-let* ((node (ts-fold--foldable-node-at-pos (point)))
+             (ov (ts-fold-overlay-at node)))
+       (progn (delete-overlay ov) t)
+     (ts-fold-close))))
 
 (defun ts-fold--after-command (&rest _)
   "Function call after interactive commands."
@@ -404,7 +404,7 @@ Argument OFFSET can be used to tweak the final beginning and end position."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-markers (node offset start-seq &optional end-seq)
-  "Returns the fold range for NODE with an OFFSET where the range starts at
+  "Return the fold range for NODE with an OFFSET where the range starts at
 the end of the first occurence of START-SEQ and ends at the end of the node
 or the start of the last occurence of the optional parameter LAST-SEQ.
 
