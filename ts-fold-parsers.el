@@ -46,6 +46,13 @@
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
+(declare-function ts-fold-range-lua-comment "ts-fold.el")
+(declare-function ts-fold-range-lua-function "ts-fold.el")
+(declare-function ts-fold-range-lua-if "ts-fold.el")
+(declare-function ts-fold-range-lua-elseif "ts-fold.el")
+(declare-function ts-fold-range-lua-else "ts-fold.el")
+(declare-function ts-fold-range-lua-do-loop "ts-fold.el")
+(declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -178,6 +185,18 @@
     (try_statement       . (ts-fold-range-seq 2 -2))
     (while_statement     . ts-fold-range-julia)))
 
+(defun ts-fold-parsers-lua ()
+  "Rule set for Lua."
+  '((expression_list      . ts-fold-range-seq)
+    (function_declaration . ts-fold-range-lua-function)
+    (if_statement         . ts-fold-range-lua-if)
+    (elseif_statement     . ts-fold-range-lua-elseif)
+    (else_statement       . ts-fold-range-lua-else)
+    (while_statement      . ts-fold-range-lua-do-loop)
+    (for_statement        . ts-fold-range-lua-do-loop)
+    (repeat_statement     . ts-fold-range-lua-repeat)
+    (comment              . ts-fold-range-lua-comment)))
+
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
   '((attrset       . ts-fold-range-seq)
@@ -223,8 +242,8 @@
   '((class    . ts-fold-range-ruby-class-def)
     (method   . ts-fold-range-ruby-class-def)
     (array    . ts-fold-range-seq)
-    (do       . (ts-fold-range-seq 1 -2))  ; match with `end`
-    (do_block . (ts-fold-range-seq 1 -2))  ; match with `end`, in spec file
+    (do       . (ts-fold-range-seq 1 -2))     ; match with `end`
+    (do_block . (ts-fold-range-seq 1 -2))     ; match with `end`, in spec file
     (then     . ts-fold-range-ruby-if)        ; `if` and `elsif` block
     (else     . (ts-fold-range-ruby-if 4 0))  ; `else` block
     (comment

@@ -77,6 +77,7 @@
     (json-mode       . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
     (julia-mode      . ,(ts-fold-parsers-julia))
+    (lua-mode        . ,(ts-fold-parsers-lua))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
     (php-mode        . ,(ts-fold-parsers-php))
@@ -104,6 +105,14 @@ the fold in a cons cell.  See `ts-fold-range-python' for an example."
 (defcustom ts-fold-mode-hook nil
   "Hook to run when enabling `ts-fold-mode`."
   :type 'hook
+  :group 'ts-fold)
+
+(defcustom ts-fold-on-next-line t
+  "If non-nil, we leave ending keywords on the next line.
+
+This is only used in languages that uses keyword to end the scope.
+For example, Lua, Ruby, etc."
+  :type 'boolean
   :group 'ts-fold)
 
 (defcustom ts-fold-replacement "..."
@@ -403,7 +412,7 @@ Argument OFFSET can be used to tweak the final beginning and end position."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-markers (node offset start-seq &optional end-seq)
-  "Returns the fold range for NODE with an OFFSET where the range starts at
+  "Return the fold range for NODE with an OFFSET where the range starts at
 the end of the first occurence of START-SEQ and ends at the end of the node
 or the start of the last occurence of the optional parameter LAST-SEQ.
 
@@ -455,6 +464,12 @@ more information."
       (if (string-prefix-p "///" text)
           (ts-fold-range-line-comment node offset "///")
         (ts-fold-range-line-comment node offset "//")))))
+
+(defun ts-fold-point-before-line-break (pos)
+  "Go to POS then find previous line break, and return its position."
+  (save-excursion
+    (goto-char pos)
+    (max 1 (1- (line-beginning-position)))))
 
 ;;
 ;; (@* "Languages" )
@@ -607,16 +622,24 @@ more information."
                               (tsc-get-child-by-field node :parameters)
                               (tsc-get-child-by-field node :name)))
               (beg (tsc-node-end-position named-node))
-              (end (tsc-node-end-position node)))
-    (ts-fold--cons-add (cons beg (- end 3)) offset)))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ruby-if (node offset)
   "Define fold range for `if' (then), `elsif', and `else' in Ruby.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let ((beg (tsc-node-start-position node))
-             (end (tsc-node-end-position node)))
+  (when-let* ((beg (tsc-node-start-position node))
+              (end (cond ((when-let ((next (tsc-get-next-sibling node)))
+                            (tsc-node-start-position next)))
+                         ((when-let ((parent (ts-fold-find-parent node "if")))
+                            (- (tsc-node-end-position parent) 3))))))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rust-macro (node offset)
@@ -654,6 +677,97 @@ information."
          (start-position (byte-to-position (aref (tsc-node-range node) 0)))
          (fold-begin (1- (- end-position start-position))))
     (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
+
+(defun ts-fold-range-lua-comment (node offset)
+  "Define fold range for Lua comemnt.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let ((text (tsc-node-text node)))
+    (if (and (string-match-p "\n" text) (string-prefix-p "--[[" text))
+        (ts-fold-range-block-comment node
+                                     ;; XXX: Add 2 to for ]] at the end
+                                     (ts-fold--cons-add (cons 2 0) offset))
+      (ts-fold-range-line-comment node offset "--"))))
+
+(defun ts-fold-range-lua-function (node offset)
+  "Define fold range for Lua `function' declaration.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((params (tsc-get-child-by-field node :parameters))
+         (beg (tsc-node-end-position params))
+         (end (- (tsc-node-end-position node) 3)))  ; fit identifier `end'
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-if (node offset)
+  "Define fold range for Lua `if' statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((then (car (ts-fold-find-children node "then")))
+         (beg (tsc-node-end-position then))
+         (next (or (ts-fold-find-children-traverse node "elseif_statement")
+                   (ts-fold-find-children-traverse node "else_statement")))
+         (end (if next
+                  (tsc-node-start-position (car next))
+                (- (tsc-node-end-position node) 3))))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-elseif (node offset)
+  "Define fold range for Lua `elseif' statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((then (car (ts-fold-find-children node "then")))
+         (beg (tsc-node-end-position then))
+         (next (tsc-get-next-sibling node))
+         (end (if next
+                  (tsc-node-start-position next)
+                (tsc-node-end-position node))))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-else (node offset)
+  "Define fold range for Lua `else' statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (+ (tsc-node-start-position node) 4))  ; fit `else', 4 letters
+         (next (tsc-get-next-sibling node))          ; the `end' node
+         (end (tsc-node-start-position next)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-do-loop (node offset)
+  "Define fold range for Lua `while' and `for' statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((do (car (ts-fold-find-children node "do")))
+         (beg (tsc-node-end-position do))
+         (end (- (tsc-node-end-position node) 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-repeat (node offset)
+  "Define fold range for Lua `repeat' statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (+ (tsc-node-start-position node) 6))  ; fit `repeat', 6 letters
+         (until (car (ts-fold-find-children node "until")))
+         (end (tsc-node-start-position until)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
 ;;; ts-fold.el ends here

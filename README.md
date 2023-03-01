@@ -119,6 +119,7 @@ These languages are fairly complete:
 - Go
 - HTML
 - Java / JavaScript / JSX / JSON / Julia
+- Lua
 - Nix
 - PHP / Python
 - R / Ruby / Rust
