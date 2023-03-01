@@ -48,6 +48,8 @@
 (declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-function "ts-fold.el")
+(declare-function ts-fold-range-lua-if "ts-fold.el")
+(declare-function ts-fold-range-lua-elseif "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-python "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -184,6 +186,8 @@
   "Rule set for Lua."
   '((expression_list      . ts-fold-range-seq)
     (function_declaration . ts-fold-range-lua-function)
+    (if_statement         . ts-fold-range-lua-if)
+    (elseif_statement     . ts-fold-range-lua-elseif)
     (comment              . ts-fold-range-lua-comment)))
 
 (defun ts-fold-parsers-nix ()

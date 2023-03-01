@@ -669,10 +669,40 @@ more information."
       (ts-fold-range-line-comment node offset "--"))))
 
 (defun ts-fold-range-lua-function (node offset)
-  "Define fold range for Lua function."
+  "Define fold range for Lua function.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
   (let* ((params (tsc-get-child-by-field node :parameters))
          (beg (tsc-node-end-position params))
-         (end (- (tsc-node-end-position node) 3)))
+         (end (- (tsc-node-end-position node) 3)))  ; fit identifier `end'
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-if (node offset)
+  "Define fold range for Lua if statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((then (car (ts-fold-find-children node "then")))
+         (beg (tsc-node-end-position then))
+         (next (or (ts-fold-find-children-traverse node "elseif_statement")
+                   (ts-fold-find-children-traverse node "else_statement")))
+         (end (if next
+                  (tsc-node-start-position (car next))
+                (- (tsc-node-end-position node) 3))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lua-elseif (node offset)
+  "Define fold range for Lua elseif statement.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((then (car (ts-fold-find-children node "then")))
+         (beg (tsc-node-end-position then))
+         (next (tsc-get-next-sibling node))
+         (end (if next
+                  (tsc-node-start-position next)
+                (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
