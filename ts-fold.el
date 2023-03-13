@@ -446,7 +446,8 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (let* ((named-node (treesit-node-child-by-field-name node "condition"))
-         (else (treesit-node-child-by-field-name node "alternative"))
+         (else (or (treesit-node-child-by-field-name node "alternative")
+                   (treesit-node-child node -1)))
          (beg (treesit-node-end named-node))
          (end (1- (treesit-node-start else))))
     (ts-fold--cons-add (cons beg end) offset)))
