@@ -324,7 +324,8 @@ If the current node is not folded or not foldable, do nothing."
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((node (tsc-root-node tree-sitter-tree))
+    (let* ((ts-fold-indicators-mode)
+           (node (tsc-root-node tree-sitter-tree))
            (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
                                  (alist-get major-mode ts-fold-range-alist)
                                  'vector))
