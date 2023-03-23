@@ -323,6 +323,7 @@ If the current node is not folded or not foldable, do nothing."
 (defun ts-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
+  (advice-remove #'ts-fold-close #'ts-fold--after-command)
   (ts-fold--ensure-ts
     (let* ((node (tsc-root-node tree-sitter-tree))
            (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
@@ -332,7 +333,9 @@ If the current node is not folded or not foldable, do nothing."
            (nodes-to-fold (tsc-query-captures query node #'ignore)))
       (thread-last nodes-to-fold
                    (mapcar #'cdr)
-                   (mapc #'ts-fold-close)))))
+                   (mapc #'ts-fold-close))))
+  (advice-add #'ts-fold-close :after #'ts-fold--after-command)
+  )
 
 ;;;###autoload
 (defun ts-fold-open-all ()
