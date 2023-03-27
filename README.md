@@ -68,7 +68,7 @@ then in Emacs:
 
 ```elisp
 (add-to-list 'load-path "/path/to/lib")
-(require ts-fold)
+(require 'ts-fold)
 ```
 
 or
