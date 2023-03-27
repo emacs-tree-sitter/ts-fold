@@ -21,31 +21,30 @@ to provide code folding based on the tree-sitter syntax tree.
 
 **Table of Contents**
 
-- [ts-fold](#ts-fold)
-  - [💾 Installation](#-installation)
-    - [🔍 Method 1. with `straight.el` and `use-package`:](#-method-1-with-straightel-and-use-package)
-    - [🔍 Method 2. Manual](#-method-2-manual)
-  - [🖥 Usage](#-usage)
-    - [📇 Commands](#-commands)
-    - [🔨 Supported languages](#-supported-languages)
-  - [📝 Customization](#-customization)
-    - [⚪ Folding on new nodes](#-folding-on-new-nodes)
-      - [❔ Example](#-example)
-      - [↔ Offset](#-offset)
-    - [🔍 Writing new fold functions](#-writing-new-fold-functions)
-  - [🔌 Plugins](#-plugins)
-    - [⚖️ Indicators Mode](#-indicators-mode)
-      - [💾 Installation](#-installation-1)
-      - [🖥 Usage](#-usage-1)
-    - [📝 Summary](#-summary)
-      - [🖥 Usage](#-usage-2)
-      - [📝 Customization](#-customization-1)
-    - [🌫️ Line-Comment folding](#-line-comment-folding)
-      - [🖥 Usage](#-usage-3)
-  - [🔰 Contribute](#-contribute)
-    - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
-    - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
-    - [❓ How to create a summary parser?](#-how-to-create-a-summary-parser)
+- [💾 Installation](#-installation)
+  - [🔍 Method 1. with `straight.el` and `use-package`:](#-method-1-with-straightel-and-use-package)
+  - [🔍 Method 2. Manual](#-method-2-manual)
+- [🖥 Usage](#-usage)
+  - [📇 Commands](#-commands)
+  - [🔨 Supported languages](#-supported-languages)
+- [📝 Customization](#-customization)
+  - [⚪ Folding on new nodes](#-folding-on-new-nodes)
+    - [❔ Example](#-example)
+    - [↔ Offset](#-offset)
+  - [🔍 Writing new fold functions](#-writing-new-fold-functions)
+- [🔌 Plugins](#-plugins)
+  - [⚖️ Indicators Mode](#-indicators-mode)
+    - [💾 Installation](#-installation-1)
+    - [🖥 Usage](#-usage-1)
+  - [📝 Summary](#-summary)
+    - [🖥 Usage](#-usage-2)
+    - [📝 Customization](#-customization-1)
+  - [🌫️ Line-Comment folding](#-line-comment-folding)
+    - [🖥 Usage](#-usage-3)
+- [🔰 Contribute](#-contribute)
+  - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
+  - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
+  - [❓ How to create a summary parser?](#-how-to-create-a-summary-parser)
 
 <!-- markdown-toc end -->
 
@@ -146,7 +145,7 @@ that others may benefit from better folding in the future!
 
 ### ⚪ Folding on new nodes
 
-Ts-fold defines all its folding definitions in the the variable
+Ts-fold defines all its folding definitions in the variable
 `ts-fold-range-alist` which is an alist with the key of the alist being the
 mode and the value being another alist of fold definitions.
 
@@ -291,7 +290,7 @@ go ahead and add new fold definitions to `ts-fold-range-alist` and be good to go
 
 #### ❔ Example
 
-Let's look at a quick example of adding a new folding definition. Lets say you
+Let's look at a quick example of adding a new folding definition. Let's say you
 want to add folding to `go-mode`'s `field_declaration_list`. The folding
 definition that is needed will be
 `'(field_declaration_list . ts-fold-range-seq)`. To add this to the
