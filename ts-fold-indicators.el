@@ -276,7 +276,7 @@ Argument FOLDED holds folding state; it's a boolean."
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
-  (when ts-fold-indicators-mode
+  (when (and tree-sitter-mode ts-fold-indicators-mode)
     (ts-fold--ensure-ts
       (when-let* ((node (ignore-errors (tsc-root-node tree-sitter-tree)))
                   (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
