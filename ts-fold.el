@@ -134,6 +134,8 @@ For example, Lua, Ruby, etc."
 ;; (@* "Externals" )
 ;;
 
+(defvar ts-fold-indicators-mode)
+
 (declare-function ts-fold-indicators-mode "ts-fold-indicators.el")
 (declare-function ts-fold-indicators-refresh "ts-fold-indicators.el")
 
