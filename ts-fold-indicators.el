@@ -142,7 +142,8 @@
         (global-ts-fold-mode 1)
         (dolist (buf (buffer-list))
           (with-current-buffer buf
-            (when (and ts-fold-mode (not ts-fold-indicators-mode) (ts-fold-indicators-mode))))))
+            (when (and ts-fold-mode (not ts-fold-indicators-mode))
+              (ts-fold-indicators-mode)))))
     (remove-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)))
 
 ;;
