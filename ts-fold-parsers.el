@@ -225,10 +225,11 @@
 
 (defun ts-fold-parsers-python ()
   "Rule set for Python."
-  '((function_definition . ts-fold-range-python)
-    (class_definition    . ts-fold-range-python)
-    (list                . ts-fold-range-seq)
-    (dictionary          . ts-fold-range-seq)
+  '((function_definition  . ts-fold-range-python)
+    (class_definition     . ts-fold-range-python)
+    (list                 . ts-fold-range-seq)
+    (dictionary           . ts-fold-range-seq)
+    (expression_statement . ts-fold-range-python-expression-statement)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
