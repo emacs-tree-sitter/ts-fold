@@ -621,7 +621,7 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((string-node (car (ts-docstr-find-children node "string")))
+  (when-let* ((string-node (car (ts-fold-find-children node "string")))
               ;; the colon is an anonymous node after return_type or parameters node
               (beg (tsc-node-start-position string-node))
               (end (tsc-node-end-position node)))
