@@ -54,7 +54,8 @@
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
-(declare-function ts-fold-range-python "ts-fold.el")
+(declare-function ts-fold-range-python-def "ts-fold.el")
+(declare-function ts-fold-range-python-expression-statement "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
@@ -225,8 +226,8 @@
 
 (defun ts-fold-parsers-python ()
   "Rule set for Python."
-  '((function_definition  . ts-fold-range-python)
-    (class_definition     . ts-fold-range-python)
+  '((function_definition  . ts-fold-range-python-def)
+    (class_definition     . ts-fold-range-python-def)
     (list                 . ts-fold-range-seq)
     (dictionary           . ts-fold-range-seq)
     (expression_statement . ts-fold-range-python-expression-statement)

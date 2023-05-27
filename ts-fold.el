@@ -97,7 +97,7 @@
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE
 in MAJOR-MODE.  It should take a single argument (the syntax node with type
 FOLDABLE-NODE-TYPE) and return the buffer positions of the beginning and end of
-the fold in a cons cell.  See `ts-fold-range-python' for an example."
+the fold in a cons cell.  See `ts-fold-range-python-def' for an example."
   :type '(alist :key-type symbol
                 :value-type (alist :key-type symbol :value-type function))
   :group 'ts-fold)
@@ -602,7 +602,7 @@ more information."
 
 ;;- OCaml
 
-(defun ts-fold-range-python (node offset)
+(defun ts-fold-range-python-def (node offset)
   "Define fold range for `function_definition' and `class_definition'.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
@@ -621,7 +621,7 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((string-node (car (ts-fold-find-children node "string")))
+  (when-let* ((string-node (car (ts-fold-find-children-traverse node "string")))
               ;; the colon is an anonymous node after return_type or parameters node
               (beg (tsc-node-start-position string-node))
               (end (tsc-node-end-position node)))
