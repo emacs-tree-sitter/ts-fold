@@ -200,9 +200,9 @@
 
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
-  '((attrset       . ts-fold-range-seq)
-    (interpolation . ts-fold-range-seq)
-    (list          . ts-fold-range-seq)))
+  '((attrset_expression . ts-fold-range-seq)
+    (interpolation      . ts-fold-range-seq)
+    (list_expression    . ts-fold-range-seq)))
 
 (defun ts-fold-parsers-ocaml ()
   "Rule set for OCaml."
