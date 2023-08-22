@@ -65,6 +65,7 @@
     (caml-mode       . ,(ts-fold-parsers-ocaml))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
+    (dart-mode       . ,(ts-fold-parsers-dart))
     (elixir-mode     . ,(ts-fold-parsers-elixir))
     (ess-r-mode      . ,(ts-fold-parsers-r))
     (go-mode         . ,(ts-fold-parsers-go))
