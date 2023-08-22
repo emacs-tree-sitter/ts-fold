@@ -205,6 +205,7 @@ type of content by checking the word boundary's existence."
     (c++-mode          . ts-fold-summary-c)
     (csharp-mode       . ts-fold-summary-csharp)
     (css-mode          . ts-fold-summary-javadoc)
+    (dart-mode         . ts-fold-summary-javadoc)
     (go-mode           . ts-fold-summary-go)
     (html-mode         . ts-fold-summary-xml)
     (java-mode         . ts-fold-summary-javadoc)

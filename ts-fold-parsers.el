@@ -118,6 +118,14 @@
     (block               . ts-fold-range-seq)
     (comment             . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-dart ()
+  "Rule set for Dart."
+  '((block                 . ts-fold-range-seq)
+    (arguments             . ts-fold-range-seq)
+    (comment               . ts-fold-range-c-like-comment)
+    (documentation_comment . ts-fold-range-c-like-comment)
+    (list_literal          . ts-fold-range-seq)))  ; array
+
 (defun ts-fold-parsers-elixir ()
   "Rules set for Elixir."
   '((list . ts-fold-range-seq)
