@@ -114,6 +114,7 @@ These languages are fairly complete:
 
 - Bash
 - C / C++ / C# / CSS
+- Dart
 - Elixir
 - Go
 - HTML
