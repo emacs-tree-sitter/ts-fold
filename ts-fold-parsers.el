@@ -121,6 +121,7 @@
 (defun ts-fold-parsers-dart ()
   "Rule set for Dart."
   '((block                 . ts-fold-range-seq)
+    (class_body            . ts-fold-range-seq)
     (arguments             . ts-fold-range-seq)
     (comment               . ts-fold-range-c-like-comment)
     (documentation_comment . ts-fold-range-c-like-comment)
