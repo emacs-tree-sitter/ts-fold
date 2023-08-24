@@ -115,7 +115,7 @@ These languages are fairly complete:
 - Bash
 - C / C++ / C# / CSS
 - Dart
-- Elixir
+- Elisp / Elixir
 - Go
 - HTML
 - Java / JavaScript / JSX / JSON / Julia
@@ -131,7 +131,6 @@ These languages are in development:
 
 - Agda
 - Elm
-- Emacs Lisp
 - OCaml
 - XML (upstream)
 

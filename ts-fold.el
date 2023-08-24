@@ -66,6 +66,7 @@
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
     (dart-mode       . ,(ts-fold-parsers-dart))
+    (emacs-lisp-mode . ,(ts-fold-parsers-elisp))
     (elixir-mode     . ,(ts-fold-parsers-elixir))
     (ess-r-mode      . ,(ts-fold-parsers-r))
     (go-mode         . ,(ts-fold-parsers-go))
@@ -667,6 +668,17 @@ more information."
               (first_bracket (tsc-get-nth-child node 2))
               (beg (tsc-node-start-position first_bracket))
               (end (1+ (tsc-node-start-position last_bracket))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-elisp-function (node offset)
+  "Return the fold range for `macro_definition' and `function_definition' NODE
+in Elisp.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((param-node (tsc-get-nth-child node 4))
+              (beg (tsc-node-start-position param-node))
+              (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elixir (node offset)

@@ -112,6 +112,10 @@ type of content by checking the word boundary's existence."
          (ts-fold-summary-csharp-vsdoc doc-str))
         (t (ts-fold-summary-javadoc doc-str))))
 
+(defun ts-fold-summary-elisp (doc-str)
+  "Extract summary from DOC-STR in Elisp."
+  (ts-fold-summary--generic doc-str ";;"))
+
 (defun ts-fold-summary-javadoc (doc-str)
   "Extract summary from DOC-STR in Javadoc."
   (ts-fold-summary--generic doc-str "*"))
@@ -206,6 +210,7 @@ type of content by checking the word boundary's existence."
     (csharp-mode       . ts-fold-summary-csharp)
     (css-mode          . ts-fold-summary-javadoc)
     (dart-mode         . ts-fold-summary-javadoc)
+    (emacs-lisp-mode   . ts-fold-summary-elisp)
     (go-mode           . ts-fold-summary-go)
     (html-mode         . ts-fold-summary-xml)
     (java-mode         . ts-fold-summary-javadoc)

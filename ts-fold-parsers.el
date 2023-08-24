@@ -59,6 +59,7 @@
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
+(declare-function ts-fold-range-elisp-function "ts-fold.el")
 (declare-function ts-fold-range-elixir "ts-fold.el")
 
 ;;
@@ -126,6 +127,14 @@
     (comment               . ts-fold-range-c-like-comment)
     (documentation_comment . ts-fold-range-c-like-comment)
     (list_literal          . ts-fold-range-seq)))  ; array
+
+(defun ts-fold-parsers-elisp ()
+  "Rule set for Elisp."
+  '((macro_definition    . ts-fold-range-elisp-function)
+    (function_definition . ts-fold-range-elisp-function)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
 
 (defun ts-fold-parsers-elixir ()
   "Rules set for Elixir."
