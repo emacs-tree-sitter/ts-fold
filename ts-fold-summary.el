@@ -213,6 +213,7 @@ type of content by checking the word boundary's existence."
     (dart-mode         . ts-fold-summary-javadoc)
     (emacs-lisp-mode   . ts-fold-summary-elisp)
     (go-mode           . ts-fold-summary-go)
+    (haskell-mode      . ts-fold-summary-lua-doc)
     (html-mode         . ts-fold-summary-xml)
     (java-mode         . ts-fold-summary-javadoc)
     (javascript-mode   . ts-fold-summary-javadoc)

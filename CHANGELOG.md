@@ -22,6 +22,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add support for Python docstring (#58)
 * Add Dart support (#62)
 * Add Elisp support (#63)
+* Add Clojure support (#64)
+* Add Haskell support (#65)
 
 ## 0.1.0
 > Released Oct 18, 2021

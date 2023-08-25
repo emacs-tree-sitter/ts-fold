@@ -71,6 +71,7 @@
     (elixir-mode     . ,(ts-fold-parsers-elixir))
     (ess-r-mode      . ,(ts-fold-parsers-r))
     (go-mode         . ,(ts-fold-parsers-go))
+    (haskell-mode    . ,(ts-fold-parsers-haskell))
     (html-mode       . ,(ts-fold-parsers-html))
     (java-mode       . ,(ts-fold-parsers-java))
     (javascript-mode . ,(ts-fold-parsers-javascript))
@@ -532,13 +533,24 @@ more information."
               (end (1- (tsc-node-start-position next))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-haskell-function (node offset)
+  "Define fold range for `function' in Haskell.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (beg (save-excursion (goto-char beg) (line-end-position)))
+              (end-node (ts-fold-last-child node))
+              (end (tsc-node-end-position end-node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-html (node offset)
   "Define fold range for tag in HTML.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (let* ((beg (tsc-node-end-position (tsc-get-nth-child node 0)))
-         (end-node (tsc-get-nth-child node (1- (tsc-count-children node))))
+         (end-node (ts-fold-last-child node))
          (end (tsc-node-start-position end-node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
@@ -675,8 +687,7 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((children (tsc-count-children node))
-              (last_bracket (tsc-get-nth-child node (- children 1)))
+  (when-let* ((last_bracket (ts-fold-last-child node))
               (first_bracket (tsc-get-nth-child node 2))
               (beg (tsc-node-start-position first_bracket))
               (end (1+ (tsc-node-start-position last_bracket))))
@@ -698,8 +709,7 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((children (tsc-count-children node))
-              (end_child (tsc-get-nth-child node (- children 1)))
+  (when-let* ((end_child (ts-fold-last-child node))
               (do_child (tsc-get-nth-child node 1))
               (beg (tsc-node-start-position do_child))
               (end (tsc-node-start-position end_child)))

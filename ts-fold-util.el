@@ -133,5 +133,11 @@ information."
         (setq parent (tsc-get-parent parent))))
     parent))
 
+(defun ts-fold-last-child (node)
+  "Return last child node from parent NODE."
+  (when-let* ((count (tsc-count-children node))
+              ((not (= count 0))))
+    (tsc-get-nth-child node (1- count))))
+
 (provide 'ts-fold-util)
 ;;; ts-fold-util.el ends here
