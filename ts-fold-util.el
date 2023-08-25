@@ -137,7 +137,7 @@ information."
   "Return last child node from parent NODE."
   (when-let* ((count (tsc-count-children node))
               (_ (not (= count 0))))
-    (tsc-get-nth-child node (- count 1))))
+    (tsc-get-nth-child node (1- count))))
 
 (provide 'ts-fold-util)
 ;;; ts-fold-util.el ends here
