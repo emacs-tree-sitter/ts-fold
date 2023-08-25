@@ -113,7 +113,7 @@ If evil mode is loaded, then these commands are also added to the evil folding l
 These languages are fairly complete:
 
 - Bash
-- C / C++ / C# / CSS
+- C / C++ / C# / Clojure / CSS
 - Dart
 - Elisp / Elixir
 - Go

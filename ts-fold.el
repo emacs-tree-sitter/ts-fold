@@ -63,6 +63,7 @@
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
     (caml-mode       . ,(ts-fold-parsers-ocaml))
+    (clojure-mode    . ,(ts-fold-parsers-clojure))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
     (dart-mode       . ,(ts-fold-parsers-dart))
@@ -603,6 +604,17 @@ more information."
       (ts-fold--cons-add (cons beg end) offset))))
 
 ;;- OCaml
+
+(defun ts-fold-range-clojure-function (node offset)
+  "Return the fold range for `list_lit' NODE in Clojure.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((param-node (car (ts-fold-find-children node "vec_lit")))
+              (next-node (tsc-get-next-sibling param-node))
+              (beg (tsc-node-start-position next-node))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-python-def (node offset)
   "Define fold range for `function_definition' and `class_definition'.

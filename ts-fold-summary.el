@@ -207,6 +207,7 @@ type of content by checking the word boundary's existence."
     (bat-mode          . ts-fold-summary-batch)
     (c-mode            . ts-fold-summary-c)
     (c++-mode          . ts-fold-summary-c)
+    (clojure-mode      . ts-fold-summary-elisp)
     (csharp-mode       . ts-fold-summary-csharp)
     (css-mode          . ts-fold-summary-javadoc)
     (dart-mode         . ts-fold-summary-javadoc)

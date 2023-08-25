@@ -54,6 +54,7 @@
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
+(declare-function ts-fold-range-clojure-function "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -95,6 +96,15 @@
 (defun ts-fold-parsers-c++ ()
   "Rule set for C++."
   (append (ts-fold-parsers-c)))
+
+(defun ts-fold-parsers-clojure ()
+  "Rule set for Clojure."
+  '((list_lit . ts-fold-range-clojure-function)
+    (map_lit  . ts-fold-range-seq)
+    (str_lit  . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
 
 (defun ts-fold-parsers-csharp ()
   "Rule set for C#."
