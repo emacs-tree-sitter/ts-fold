@@ -44,6 +44,7 @@
 (declare-function ts-fold-range-c-preproc-if "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
+(declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
@@ -156,6 +157,11 @@
     (import_spec_list       . ts-fold-range-seq)
     (interface_type         . (lambda (node offset)
                                 (ts-fold-range-markers node offset "{" "}")))))
+
+(defun ts-fold-parsers-haskell ()
+  "Rule set for Haskell."
+  '((function . ts-fold-range-haskell-function)
+    (comment  . ts-fold-range-lua-comment)))
 
 (defun ts-fold-parsers-html ()
   "Rule set for HTML."
