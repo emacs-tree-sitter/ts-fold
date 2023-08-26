@@ -154,7 +154,7 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary-markdown (doc-str)
   "Extract summary from DOC-STR in Markdown block."
-  (ts-fold-summary--doc-extract doc-str '()))
+  (ts-fold-summary--doc-extract doc-str '("-" "```")))
 
 (defun ts-fold-summary-org (doc-str)
   "Extract summary from DOC-STR in Org block."
