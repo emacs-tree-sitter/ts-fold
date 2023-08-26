@@ -226,6 +226,7 @@ type of content by checking the word boundary's existence."
     (markdown-mode     . ts-fold-summary-markdown)
     (objc-mode         . ts-fold-summary-c)
     (org-mode          . ts-fold-summary-org)
+    (perl-mode         . ts-fold-summary-ruby-doc)
     (php-mode          . ts-fold-summary-javadoc)
     (python-mode       . ts-fold-summary-python-doc)
     (rjsx-mode         . ts-fold-summary-javadoc)

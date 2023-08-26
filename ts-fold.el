@@ -84,6 +84,7 @@
     (lua-mode        . ,(ts-fold-parsers-lua))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
+    (perl-mode       . ,(ts-fold-parsers-perl))
     (php-mode        . ,(ts-fold-parsers-php))
     (python-mode     . ,(ts-fold-parsers-python))
     (rjsx-mode       . ,(ts-fold-parsers-javascript))
