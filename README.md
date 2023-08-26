@@ -131,6 +131,7 @@ These languages are in development:
 
 - Agda
 - Elm
+- Noir
 - OCaml
 - XML (upstream)
 
