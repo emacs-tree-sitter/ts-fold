@@ -235,8 +235,7 @@
 (defun ts-fold-parsers-markdown ()
   "Rule set for Markdown."
   '((fenced_code_block . (ts-fold-range-seq 2 -2))
-    (html_block        . ts-fold-range-html)
-    (comment           . ts-fold-range-seq)))
+    (html_block        . ts-fold-range-html)))
 
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
