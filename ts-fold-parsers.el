@@ -245,6 +245,14 @@
     (type_definition     . ts-fold-range-ocaml-type-definition)
     (value_definition    . ts-fold-range-ocaml-value-definition)))
 
+(defun ts-fold-parsers-perl ()
+  "Rule set for Perl."
+  '((block           . ts-fold-range-seq)
+    (list_expression . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-php ()
   "Rule set for PHP."
   '((namespace_use_group . ts-fold-range-seq)

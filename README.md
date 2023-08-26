@@ -121,7 +121,7 @@ These languages are fairly complete:
 - Java / JavaScript / JSX / JSON / Julia
 - Lua
 - Nix
-- PHP / Python
+- Perl / PHP / Python
 - R / Ruby / Rust
 - Scala / Swift
 - TypeScript / TSX
