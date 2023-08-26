@@ -232,6 +232,12 @@
     (repeat_statement     . ts-fold-range-lua-repeat)
     (comment              . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-markdown ()
+  "Rule set for Markdown."
+  '((fenced_code_block . (ts-fold-range-seq 2 -2))
+    (html_block        . ts-fold-range-html)
+    (comment           . ts-fold-range-seq)))
+
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
   '((attrset_expression . ts-fold-range-seq)
