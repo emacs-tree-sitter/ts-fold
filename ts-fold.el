@@ -221,6 +221,15 @@ ts-fold can act on."
 ;; (@* "Core" )
 ;;
 
+(defun ts-fold--get-fold-range (node)
+  "Return the beginning (as buffer position) of fold for NODE.
+Return nil if there is no fold to be made."
+  (when-let* ((fold-alist (alist-get major-mode ts-fold-range-alist))
+              (fold-func (alist-get (tsc-node-type node) fold-alist)))
+    (cond ((functionp fold-func) (funcall fold-func node (cons 0 0)))
+          ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
+          (t (user-error "Bad folding function for node")))))
+
 (defun ts-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
 
@@ -233,18 +242,11 @@ This function is borrowed from `tree-sitter-node-at-point'."
          (node (tsc-get-descendant-for-position-range root pos pos))
          ;; Used for looping
          (current node))
-    (while (and current (not (alist-get (tsc-node-type current) mode-ranges)))
+    (while (and current
+                (or (not (alist-get (tsc-node-type current) mode-ranges))
+                    (not (ts-fold--get-fold-range current))))
       (setq current (tsc-get-parent current)))
     current))
-
-(defun ts-fold--get-fold-range (node)
-  "Return the beginning (as buffer position) of fold for NODE.
-Return nil if there is no fold to be made."
-  (when-let* ((fold-alist (alist-get major-mode ts-fold-range-alist))
-              (fold-func (alist-get (tsc-node-type node) fold-alist)))
-    (cond ((functionp fold-func) (funcall fold-func node (cons 0 0)))
-          ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
-          (t (user-error "Bad folding function for node")))))
 
 ;;
 ;; (@* "Overlays" )
