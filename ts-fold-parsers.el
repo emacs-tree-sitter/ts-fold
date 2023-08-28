@@ -44,6 +44,8 @@
 (declare-function ts-fold-range-c-preproc-if "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
+(declare-function ts-fold-range-elisp-function "ts-fold.el")
+(declare-function ts-fold-range-elixir "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
@@ -61,8 +63,7 @@
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
-(declare-function ts-fold-range-elisp-function "ts-fold.el")
-(declare-function ts-fold-range-elixir "ts-fold.el")
+(declare-function ts-fold-range-toml-table "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -331,14 +332,27 @@
     (extension_declaration . ts-fold-range-seq)
     (comment               . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-toml ()
+  "Rule set for TOML."
+  '((table . ts-fold-range-toml-table)
+    (array . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-typescript ()
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
 
 (defun ts-fold-parsers-yaml ()
   "Rule set for YAML."
-  '((comment . (lambda (node offset) (ts-fold-range-line-comment node offset "#")))
-    (block_mapping_pair . ((lambda (node offset) (ts-fold-range-markers node offset ":")) 0 1))))
+  '((comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))
+    (block_mapping_pair
+     . ((lambda (node offset)
+          (ts-fold-range-markers node offset ":"))
+        0 1))))
 
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

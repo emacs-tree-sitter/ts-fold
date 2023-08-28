@@ -95,6 +95,8 @@
     (sh-mode         . ,(ts-fold-parsers-bash))
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))
+    (toml-mode       . ,(ts-fold-parsers-toml))
+    (conf-toml-mode  . ,(ts-fold-parsers-toml))
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
     (typescript-mode . ,(ts-fold-parsers-typescript))
     (yaml-mode       . ,(ts-fold-parsers-yaml)))
@@ -711,10 +713,10 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((end_child (ts-fold-last-child node))
-              (do_child (tsc-get-nth-child node 1))
-              (beg (tsc-node-start-position do_child))
-              (end (tsc-node-start-position end_child)))
+  (when-let* ((end-child (ts-fold-last-child node))
+              (do-child (tsc-get-nth-child node 1))
+              (beg (tsc-node-start-position do-child))
+              (end (tsc-node-start-position end-child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-julia (node offset)
@@ -818,6 +820,17 @@ more information."
          (end (tsc-node-start-position until)))
     (when ts-fold-on-next-line  ; display nicely
       (setq end (ts-fold-point-before-line-break end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-toml-table (node offset)
+  "Return the fold range for `table' NODE in TOML.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((close-bracket (car (ts-fold-find-children node "]")))
+              (beg (tsc-node-end-position close-bracket))
+              (end-child (ts-fold-last-child node))
+              (end (tsc-node-end-position end-child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)

@@ -130,7 +130,7 @@ These languages are fairly complete:
 - Perl / PHP / Python
 - R / Ruby / Rust
 - Scala / Swift
-- TypeScript / TSX
+- TOML / TypeScript / TSX
 - YAML
 
 These languages are in development:

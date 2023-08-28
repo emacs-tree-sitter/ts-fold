@@ -235,6 +235,8 @@ type of content by checking the word boundary's existence."
     (scala-mode        . ts-fold-summary-javadoc)
     (sh-mode           . ts-fold-summary-javadoc)
     (swift-mode        . ts-fold-summary-c)
+    (toml-mode         . ts-fold-summary-javadoc)
+    (conf-toml-mode    . ts-fold-summary-javadoc)
     (typescript-mode   . ts-fold-summary-javadoc)
     (nxml-mode         . ts-fold-summary-xml))
   "Alist mapping `major-mode' to doc parser function."
