@@ -26,6 +26,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Haskell support (#65)
 * Add Perl support (#66)
 * Add Markdown support (#67)
+* Add TOML support (#68)
 
 ## 0.1.0
 > Released Oct 18, 2021
