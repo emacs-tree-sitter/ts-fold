@@ -744,7 +744,7 @@ information."
   (when-let* ((open-bracket (car (ts-fold-find-children node "{")))
               (beg (tsc-node-end-position open-bracket))
               (end (1- (tsc-node-end-position node))))
-    (ts-fold--cons-add (cons beg end) offset))))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-comment (node offset)
   "Define fold range for Lua comemnt.

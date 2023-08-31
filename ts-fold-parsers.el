@@ -228,6 +228,7 @@
     (control_structure_body . ts-fold-range-seq)
     (lambda_literal         . ts-fold-range-seq)
     (enum_class_body        . ts-fold-range-seq)
+    (class_body             . ts-fold-range-seq)
     (when_expression        . ts-fold-range-kotlin-when)
     (multiline_comment      . ts-fold-range-c-like-comment)
     (line_comment           . ts-fold-range-c-like-comment)))
