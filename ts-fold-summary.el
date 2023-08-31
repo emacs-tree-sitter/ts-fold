@@ -215,6 +215,7 @@ type of content by checking the word boundary's existence."
     (go-mode           . ts-fold-summary-go)
     (haskell-mode      . ts-fold-summary-lua-doc)
     (html-mode         . ts-fold-summary-xml)
+    (jai-mode          . ts-fold-summary-c)
     (java-mode         . ts-fold-summary-javadoc)
     (javascript-mode   . ts-fold-summary-javadoc)
     (js-mode           . ts-fold-summary-javadoc)

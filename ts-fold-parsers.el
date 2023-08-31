@@ -180,6 +180,13 @@
   '((element . ts-fold-range-html)
     (comment . (ts-fold-range-seq 1 -1))))
 
+(defun ts-fold-parsers-jai ()
+  "Rule set for Jai."
+  '((imperative_scope . ts-fold-range-seq)
+    (data_scope       . ts-fold-range-seq)
+    (block_comment    . ts-fold-range-block-comment)
+    (inline_comment   . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-java ()
   "Rule set for Java."
   '((switch_block                    . ts-fold-range-seq)
@@ -192,7 +199,8 @@
     (annotation_type_body            . ts-fold-range-seq)
     (interface_body                  . ts-fold-range-seq)
     (array_initializer               . ts-fold-range-seq)
-    (block_comment                   . (ts-fold-range-seq 1 -1))))
+    (block_comment                   . ts-fold-range-block-comment)
+    (line_comment                    . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-javascript ()
   "Rule set for JavaScript."
