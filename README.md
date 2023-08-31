@@ -123,7 +123,7 @@ These languages are fairly complete:
 - Elisp / Elixir
 - Go
 - Haskell / HTML
-- Java / JavaScript / JSX / JSON / Julia
+- Jai / Java / JavaScript / JSX / JSON / Julia
 - Kotlin
 - Lua
 - Markdown

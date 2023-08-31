@@ -73,6 +73,7 @@
     (go-mode         . ,(ts-fold-parsers-go))
     (haskell-mode    . ,(ts-fold-parsers-haskell))
     (html-mode       . ,(ts-fold-parsers-html))
+    (jai-mode        . ,(ts-fold-parsers-jai))
     (java-mode       . ,(ts-fold-parsers-java))
     (javascript-mode . ,(ts-fold-parsers-javascript))
     (js-mode         . ,(ts-fold-parsers-javascript))
@@ -318,7 +319,8 @@ If the current node is not folded or not foldable, do nothing."
   (ts-fold--ensure-ts
     (when-let* ((node (ts-fold--foldable-node-at-pos))
                 (ov (ts-fold-overlay-at node)))
-      (delete-overlay ov))))
+      (delete-overlay ov)
+      t)))
 
 ;;;###autoload
 (defun ts-fold-open-recursively ()
