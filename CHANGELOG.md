@@ -28,6 +28,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Markdown support (#67)
 * Add TOML support (#68)
 * fix: Don't fold lint comment when only 1 line (#69) 
+* Add Kotlin support (#70)
 
 ## 0.1.0
 > Released Oct 18, 2021
