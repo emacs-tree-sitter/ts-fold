@@ -161,7 +161,7 @@
 
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."
-  '((body . (ts-fold-range-seq 0 1))
+  '((body . (ts-fold-range-seq -1 1))
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
