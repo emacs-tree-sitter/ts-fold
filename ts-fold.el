@@ -81,6 +81,7 @@
     (json-mode       . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
     (julia-mode      . ,(ts-fold-parsers-julia))
+    (kotlin-mode     . ,(ts-fold-parsers-kotlin))
     (lua-mode        . ,(ts-fold-parsers-lua))
     (markdown-mode   . ,(ts-fold-parsers-markdown))
     (nix-mode        . ,(ts-fold-parsers-nix))
@@ -733,6 +734,17 @@ information."
          (start-position (byte-to-position (aref (tsc-node-range node) 0)))
          (fold-begin (1- (- end-position start-position))))
     (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
+
+(defun ts-fold-range-kotlin-when (node offset)
+  "Return the fold range for `when' NODE in Kotlin.
+
+It excludes the NODE's first child and the `end' keyword.  For
+argument OFFSET, see function `ts-fold-range-seq' for more
+information."
+  (when-let* ((open-bracket (car (ts-fold-find-children node "{")))
+              (beg (tsc-node-end-position open-bracket))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-lua-comment (node offset)
   "Define fold range for Lua comemnt.

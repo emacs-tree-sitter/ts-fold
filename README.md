@@ -124,6 +124,7 @@ These languages are fairly complete:
 - Go
 - Haskell / HTML
 - Java / JavaScript / JSX / JSON / Julia
+- Kotlin
 - Lua
 - Markdown
 - Nix
