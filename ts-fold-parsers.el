@@ -49,6 +49,7 @@
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
+(declare-function ts-fold-range-kotlin-when "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-function "ts-fold.el")
 (declare-function ts-fold-range-lua-if "ts-fold.el")
@@ -220,6 +221,17 @@
     (triple_string       . (ts-fold-range-seq 2 -2))
     (try_statement       . (ts-fold-range-seq 2 -2))
     (while_statement     . ts-fold-range-julia)))
+
+(defun ts-fold-parsers-kotlin ()
+  "Rule set for Kotlin."
+  '((function_body          . ts-fold-range-seq)
+    (control_structure_body . ts-fold-range-seq)
+    (lambda_literal         . ts-fold-range-seq)
+    (enum_class_body        . ts-fold-range-seq)
+    (class_body             . ts-fold-range-seq)
+    (when_expression        . ts-fold-range-kotlin-when)
+    (multiline_comment      . ts-fold-range-c-like-comment)
+    (line_comment           . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-lua ()
   "Rule set for Lua."
