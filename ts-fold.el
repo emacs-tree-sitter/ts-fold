@@ -70,6 +70,7 @@
     (emacs-lisp-mode . ,(ts-fold-parsers-elisp))
     (elixir-mode     . ,(ts-fold-parsers-elixir))
     (ess-r-mode      . ,(ts-fold-parsers-r))
+    (gdscript-mode   . ,(ts-fold-parsers-gdscript))
     (go-mode         . ,(ts-fold-parsers-go))
     (haskell-mode    . ,(ts-fold-parsers-haskell))
     (html-mode       . ,(ts-fold-parsers-html))

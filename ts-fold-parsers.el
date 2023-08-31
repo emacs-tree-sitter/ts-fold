@@ -159,6 +159,13 @@
          (ts-fold-range-line-comment node offset "#")))
     (do_block . ts-fold-range-elixir)))
 
+(defun ts-fold-parsers-gdscript ()
+  "Rule set for GGScript."
+  '((body . (ts-fold-range-seq -1 1))
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-go ()
   "Rule set for Go."
   '((block                  . ts-fold-range-seq)
