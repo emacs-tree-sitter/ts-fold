@@ -495,6 +495,16 @@ more information."
 ;; (@* "Languages" )
 ;;
 
+(defun ts-fold-range-beancount-transaction (node offset)
+  "Define fold range for `transaction' preprocessor.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (beg (save-excursion (goto-char beg) (line-end-position)))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-c-preproc-if (node offset)
   "Define fold range for `if' preprocessor.
 
