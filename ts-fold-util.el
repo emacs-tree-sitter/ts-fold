@@ -79,6 +79,24 @@ Optional argument TRIM, see function `ts-fold--get-face'."
   (ts-fold--is-face obj ts-fold--doc-faces trim))
 
 ;;
+;; (@* "Positions" )
+;;
+
+(defun ts-fold--last-eol (pos)
+  "Go to POS then find previous line break, and return its position."
+  (save-excursion
+    (goto-char pos)
+    (max 1 (1- (line-beginning-position)))))
+
+(defun ts-fold--bol (point)
+  "Return line beginning position at POINT."
+  (save-excursion (goto-char point) (line-beginning-position)))
+
+(defun ts-fold--eol (point)
+  "Return line end position at POINT."
+  (save-excursion (goto-char point) (line-end-position)))
+
+;;
 ;; (@* "Math" )
 ;;
 
