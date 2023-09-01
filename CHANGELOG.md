@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
-## 0.2.0 (Unreleased)
+## 0.3.0 (Unreleased)
 > Released N/A
+
+* N/A
+
+## 0.2.0
+> Released Sep 01, 2023
 
 * Support Elixir (#10)
 * Render indicators once it's mode is enabled (#19)

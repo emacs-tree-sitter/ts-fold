@@ -1,5 +1,5 @@
 (package "ts-fold"
-         "0.1.0"
+         "0.2.0"
          "Code folding using tree-sitter")
 
 (website-url "https://github.com/emacs-tree-sitter/ts-fold")
