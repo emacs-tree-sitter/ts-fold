@@ -84,6 +84,13 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
+(defun ts-fold-parsers-beancount ()
+  "Rule set for Beancount."
+  '((transaction . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
+
 (defun ts-fold-parsers-c ()
   "Rule set for C."
   '((compound_statement     . ts-fold-range-seq)

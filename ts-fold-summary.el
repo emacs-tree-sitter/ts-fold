@@ -205,6 +205,7 @@ type of content by checking the word boundary's existence."
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode . ts-fold-summary-javadoc)
     (bat-mode          . ts-fold-summary-batch)
+    (beancount-mode    . ts-fold-summary-elisp)
     (c-mode            . ts-fold-summary-c)
     (c++-mode          . ts-fold-summary-c)
     (clojure-mode      . ts-fold-summary-elisp)

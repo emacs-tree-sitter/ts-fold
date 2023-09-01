@@ -32,6 +32,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Jai support (#71)
 * Add GDScript support (#72)
 * Add Scheme support (#73)
+* Add Beancount support (#74)
 
 ## 0.1.0
 > Released Oct 18, 2021
