@@ -132,6 +132,7 @@ These languages are fairly complete:
 - R / Ruby / Rust
 - Scala / Scheme / Swift
 - TOML / TypeScript / TSX
+- Verilog
 - YAML
 
 These languages are in development:

@@ -104,6 +104,7 @@
     (conf-toml-mode  . ,(ts-fold-parsers-toml))
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
     (typescript-mode . ,(ts-fold-parsers-typescript))
+    (verilog-mode    . ,(ts-fold-parsers-verilog))
     (yaml-mode       . ,(ts-fold-parsers-yaml)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
@@ -496,7 +497,7 @@ more information."
 ;;
 
 (defun ts-fold-range-beancount-transaction (node offset)
-  "Define fold range for `transaction' preprocessor.
+  "Define fold range for `transaction' in Beancount.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -861,6 +862,19 @@ more information."
               (beg (tsc-node-end-position close-bracket))
               (end-child (ts-fold-last-child node))
               (end (tsc-node-end-position end-child)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-verilog-module (node offset)
+  "Return the fold range for `module' NODE in Verilog.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((close-bracket (car (ts-fold-find-children node ";")))
+              (beg (tsc-node-end-position close-bracket))
+              (end-child (ts-fold-last-child node))
+              (end (tsc-node-end-position end-child))
+              (end (save-excursion (goto-char end) (line-beginning-position)))
+              (end (1- end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)

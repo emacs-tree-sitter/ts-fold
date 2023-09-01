@@ -66,6 +66,7 @@
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
 (declare-function ts-fold-range-toml-table "ts-fold.el")
+(declare-function ts-fold-range-verilog-module "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -385,6 +386,11 @@
 (defun ts-fold-parsers-typescript ()
   "Rule set for TypeScript."
   (append (ts-fold-parsers-javascript)))
+
+(defun ts-fold-parsers-verilog ()
+  "Rule set for Verilog."
+  '((module_declaration . ts-fold-range-verilog-module)
+    (comment            . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-yaml ()
   "Rule set for YAML."

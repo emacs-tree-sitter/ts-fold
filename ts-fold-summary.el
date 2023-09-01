@@ -242,6 +242,7 @@ type of content by checking the word boundary's existence."
     (toml-mode         . ts-fold-summary-javadoc)
     (conf-toml-mode    . ts-fold-summary-javadoc)
     (typescript-mode   . ts-fold-summary-javadoc)
+    (verilog-mode      . ts-fold-summary-javadoc)
     (nxml-mode         . ts-fold-summary-xml))
   "Alist mapping `major-mode' to doc parser function."
   :type '(alist :key-type symbol :value-type function)
