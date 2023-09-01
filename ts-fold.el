@@ -85,6 +85,7 @@
     (jsonc-mode      . ,(ts-fold-parsers-json))
     (julia-mode      . ,(ts-fold-parsers-julia))
     (kotlin-mode     . ,(ts-fold-parsers-kotlin))
+    (latex-mode      . ,(ts-fold-parsers-latex))
     (lua-mode        . ,(ts-fold-parsers-lua))
     (markdown-mode   . ,(ts-fold-parsers-markdown))
     (nix-mode        . ,(ts-fold-parsers-nix))

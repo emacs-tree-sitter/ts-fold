@@ -140,6 +140,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Rust."
   (ts-fold-summary--generic doc-str "///"))
 
+(defun ts-fold-summary-tex-doc (doc-str)
+  "Extract summary from DOC-STR in Tex family."
+  (ts-fold-summary--generic doc-str "%"))
+
 (defun ts-fold-summary-c-macro (doc-str)
   "Parse C macro summary from DOC-STR."
   (when (ts-fold--is-face doc-str
@@ -213,6 +217,7 @@ type of content by checking the word boundary's existence."
     (css-mode          . ts-fold-summary-javadoc)
     (dart-mode         . ts-fold-summary-javadoc)
     (emacs-lisp-mode   . ts-fold-summary-elisp)
+    (elixir-mode       . ts-fold-summary-ruby-doc)
     (gdscript-mode     . ts-fold-summary-ruby-doc)
     (go-mode           . ts-fold-summary-go)
     (haskell-mode      . ts-fold-summary-lua-doc)
@@ -225,6 +230,7 @@ type of content by checking the word boundary's existence."
     (js3-mode          . ts-fold-summary-javadoc)
     (julia-mode        . ts-fold-summary-julia-doc)
     (kotlin-mode       . ts-fold-summary-javadoc)
+    (latex-mode        . ts-fold-summary-tex-doc)
     (lua-mode          . ts-fold-summary-lua-doc)
     (markdown-mode     . ts-fold-summary-markdown)
     (objc-mode         . ts-fold-summary-c)
