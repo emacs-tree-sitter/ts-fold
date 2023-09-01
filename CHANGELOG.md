@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > Released N/A
 
 * Add Noir support (#77)
+* Improve Elixir UX (#78)
 
 ## 0.2.0
 > Released Sep 01, 2023
