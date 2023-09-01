@@ -122,7 +122,7 @@ These languages are fairly complete:
 - Kotlin
 - LaTex / Lua
 - Markdown
-- Nix
+- Nix / Noir
 - Perl / PHP / Python
 - R / Ruby / Rust
 - Scala / Scheme / Swift

@@ -88,6 +88,7 @@
     (latex-mode      . ,(ts-fold-parsers-latex))
     (lua-mode        . ,(ts-fold-parsers-lua))
     (markdown-mode   . ,(ts-fold-parsers-markdown))
+    (noir-mode       . ,(ts-fold-parsers-noir))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
     (perl-mode       . ,(ts-fold-parsers-perl))

@@ -233,6 +233,8 @@ type of content by checking the word boundary's existence."
     (latex-mode        . ts-fold-summary-tex-doc)
     (lua-mode          . ts-fold-summary-lua-doc)
     (markdown-mode     . ts-fold-summary-markdown)
+    (nix-mode          . ts-fold-summary-ruby-doc)
+    (noir-mode         . ts-fold-summary-rust-doc)
     (objc-mode         . ts-fold-summary-c)
     (org-mode          . ts-fold-summary-org)
     (perl-mode         . ts-fold-summary-ruby-doc)
