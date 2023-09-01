@@ -282,11 +282,19 @@
   '((fenced_code_block . (ts-fold-range-seq 2 -2))
     (html_block        . ts-fold-range-html)))
 
+(defun ts-fold-parsers-noir ()
+  "Rule set for Noir."
+  '((body    . ts-fold-range-seq)
+    (comment . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
   '((attrset_expression . ts-fold-range-seq)
     (interpolation      . ts-fold-range-seq)
-    (list_expression    . ts-fold-range-seq)))
+    (list_expression    . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-ocaml ()
   "Rule set for OCaml."

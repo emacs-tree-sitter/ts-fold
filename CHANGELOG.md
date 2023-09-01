@@ -8,7 +8,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 0.2.1 (Unreleased)
 > Released N/A
 
-* N/A
+* Add Noir support (#77)
 
 ## 0.2.0
 > Released Sep 01, 2023
