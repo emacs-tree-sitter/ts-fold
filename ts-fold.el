@@ -587,7 +587,10 @@ more information."
   (when-let* ((end-child (ts-fold-last-child node))
               (do-child (tsc-get-nth-child node 1))
               (beg (tsc-node-start-position do-child))
+              (beg (ts-fold--last-eol beg))
               (end (tsc-node-start-position end-child)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-haskell-function (node offset)

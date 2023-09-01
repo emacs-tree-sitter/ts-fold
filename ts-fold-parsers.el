@@ -161,13 +161,13 @@
 
 (defun ts-fold-parsers-elixir ()
   "Rules set for Elixir."
-  '((list . ts-fold-range-seq)
-    (map . ts-fold-range-seq)
-    (tuple . ts-fold-range-seq)
+  '((list     . ts-fold-range-seq)
+    (map      . ts-fold-range-seq)
+    (tuple    . ts-fold-range-seq)
+    (do_block . ts-fold-range-elixir)
     (comment
      . (lambda (node offset)
-         (ts-fold-range-line-comment node offset "#")))
-    (do_block . ts-fold-range-elixir)))
+         (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."
@@ -179,7 +179,7 @@
 (defun ts-fold-parsers-go ()
   "Rule set for Go."
   '((block                  . ts-fold-range-seq)
-    (comment                . ts-fold-range-seq)
+    (comment                . ts-fold-range-c-like-comment)
     (const_declaration      . (lambda (node offset)
                                 (ts-fold-range-markers node offset "(" ")")))
     (field_declaration_list . ts-fold-range-seq)
