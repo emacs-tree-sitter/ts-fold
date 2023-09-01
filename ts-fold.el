@@ -560,6 +560,8 @@ more information."
               (next-node (tsc-get-next-sibling param-node))
               (beg (tsc-node-start-position next-node))
               (end (1- (tsc-node-end-position node))))
+    (unless ts-fold-on-next-line  ; display nicely
+      (setq beg (ts-fold--last-eol beg)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elisp-function (node offset)
@@ -571,6 +573,8 @@ more information."
   (when-let* ((param-node (tsc-get-nth-child node 4))
               (beg (tsc-node-start-position param-node))
               (end (1- (tsc-node-end-position node))))
+    (unless ts-fold-on-next-line  ; display nicely
+      (setq beg (ts-fold--last-eol beg)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elixir (node offset)
@@ -867,8 +871,9 @@ more information."
               (beg (ts-fold--eol beg))
               (end-child (ts-fold-last-child node))
               (end (tsc-node-end-position end-child))
-              (end (ts-fold--bol end))
-              (end (1- end)))
+              (end (ts-fold--bol end)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-verilog-list (node offset)
