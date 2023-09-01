@@ -40,6 +40,7 @@
 (declare-function ts-fold-range-block-comment "ts-fold.el")
 (declare-function ts-fold-range-c-like-comment "ts-fold.el")
 
+(declare-function ts-fold-range-beancount-transaction "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-ifdef "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-if "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-elif "ts-fold.el")
@@ -83,6 +84,13 @@
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-beancount ()
+  "Rule set for Beancount."
+  '((transaction . ts-fold-range-beancount-transaction)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
 
 (defun ts-fold-parsers-c ()
   "Rule set for C."
