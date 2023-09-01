@@ -104,6 +104,7 @@
     (conf-toml-mode  . ,(ts-fold-parsers-toml))
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
     (typescript-mode . ,(ts-fold-parsers-typescript))
+    (verilog-mode    . ,(ts-fold-parsers-verilog))
     (yaml-mode       . ,(ts-fold-parsers-yaml)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
@@ -485,23 +486,17 @@ more information."
           (ts-fold-range-line-comment node offset "///")
         (ts-fold-range-line-comment node offset "//")))))
 
-(defun ts-fold-point-before-line-break (pos)
-  "Go to POS then find previous line break, and return its position."
-  (save-excursion
-    (goto-char pos)
-    (max 1 (1- (line-beginning-position)))))
-
 ;;
 ;; (@* "Languages" )
 ;;
 
 (defun ts-fold-range-beancount-transaction (node offset)
-  "Define fold range for `transaction' preprocessor.
+  "Define fold range for `transaction' in Beancount.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-start-position node))
-              (beg (save-excursion (goto-char beg) (line-end-position)))
+              (beg (ts-fold--eol beg))
               (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
@@ -565,6 +560,8 @@ more information."
               (next-node (tsc-get-next-sibling param-node))
               (beg (tsc-node-start-position next-node))
               (end (1- (tsc-node-end-position node))))
+    (unless ts-fold-on-next-line  ; display nicely
+      (setq beg (ts-fold--last-eol beg)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elisp-function (node offset)
@@ -576,6 +573,8 @@ more information."
   (when-let* ((param-node (tsc-get-nth-child node 4))
               (beg (tsc-node-start-position param-node))
               (end (1- (tsc-node-end-position node))))
+    (unless ts-fold-on-next-line  ; display nicely
+      (setq beg (ts-fold--last-eol beg)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elixir (node offset)
@@ -595,7 +594,7 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-start-position node))
-              (beg (save-excursion (goto-char beg) (line-end-position)))
+              (beg (ts-fold--eol beg))
               (end-node (ts-fold-last-child node))
               (end (tsc-node-end-position end-node)))
     (ts-fold--cons-add (cons beg end) offset)))
@@ -654,7 +653,7 @@ more information."
          (beg (tsc-node-end-position params))
          (end (- (tsc-node-end-position node) 3)))  ; fit identifier `end'
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-if (node offset)
@@ -670,7 +669,7 @@ more information."
                   (tsc-node-start-position (car next))
                 (- (tsc-node-end-position node) 3))))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-elseif (node offset)
@@ -685,7 +684,7 @@ more information."
                   (tsc-node-start-position next)
                 (tsc-node-end-position node))))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-else (node offset)
@@ -697,7 +696,7 @@ more information."
          (next (tsc-get-next-sibling node))          ; the `end' node
          (end (tsc-node-start-position next)))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-do-loop (node offset)
@@ -709,7 +708,7 @@ more information."
          (beg (tsc-node-end-position do))
          (end (- (tsc-node-end-position node) 3)))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-lua-repeat (node offset)
@@ -721,7 +720,7 @@ more information."
          (until (car (ts-fold-find-children node "until")))
          (end (tsc-node-start-position until)))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 ;;+ OCaml
@@ -824,7 +823,7 @@ more information."
               (end (tsc-node-end-position node))
               (end (- end 3)))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ruby-if (node offset)
@@ -838,7 +837,7 @@ more information."
                          ((when-let ((parent (ts-fold-find-parent node "if")))
                             (- (tsc-node-end-position parent) 3))))))
     (when ts-fold-on-next-line  ; display nicely
-      (setq end (ts-fold-point-before-line-break end)))
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rust-macro (node offset)
@@ -861,6 +860,45 @@ more information."
               (beg (tsc-node-end-position close-bracket))
               (end-child (ts-fold-last-child node))
               (end (tsc-node-end-position end-child)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-initial-construct (node offset)
+  "Return the fold range for `initial' NODE in Verilog.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (beg (ts-fold--eol beg))
+              (end-child (ts-fold-last-child node))
+              (end (tsc-node-end-position end-child))
+              (end (ts-fold--bol end)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-verilog-list (node offset)
+  "Return the fold range for `list' NODE in Verilog.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((prev (tsc-get-prev-sibling node))
+              (next (tsc-get-next-sibling node))
+              (beg (tsc-node-end-position prev))
+              (end (tsc-node-start-position next)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-verilog-module (node offset)
+  "Return the fold range for `module' NODE in Verilog.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((close-bracket (car (ts-fold-find-children node ";")))
+              (beg (tsc-node-end-position close-bracket))
+              (end-child (ts-fold-last-child node))
+              (end (tsc-node-end-position end-child))
+              (end (ts-fold--bol end)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (provide 'ts-fold)
