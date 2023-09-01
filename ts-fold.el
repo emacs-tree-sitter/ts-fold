@@ -95,6 +95,7 @@
     (ruby-mode       . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
     (rustic-mode     . ,(ts-fold-parsers-rust))
+    (scheme-mode     . ,(ts-fold-parsers-scheme))
     (sh-mode         . ,(ts-fold-parsers-bash))
     (scala-mode      . ,(ts-fold-parsers-scala))
     (swift-mode      . ,(ts-fold-parsers-swift))

@@ -348,6 +348,13 @@
     (block            . ts-fold-range-seq)
     (comment          . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-scheme ()
+  "Rule set for Scheme."
+  '((list . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
+
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
   '((switch_statement      . ts-fold-range-seq)

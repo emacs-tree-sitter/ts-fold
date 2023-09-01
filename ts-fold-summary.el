@@ -235,6 +235,7 @@ type of content by checking the word boundary's existence."
     (ruby-mode         . ts-fold-summary-ruby-doc)
     (rust-mode         . ts-fold-summary-rust-doc)
     (scala-mode        . ts-fold-summary-javadoc)
+    (scheme-mode       . ts-fold-summary-elisp)
     (sh-mode           . ts-fold-summary-javadoc)
     (swift-mode        . ts-fold-summary-c)
     (toml-mode         . ts-fold-summary-javadoc)
