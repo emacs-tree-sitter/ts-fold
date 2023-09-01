@@ -19,11 +19,6 @@ to provide code folding based on the tree-sitter syntax tree.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 
-<!---
-your comment goes here
-and here
--->
-
 **Table of Contents**
 
 - [💾 Installation](#-installation)
@@ -125,7 +120,7 @@ These languages are fairly complete:
 - Haskell / HTML
 - Jai / Java / JavaScript / JSX / JSON / Julia
 - Kotlin
-- Lua
+- LaTex / Lua
 - Markdown
 - Nix
 - Perl / PHP / Python

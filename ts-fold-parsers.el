@@ -258,6 +258,13 @@
     (multiline_comment      . ts-fold-range-c-like-comment)
     (line_comment           . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-latex ()
+  "Rule set for LaTex."
+  '((curly_group . ts-fold-range-seq)
+    (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "%")))))
+
 (defun ts-fold-parsers-lua ()
   "Rule set for Lua."
   '((expression_list      . ts-fold-range-seq)

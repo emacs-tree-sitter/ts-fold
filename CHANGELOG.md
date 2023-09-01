@@ -34,6 +34,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Scheme support (#73)
 * Add Beancount support (#74)
 * Add Verilog support (#75)
+* Add LaTex support (#76)
 
 ## 0.1.0
 > Released Oct 18, 2021
