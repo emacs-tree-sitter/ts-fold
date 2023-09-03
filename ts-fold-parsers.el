@@ -69,6 +69,7 @@
 (declare-function ts-fold-range-verilog-list "ts-fold.el")
 (declare-function ts-fold-range-verilog-module "ts-fold.el")
 (declare-function ts-fold-range-vhdl-package "ts-fold.el")
+(declare-function ts-fold-range-vhdl-type "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
