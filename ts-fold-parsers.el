@@ -68,6 +68,8 @@
 (declare-function ts-fold-range-toml-table "ts-fold.el")
 (declare-function ts-fold-range-verilog-list "ts-fold.el")
 (declare-function ts-fold-range-verilog-module "ts-fold.el")
+(declare-function ts-fold-range-vhdl-package "ts-fold.el")
+(declare-function ts-fold-range-vhdl-type "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -409,6 +411,13 @@
     (list_of_port_connections . ts-fold-range-verilog-list)
     (initial_construct        . ts-fold-range-initial-construct)
     (comment                  . ts-fold-range-c-like-comment)))
+
+(defun ts-fold-parsers-vhdl ()
+  "Rule set for VHDL."
+  '((package_declaration         . ts-fold-range-vhdl-package)
+    (full_type_declaration       . ts-fold-range-vhdl-type)
+    (enumeration_type_definition . ts-fold-range-seq)
+    (comment                     . ts-fold-range-lua-comment)))
 
 (defun ts-fold-parsers-yaml ()
   "Rule set for YAML."
