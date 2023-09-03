@@ -107,6 +107,7 @@
     (tuareg-mode     . ,(ts-fold-parsers-ocaml))
     (typescript-mode . ,(ts-fold-parsers-typescript))
     (verilog-mode    . ,(ts-fold-parsers-verilog))
+    (vhdl-mode       . ,(ts-fold-parsers-vhdl))
     (yaml-mode       . ,(ts-fold-parsers-yaml)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
@@ -902,6 +903,34 @@ more information."
               (end-child (ts-fold-last-child node))
               (end (tsc-node-end-position end-child))
               (end (ts-fold--bol end)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-vhdl-package (node offset)
+  "Return the fold range for `package' NODE in VHDL.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((start-child (car (ts-fold-find-children node "declarative_part")))
+              (beg (tsc-node-start-position start-child))
+              (beg (ts-fold--last-eol beg))
+              (end-child (car (ts-fold-find-children node "end")))
+              (end (tsc-node-start-position end-child)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-vhdl-type (node offset)
+  "Return the fold range for `type' NODE in VHDL.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((start-child (car (ts-fold-find-children node "record_type_definition")))
+              (record (car (ts-fold-find-children start-child "record")))
+              (beg (tsc-node-end-position record))
+              (end-child (car (ts-fold-find-children start-child "end")))
+              (end (tsc-node-start-position end-child)))
     (when ts-fold-on-next-line
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
