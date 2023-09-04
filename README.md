@@ -115,7 +115,7 @@ These languages are fairly complete:
 - Bash / Beancount
 - C / C++ / C# / Clojure / CSS
 - Dart
-- Elisp / Elixir
+- Elisp / Elixir / Erlang
 - GDScript / Go
 - Haskell / HTML
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
@@ -137,7 +137,7 @@ These languages are in development:
 
 - Ada
 - Agda
-- Elm / Erlang
+- Elm
 
 ## 📝 Customization
 
