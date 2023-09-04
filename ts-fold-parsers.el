@@ -419,6 +419,11 @@
     (enumeration_type_definition . ts-fold-range-seq)
     (comment                     . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-xml ()
+  "Rule set for XML."
+  '((element . ts-fold-range-html)
+    (Comment . (ts-fold-range-seq 3 -2))))
+
 (defun ts-fold-parsers-yaml ()
   "Rule set for YAML."
   '((comment
