@@ -12,6 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Improve Elixir UX (#78)
 * Add VHDL support (#79)
 * Add XML support (#80)
+* Add Jsonnet support (#81)
 
 ## 0.2.0
 > Released Sep 01, 2023

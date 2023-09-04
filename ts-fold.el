@@ -83,6 +83,7 @@
     (js3-mode        . ,(ts-fold-parsers-javascript))
     (json-mode       . ,(ts-fold-parsers-json))
     (jsonc-mode      . ,(ts-fold-parsers-json))
+    (jsonnet-mode    . ,(ts-fold-parsers-jsonnet))
     (julia-mode      . ,(ts-fold-parsers-julia))
     (kotlin-mode     . ,(ts-fold-parsers-kotlin))
     (latex-mode      . ,(ts-fold-parsers-latex))
