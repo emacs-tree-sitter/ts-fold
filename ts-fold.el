@@ -602,7 +602,10 @@ more information."
   "Return the fold range for generic signature NODE in Erlang.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
-more information."
+more information.
+
+Argument START is a string to target for the first node we use to find the
+start of the position."
   (when-let* ((start-node (car (ts-fold-find-children node start)))
               (beg (tsc-node-end-position start-node))
               (end (tsc-node-end-position node)))
