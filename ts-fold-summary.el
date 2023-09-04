@@ -254,6 +254,7 @@ type of content by checking the word boundary's existence."
     (verilog-mode      . ts-fold-summary-javadoc)
     (vhdl-mode         . ts-fold-summary-lua-doc)
     (nxml-mode         . ts-fold-summary-xml)
+    (yaml-mode         . ts-fold-summary-ruby-doc)
     (zig-mode          . ts-fold-summary-go))
   "Alist mapping `major-mode' to doc parser function."
   :type '(alist :key-type symbol :value-type function)
