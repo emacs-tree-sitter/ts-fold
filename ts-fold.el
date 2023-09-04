@@ -110,7 +110,8 @@
     (verilog-mode    . ,(ts-fold-parsers-verilog))
     (vhdl-mode       . ,(ts-fold-parsers-vhdl))
     (nxml-mode       . ,(ts-fold-parsers-xml))
-    (yaml-mode       . ,(ts-fold-parsers-yaml)))
+    (yaml-mode       . ,(ts-fold-parsers-yaml))
+    (zig-mode        . ,(ts-fold-parsers-zig)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
 FUNCTION is used to determine where the beginning and end for FOLDABLE-NODE-TYPE

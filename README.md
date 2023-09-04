@@ -131,13 +131,13 @@ These languages are fairly complete:
 - Verilog / VHDL
 - XML
 - YAML
+- Zig
 
 These languages are in development:
 
 - Ada
 - Agda
 - Elm / Erlang
-- Zig
 
 ## 📝 Customization
 
