@@ -13,6 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add VHDL support (#79)
 * Add XML support (#80)
 * Add Jsonnet support (#81)
+* Add Zig support (#82)
 
 ## 0.2.0
 > Released Sep 01, 2023

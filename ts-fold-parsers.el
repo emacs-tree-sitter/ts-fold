@@ -440,5 +440,10 @@
           (ts-fold-range-markers node offset ":"))
         0 1))))
 
+(defun ts-fold-parsers-zig ()
+  "Rule set for Zig."
+  '((Block        . ts-fold-range-seq)
+    (line_comment . ts-fold-range-c-like-comment)))
+
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here
