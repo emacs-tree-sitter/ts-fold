@@ -70,6 +70,7 @@
     (dart-mode       . ,(ts-fold-parsers-dart))
     (emacs-lisp-mode . ,(ts-fold-parsers-elisp))
     (elixir-mode     . ,(ts-fold-parsers-elixir))
+    (erlang-mode     . ,(ts-fold-parsers-erlang))
     (ess-r-mode      . ,(ts-fold-parsers-r))
     (gdscript-mode   . ,(ts-fold-parsers-gdscript))
     (go-mode         . ,(ts-fold-parsers-go))
@@ -596,6 +597,33 @@ more information."
     (when ts-fold-on-next-line  ; display nicely
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-erlang-signature (node offset start)
+  "Return the fold range for generic signature NODE in Erlang.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information.
+
+Argument START is a string to target for the first node we use to find the
+start of the position."
+  (when-let* ((start-node (car (ts-fold-find-children node start)))
+              (beg (tsc-node-end-position start-node))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-erlang-clause-body (node offset)
+  "Return the fold range for `clause_body' NODE in Erlang.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (ts-fold-range-erlang-signature node offset "->"))
+
+(defun ts-fold-range-erlang-type-guards (node offset)
+  "Return the fold range for `type_guards' NODE in Erlang.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (ts-fold-range-erlang-signature node offset "when"))
 
 (defun ts-fold-range-haskell-function (node offset)
   "Define fold range for `function' in Haskell.

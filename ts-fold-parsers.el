@@ -47,6 +47,8 @@
 (declare-function ts-fold-range-c-preproc-else "ts-fold.el")
 (declare-function ts-fold-range-elisp-function "ts-fold.el")
 (declare-function ts-fold-range-elixir "ts-fold.el")
+(declare-function ts-fold-range-erlang-clause-body "ts-fold.el")
+(declare-function ts-fold-range-erlang-type-guards "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
@@ -170,6 +172,15 @@
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-erlang ()
+  "Rules set for Erlang."
+  '((list        . ts-fold-range-seq)
+    (clause_body . ts-fold-range-erlang-clause-body)
+    (type_guards . ts-fold-range-erlang-type-guards)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "%")))))
 
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."
