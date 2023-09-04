@@ -134,8 +134,10 @@ These languages are fairly complete:
 
 These languages are in development:
 
+- Ada
 - Agda
-- Elm
+- Elm / Erlang
+- Zig
 
 ## 📝 Customization
 
