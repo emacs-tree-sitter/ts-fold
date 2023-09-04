@@ -234,6 +234,12 @@
   '((object . ts-fold-range-seq)
     (array  . ts-fold-range-seq)))
 
+(defun ts-fold-parsers-jsonnet ()
+  "Rule set for Jsonnet."
+  '((object  . ts-fold-range-seq)
+    (array   . ts-fold-range-seq)
+    (comment . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-julia ()
   "Rule set for Julia."
   '((block_comment       . (ts-fold-range-seq 1 -1))

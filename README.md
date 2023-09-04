@@ -118,7 +118,7 @@ These languages are fairly complete:
 - Elisp / Elixir
 - GDScript / Go
 - Haskell / HTML
-- Jai / Java / JavaScript / JSX / JSON / Julia
+- Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
 - LaTex / Lua
 - Markdown
