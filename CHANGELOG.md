@@ -11,6 +11,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Noir support (#77)
 * Improve Elixir UX (#78)
 * Add VHDL support (#79)
+* Add XML support (#80)
 
 ## 0.2.0
 > Released Sep 01, 2023

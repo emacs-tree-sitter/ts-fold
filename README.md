@@ -123,20 +123,19 @@ These languages are fairly complete:
 - LaTex / Lua
 - Markdown
 - Nix / Noir
+- OCaml
 - Perl / PHP / Python
 - R / Ruby / Rust
 - Scala / Scheme / Swift
 - TOML / TypeScript / TSX
 - Verilog / VHDL
+- XML
 - YAML
 
 These languages are in development:
 
 - Agda
 - Elm
-- Noir
-- OCaml
-- XML (upstream)
 
 ## 📝 Customization
 

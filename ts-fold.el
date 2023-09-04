@@ -108,6 +108,7 @@
     (typescript-mode . ,(ts-fold-parsers-typescript))
     (verilog-mode    . ,(ts-fold-parsers-verilog))
     (vhdl-mode       . ,(ts-fold-parsers-vhdl))
+    (nxml-mode       . ,(ts-fold-parsers-xml))
     (yaml-mode       . ,(ts-fold-parsers-yaml)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
