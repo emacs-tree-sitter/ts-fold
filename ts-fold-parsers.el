@@ -420,7 +420,12 @@
 
 (defun ts-fold-parsers-typescript ()
   "Rule set for TypeScript."
-  (append (ts-fold-parsers-javascript)))
+  (append
+   (ts-fold-parsers-javascript)
+   '((class_body    . ts-fold-range-seq)
+     (enum_body     . ts-fold-range-seq)
+     (named_imports . ts-fold-range-seq)
+     (object_type   . ts-fold-range-seq))))
 
 (defun ts-fold-parsers-verilog ()
   "Rule set for Verilog."
