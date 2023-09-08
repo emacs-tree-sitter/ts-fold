@@ -62,6 +62,7 @@
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
+(declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
@@ -321,6 +322,11 @@
     (module_definition   . ts-fold-range-ocaml-module-definition)
     (type_definition     . ts-fold-range-ocaml-type-definition)
     (value_definition    . ts-fold-range-ocaml-value-definition)))
+
+(defun ts-fold-parsers-pascal ()
+  "Rule set for Pascal."
+  '((kFunction . ts-fold-range-seq)
+    (comment . ts-fold-range-pascal-comment)))
 
 (defun ts-fold-parsers-perl ()
   "Rule set for Perl."

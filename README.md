@@ -138,6 +138,7 @@ These languages are in development:
 - Ada
 - Agda
 - Elm
+- Pascal
 
 ## 📝 Customization
 

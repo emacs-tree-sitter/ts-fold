@@ -128,6 +128,12 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Lua."
   (ts-fold-summary--generic doc-str "--"))
 
+(defun ts-fold-summary-pascal-doc (doc-str)
+  "Extract summary from DOC-STR in Pascal."
+  (cond ((string-prefix-p "{" doc-str)
+         (ts-fold-summary--generic doc-str '("{" "}")))
+        (t (ts-fold-summary-go doc-str))))
+
 (defun ts-fold-summary-python-doc (doc-str)
   "Extract summary from DOC-STR in Python."
   (ts-fold-summary--generic doc-str "\"\"\""))
@@ -241,6 +247,7 @@ type of content by checking the word boundary's existence."
     (org-mode          . ts-fold-summary-org)
     (perl-mode         . ts-fold-summary-ruby-doc)
     (php-mode          . ts-fold-summary-javadoc)
+    (pascal-mode       . ts-fold-summary-pascal-doc)
     (python-mode       . ts-fold-summary-python-doc)
     (rjsx-mode         . ts-fold-summary-javadoc)
     (ruby-mode         . ts-fold-summary-ruby-doc)
