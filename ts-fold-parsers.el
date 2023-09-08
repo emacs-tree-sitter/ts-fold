@@ -325,8 +325,7 @@
 
 (defun ts-fold-parsers-pascal ()
   "Rule set for Pascal."
-  '((kFunction . ts-fold-range-seq)
-    (comment . ts-fold-range-pascal-comment)))
+  '((comment . ts-fold-range-pascal-comment)))
 
 (defun ts-fold-parsers-perl ()
   "Rule set for Perl."
