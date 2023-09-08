@@ -93,6 +93,7 @@
     (noir-mode       . ,(ts-fold-parsers-noir))
     (nix-mode        . ,(ts-fold-parsers-nix))
     (ocaml-mode      . ,(ts-fold-parsers-ocaml))
+    (pascal-mode     . ,(ts-fold-parsers-pascal))
     (perl-mode       . ,(ts-fold-parsers-perl))
     (php-mode        . ,(ts-fold-parsers-php))
     (python-mode     . ,(ts-fold-parsers-python))
@@ -234,6 +235,18 @@ ts-fold can act on."
 ;; (@* "Core" )
 ;;
 
+(defun ts-fold--range-on-same-line (range)
+  "Return non-nil if RANGE is on the same line."
+  (let ((beg (car range))
+        (end (cdr range))
+        (lbp) (lep))
+    (save-excursion
+      (goto-char beg)
+      (setq lbp (line-beginning-position)
+            lep (line-end-position)))
+    (and (<= lbp beg) (<= beg lep)
+         (<= lbp end) (<= end lep))))
+
 (defun ts-fold--get-fold-range (node)
   "Return the beginning (as buffer position) of fold for NODE.
 Return nil if there is no fold to be made."
@@ -242,6 +255,13 @@ Return nil if there is no fold to be made."
     (cond ((functionp fold-func) (funcall fold-func node (cons 0 0)))
           ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
           (t (user-error "Bad folding function for node")))))
+
+(defun ts-fold--foldable-node-p (node mode-ranges)
+  "Return non-nil if NODE is foldable in MODE-RANGES."
+  (or (not (alist-get (tsc-node-type node) mode-ranges))  ; Not registered, continue.
+      (let ((range (ts-fold--get-fold-range node)))
+        (or (not range)                                   ; Range not defined, continue.
+            (ts-fold--range-on-same-line range)))))       ; On same line, continue.
 
 (defun ts-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
@@ -256,8 +276,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
          ;; Used for looping
          (current node))
     (while (and current
-                (or (not (alist-get (tsc-node-type current) mode-ranges))
-                    (not (ts-fold--get-fold-range current))))
+                (ts-fold--foldable-node-p current mode-ranges))
       (setq current (tsc-get-parent current)))
     current))
 
@@ -468,7 +487,6 @@ Argument PREFIX is the comment prefix in string."
   (when-let* ((ts-fold-line-comment-mode)  ; XXX: Check enabled!?
               (first-node (ts-fold--continuous-node-prefix node prefix nil))
               (last-node (ts-fold--continuous-node-prefix node prefix t))
-              ((not (equal first-node last-node)))
               (prefix-len (length prefix))
               (beg (+ (tsc-node-start-position first-node) prefix-len))
               (end (tsc-node-end-position last-node)))
@@ -823,6 +841,19 @@ more information."
 
 ;;- OCaml
 
+(defun ts-fold-range-pascal-comment (node offset)
+  "Define fold range for `comment' in Pascal.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let ((text (tsc-node-text node)))
+    (cond ((string-prefix-p "{" text)
+           (ts-fold-range-seq node offset))
+          ((string-prefix-p "(*" text)
+           (ts-fold-range-seq node (ts-fold--cons-add '(1 . -1) offset)))
+          (t
+           (ts-fold-range-c-like-comment node offset)))))
+
 (defun ts-fold-range-python-def (node offset)
   "Define fold range for `function_definition' and `class_definition'.
 
@@ -878,7 +909,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rust-macro (node offset)
-  "Return the fold range for `macro_definition' NODE in Rust.
+  "Return the fold range for `macro_definition' in Rust.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -889,7 +920,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-toml-table (node offset)
-  "Return the fold range for `table' NODE in TOML.
+  "Return the fold range for `table' in TOML.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -900,7 +931,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-initial-construct (node offset)
-  "Return the fold range for `initial' NODE in Verilog.
+  "Return the fold range for `initial' in Verilog.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -914,7 +945,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-verilog-list (node offset)
-  "Return the fold range for `list' NODE in Verilog.
+  "Return the fold range for `list' in Verilog.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -925,7 +956,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-verilog-module (node offset)
-  "Return the fold range for `module' NODE in Verilog.
+  "Return the fold range for `module' in Verilog.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -939,7 +970,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-vhdl-package (node offset)
-  "Return the fold range for `package' NODE in VHDL.
+  "Return the fold range for `package' in VHDL.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -953,7 +984,7 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-vhdl-type (node offset)
-  "Return the fold range for `type' NODE in VHDL.
+  "Return the fold range for `type' in VHDL.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
