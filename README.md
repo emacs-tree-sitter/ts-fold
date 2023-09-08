@@ -138,7 +138,9 @@ These languages are in development:
 - Ada
 - Agda
 - Elm
+- Fortran
 - Pascal
+- Smithy
 
 ## 📝 Customization
 
