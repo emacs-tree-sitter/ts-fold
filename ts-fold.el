@@ -236,7 +236,7 @@ ts-fold can act on."
 ;;
 
 (defun ts-fold--range-on-same-line (range)
-  "Return non-nil if range is on the same line."
+  "Return non-nil if RANGE is on the same line."
   (let ((beg (car range))
         (end (cdr range))
         (lbp) (lep))
