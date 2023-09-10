@@ -16,6 +16,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Zig support (#82)
 * Add Erlang support (#83)
 * Add basic Pascal support (#84)
+* Add CMake support (#85)
 
 ## 0.2.0
 > Released Sep 01, 2023

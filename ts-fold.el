@@ -64,6 +64,7 @@
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
     (caml-mode       . ,(ts-fold-parsers-ocaml))
+    (cmake-mode      . ,(ts-fold-parsers-cmake))
     (clojure-mode    . ,(ts-fold-parsers-clojure))
     (csharp-mode     . ,(ts-fold-parsers-csharp))
     (css-mode        . ,(ts-fold-parsers-css))
