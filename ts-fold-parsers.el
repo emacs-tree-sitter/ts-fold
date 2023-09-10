@@ -124,6 +124,13 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset ";;")))))
 
+(defun ts-fold-parsers-cmake ()
+  "Rule set for CMake."
+  '((body . ts-fold-range-seq)
+    (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-csharp ()
   "Rule set for C#."
   '((block                                . ts-fold-range-seq)

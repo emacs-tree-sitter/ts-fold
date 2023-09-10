@@ -218,6 +218,7 @@ type of content by checking the word boundary's existence."
     (beancount-mode    . ts-fold-summary-elisp)
     (c-mode            . ts-fold-summary-c)
     (c++-mode          . ts-fold-summary-c)
+    (cmake-mode        . ts-fold-summary-ruby-doc)
     (clojure-mode      . ts-fold-summary-elisp)
     (csharp-mode       . ts-fold-summary-csharp)
     (css-mode          . ts-fold-summary-javadoc)
