@@ -40,6 +40,7 @@
 (declare-function ts-fold-range-block-comment "ts-fold.el")
 (declare-function ts-fold-range-c-like-comment "ts-fold.el")
 
+(declare-function ts-fold-range-asm-label "ts-fold.el")
 (declare-function ts-fold-range-beancount-transaction "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-ifdef "ts-fold.el")
 (declare-function ts-fold-range-c-preproc-if "ts-fold.el")
@@ -83,6 +84,13 @@
 (defun ts-fold-parsers-agda ()
   "Rule set for Agda."
   '(()))
+
+(defun ts-fold-parsers-asm ()
+  "Rule set for Assembly."
+  '((label . ts-fold-range-asm-label)
+    (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
 
 (defun ts-fold-parsers-bash ()
   "Rule set for Bash."
