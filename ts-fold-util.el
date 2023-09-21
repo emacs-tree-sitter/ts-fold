@@ -34,7 +34,7 @@
   (format "%s" obj))
 
 (defun ts-fold--count-matches (pattern str)
-  "Count occurrences of `pattern' in `str'.
+  "Count occurrences of PATTERN in STR.
 
 Like function `s-count-matches' but faster."
   (max 0 (1- (length (split-string str pattern)))))
