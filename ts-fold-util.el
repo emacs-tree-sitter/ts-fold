@@ -26,6 +26,14 @@
 ;;; Code:
 
 ;;
+;; (@* "String" )
+;;
+
+(defun ts-fold-2str (obj)
+  "Convert OBJ to string."
+  (format "%s" obj))
+
+;;
 ;; (@* "Cons" )
 ;;
 
@@ -103,6 +111,14 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 (defun ts-fold--in-range-p (in-val in-min in-max)
   "Check to see if IN-VAL is between IN-MIN and IN-MAX."
   (and (<= in-min in-val) (<= in-val in-max)))
+
+;;
+;; (@* "List" )
+;;
+
+(defun ts-fold-listify (obj)
+  "Ensure OBJ is a list."
+  (if (listp obj) obj (list obj)))
 
 ;;
 ;; (@* "TS node" )

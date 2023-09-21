@@ -60,6 +60,9 @@
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode       . ,(ts-fold-parsers-agda))
+    (fasm-mode       . ,(ts-fold-parsers-asm))
+    (masm-mode       . ,(ts-fold-parsers-asm))
+    (nasm-mode       . ,(ts-fold-parsers-asm))
     (beancount-mode  . ,(ts-fold-parsers-beancount))
     (c-mode          . ,(ts-fold-parsers-c))
     (c++-mode        . ,(ts-fold-parsers-c++))
@@ -424,6 +427,17 @@ If the current syntax node is not foldable, do nothing."
 If NEXT is non-nil, return next sibling.  Otherwirse, return previouse sibling."
   (if next (tsc-get-next-sibling node) (tsc-get-prev-sibling node)))
 
+(defun ts-fold--next-prev-node-skip-newline (node next)
+  "Like function `ts-fold--next-prev-node'.
+
+For arguments NODE and NEXT, please see the function `ts-fold--next-prev-node'
+for more information."
+  (let ((iter-node (ts-fold--next-prev-node node next)))
+    (while (and iter-node
+                (equal "\n" (tsc-node-text iter-node)))
+      (setq iter-node (ts-fold--next-prev-node iter-node next)))
+    iter-node))
+
 (defun ts-fold--continuous-node-prefix (node prefix next)
   "Iterate through node starting from NODE and compare node-text to PREFIX;
 then return the last iterated node.
@@ -443,7 +457,7 @@ in backward direction."
           (setq last-node iter-node last-line line
                 last-line-range (1+ (s-count-matches "\n" text)))
         (setq break t))
-      (setq iter-node (ts-fold--next-prev-node iter-node next)))
+      (setq iter-node (ts-fold--next-prev-node-skip-newline iter-node next)))
     last-node))
 
 (defun ts-fold--one-liner-node (node)
@@ -515,6 +529,27 @@ more information."
 ;;
 ;; (@* "Languages" )
 ;;
+
+(defun ts-fold-range-asm--find-last-instruction (node)
+  "Find the last instruction node by starting NODE."
+  (let* ((iter-node (ts-fold--next-prev-node-skip-newline node t))
+         (last iter-node))
+    (while (and iter-node
+                (not (member (ts-fold-2str (tsc-node-type iter-node))
+                             (ts-fold-listify "label"))))
+      (setq last iter-node
+            iter-node (ts-fold--next-prev-node-skip-newline iter-node t)))
+    last))  ; return last insturction node
+
+(defun ts-fold-range-asm-label (node offset)
+  "Define fold range for `label' in Assembly.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-end-position node))
+              (end (ts-fold-range-asm--find-last-instruction node))
+              (end (tsc-node-end-position end)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-beancount-transaction (node offset)
   "Define fold range for `transaction' in Beancount.
