@@ -17,7 +17,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Erlang support (#83)
 * Add basic Pascal support (#84)
 * Add CMake support (#85)
-* Add Assembly support (#86)
+* Add Assembly support (#87)
+* perf: Speed up count matches (#88)
 
 ## 0.2.0
 > Released Sep 01, 2023
