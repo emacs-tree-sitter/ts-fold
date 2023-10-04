@@ -102,6 +102,7 @@
     (php-mode        . ,(ts-fold-parsers-php))
     (python-mode     . ,(ts-fold-parsers-python))
     (rjsx-mode       . ,(ts-fold-parsers-javascript))
+    (rst-mode        . ,(ts-fold-parsers-rst))
     (ruby-mode       . ,(ts-fold-parsers-ruby))
     (rust-mode       . ,(ts-fold-parsers-rust))
     (rustic-mode     . ,(ts-fold-parsers-rust))
@@ -914,6 +915,18 @@ more information."
               (beg (tsc-node-start-position string-node))
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons (+ beg 3) (- end 3)) offset)))
+
+(defun ts-fold-range-rst-body (node offset)
+  "Define fold range for `body' in reStructuredText.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((first (car (ts-fold-get-children node)))
+         (beg (tsc-node-end-position first))
+         (end (tsc-node-end-position node))
+         (same-pos (= beg end))
+         (beg (if same-pos (tsc-node-start-position node) beg)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ruby-class-def (node offset)
   "Define fold range for `method' and `class' in Ruby.

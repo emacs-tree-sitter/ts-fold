@@ -66,6 +66,7 @@
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
+(declare-function ts-fold-range-rst-body "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
@@ -377,6 +378,11 @@
 (defun ts-fold-parsers-r ()
   "Rule set for R."
   '((brace_list . ts-fold-range-seq)))
+
+(defun ts-fold-parsers-rst ()
+  "Rule set for reStructuredText."
+  '((body    . ts-fold-range-rst-body)
+    (comment . (ts-fold-range-seq 1 0))))
 
 (defun ts-fold-parsers-ruby ()
   "Rule set for Ruby."
