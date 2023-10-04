@@ -126,7 +126,7 @@ These languages are fairly complete:
 - Nix / Noir
 - OCaml
 - Perl / PHP / Python
-- R / Ruby / Rust
+- R / Ruby / Rust / reStructuredText
 - Scala / Scheme / Swift
 - TOML / TypeScript / TSX
 - Verilog / VHDL

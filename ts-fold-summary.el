@@ -138,6 +138,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Python."
   (ts-fold-summary--generic doc-str "\"\"\""))
 
+(defun ts-fold-summary-rst-doc (doc-str)
+  "Extract summary from DOC-STR in reStructuredText."
+  (ts-fold-summary--generic doc-str ".."))
+
 (defun ts-fold-summary-ruby-doc (doc-str)
   "Extract summary from DOC-STR in Ruby."
   (ts-fold-summary--generic doc-str "#"))
@@ -254,6 +258,7 @@ type of content by checking the word boundary's existence."
     (pascal-mode       . ts-fold-summary-pascal-doc)
     (python-mode       . ts-fold-summary-python-doc)
     (rjsx-mode         . ts-fold-summary-javadoc)
+    (rst-mode          . ts-fold-summary-rst-doc)
     (ruby-mode         . ts-fold-summary-ruby-doc)
     (rust-mode         . ts-fold-summary-rust-doc)
     (scala-mode        . ts-fold-summary-javadoc)
