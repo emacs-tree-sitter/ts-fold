@@ -20,6 +20,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Assembly support (#87)
 * perf: Speed up count matches (#88)
 * Add reStructuredText support (#89)
+* Add Make support (#90)
 
 ## 0.2.0
 > Released Sep 01, 2023

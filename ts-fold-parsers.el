@@ -313,6 +313,13 @@
     (repeat_statement     . ts-fold-range-lua-repeat)
     (comment              . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-make ()
+  "Rule set for Make."
+  '((recipe . (ts-fold-range-seq -1 -1))
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-markdown ()
   "Rule set for Markdown."
   '((fenced_code_block . (ts-fold-range-seq 2 -2))
