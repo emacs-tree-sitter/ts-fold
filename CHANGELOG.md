@@ -21,6 +21,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * perf: Speed up count matches (#88)
 * Add reStructuredText support (#89)
 * Add Make support (#90)
+* Add SQL support (#91)
 
 ## 0.2.0
 > Released Sep 01, 2023

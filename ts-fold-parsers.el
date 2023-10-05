@@ -70,8 +70,10 @@
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
 (declare-function ts-fold-range-rust-macro "ts-fold.el")
+(declare-function ts-fold-range-sql-block "ts-fold.el")
 (declare-function ts-fold-range-toml-table "ts-fold.el")
 (declare-function ts-fold-range-verilog-list "ts-fold.el")
+(declare-function ts-fold-range-verilog-initial-construct "ts-fold.el")
 (declare-function ts-fold-range-verilog-module "ts-fold.el")
 (declare-function ts-fold-range-vhdl-package "ts-fold.el")
 (declare-function ts-fold-range-vhdl-type "ts-fold.el")
@@ -432,6 +434,13 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset ";;")))))
 
+(defun ts-fold-parsers-sql ()
+  "Rule set for SQL."
+  '((block      . ts-fold-range-sql-block)
+    (subquery   . ts-fold-range-seq)
+    (list       . ts-fold-range-seq)
+    (marginalia . ts-fold-range-c-like-comment)))  ; This is the comment!
+
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
   '((switch_statement      . ts-fold-range-seq)
@@ -464,7 +473,7 @@
   "Rule set for Verilog."
   '((module_declaration       . ts-fold-range-verilog-module)
     (list_of_port_connections . ts-fold-range-verilog-list)
-    (initial_construct        . ts-fold-range-initial-construct)
+    (initial_construct        . ts-fold-range-verilog-initial-construct)
     (comment                  . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-vhdl ()

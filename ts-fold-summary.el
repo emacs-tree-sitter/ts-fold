@@ -270,6 +270,7 @@ type of content by checking the word boundary's existence."
     (scala-mode             . ts-fold-summary-javadoc)
     (scheme-mode            . ts-fold-summary-elisp)
     (sh-mode                . ts-fold-summary-javadoc)
+    (sql-mode               . ts-fold-summary-c)
     (swift-mode             . ts-fold-summary-c)
     (toml-mode              . ts-fold-summary-javadoc)
     (conf-toml-mode         . ts-fold-summary-javadoc)
