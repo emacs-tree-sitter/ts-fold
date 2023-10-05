@@ -115,6 +115,7 @@
     (scheme-mode            . ,(ts-fold-parsers-scheme))
     (sh-mode                . ,(ts-fold-parsers-bash))
     (scala-mode             . ,(ts-fold-parsers-scala))
+    (sql-mode               . ,(ts-fold-parsers-sql))
     (swift-mode             . ,(ts-fold-parsers-swift))
     (toml-mode              . ,(ts-fold-parsers-toml))
     (conf-toml-mode         . ,(ts-fold-parsers-toml))
@@ -974,6 +975,17 @@ more information."
               (end (1+ (tsc-node-start-position last_bracket))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-sql-block (node offset)
+  "Return the fold range for `block' in SQL.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg-node (car (ts-fold-find-children node "keyword_begin")))
+              (end-node (car (ts-fold-find-children node "keyword_end")))
+              (beg (tsc-node-end-position beg-node))
+              (end (tsc-node-start-position end-node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-toml-table (node offset)
   "Return the fold range for `table' in TOML.
 
@@ -985,7 +997,7 @@ more information."
               (end (tsc-node-end-position end-child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
-(defun ts-fold-range-initial-construct (node offset)
+(defun ts-fold-range-verilog-initial-construct (node offset)
   "Return the fold range for `initial' in Verilog.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for

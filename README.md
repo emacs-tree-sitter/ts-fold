@@ -127,7 +127,7 @@ These languages are fairly complete:
 - OCaml
 - Perl / PHP / Python
 - R / Ruby / Rust / reStructuredText
-- Scala / Scheme / Swift
+- Scala / Scheme / SQL / Swift
 - TOML / TypeScript / TSX
 - Verilog / VHDL
 - XML
