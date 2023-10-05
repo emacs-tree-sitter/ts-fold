@@ -61,6 +61,7 @@
 (declare-function ts-fold-range-lua-else "ts-fold.el")
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
+(declare-function ts-fold-range-make-recipe "ts-fold.el")
 (declare-function ts-fold-range-ocaml "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
@@ -317,7 +318,7 @@
 
 (defun ts-fold-parsers-make ()
   "Rule set for Make."
-  '((recipe . (ts-fold-range-seq -1 -1))
+  '((recipe . ts-fold-range-make-recipe)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))

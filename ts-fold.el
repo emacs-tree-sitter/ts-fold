@@ -822,6 +822,16 @@ more information."
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-make-recipe (node offset)
+  "Define fold range for `recipe' in Make.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((last-child (ts-fold-last-child node))
+              (beg (tsc-node-start-position node))
+              (end (tsc-node-end-position last-child)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 ;;+ OCaml
 
 (defun ts-fold-range-ocaml-comment (node offset)
