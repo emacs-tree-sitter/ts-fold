@@ -79,6 +79,7 @@
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
     (go-mode                . ,(ts-fold-parsers-go))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
+    (hlsl-mode              . ,(ts-fold-parsers-hlsl))
     (html-mode              . ,(ts-fold-parsers-html))
     (jai-mode               . ,(ts-fold-parsers-jai))
     (java-mode              . ,(ts-fold-parsers-java))

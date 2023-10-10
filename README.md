@@ -118,7 +118,7 @@ These languages are fairly complete:
 - Dart
 - Elisp / Elixir / Erlang
 - GDScript / Go
-- Haskell / HTML
+- Haskell / HLSL / HTML
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
 - LaTex / Lisp / Lua

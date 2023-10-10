@@ -226,6 +226,12 @@
   '((function . ts-fold-range-haskell-function)
     (comment  . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-hlsl ()
+  "Rule set for HLSL."
+  '((field_declaration_list . ts-fold-range-seq)
+    (compound_statement     . ts-fold-range-seq)
+    (comment                . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-html ()
   "Rule set for HTML."
   '((element . ts-fold-range-html)
