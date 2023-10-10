@@ -54,6 +54,7 @@
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-kotlin-when "ts-fold.el")
+(declare-function ts-fold-range-lisp-function "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-function "ts-fold.el")
 (declare-function ts-fold-range-lua-if "ts-fold.el")
@@ -303,6 +304,15 @@
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "%")))))
+
+(defun ts-fold-parsers-lisp ()
+  "Rule set for Lisp."
+  '((defun . ts-fold-range-lisp-function)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     ";;")))))
 
 (defun ts-fold-parsers-lua ()
   "Rule set for Lua."

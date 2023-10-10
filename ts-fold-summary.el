@@ -247,6 +247,8 @@ type of content by checking the word boundary's existence."
     (julia-mode             . ts-fold-summary-julia-doc)
     (kotlin-mode            . ts-fold-summary-javadoc)
     (latex-mode             . ts-fold-summary-tex-doc)
+    (lisp-mode              . ts-fold-summary-elisp)
+    (lisp-interaction-mode  . ts-fold-summary-elisp)
     (lua-mode               . ts-fold-summary-lua-doc)
     (makefile-mode          . ts-fold-summary-ruby-doc)
     (makefile-automake-mode . ts-fold-summary-ruby-doc)

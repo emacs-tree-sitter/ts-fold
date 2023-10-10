@@ -121,7 +121,7 @@ These languages are fairly complete:
 - Haskell / HTML
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
-- LaTex / Lua
+- LaTex / Lisp / Lua
 - Make / Markdown
 - Nix / Noir
 - OCaml

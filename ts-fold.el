@@ -92,6 +92,8 @@
     (julia-mode             . ,(ts-fold-parsers-julia))
     (kotlin-mode            . ,(ts-fold-parsers-kotlin))
     (latex-mode             . ,(ts-fold-parsers-latex))
+    (lisp-mode              . ,(ts-fold-parsers-lisp))
+    (lisp-interaction-mode  . ,(ts-fold-parsers-lisp))
     (lua-mode               . ,(ts-fold-parsers-lua))
     (makefile-mode          . ,(ts-fold-parsers-make))
     (makefile-automake-mode . ,(ts-fold-parsers-make))
@@ -728,6 +730,17 @@ argument OFFSET, see function `ts-fold-range-seq' for more
 information."
   (when-let* ((open-bracket (car (ts-fold-find-children node "{")))
               (beg (tsc-node-end-position open-bracket))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-lisp-function (node offset)
+  "Define fold range for function in Lisp .
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((header (car (ts-fold-find-children node "defun_header")))
+              (body (tsc-get-next-sibling header))
+              (beg (tsc-node-start-position body))
               (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
