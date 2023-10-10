@@ -24,6 +24,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add SQL support (#91)
 * Add Common Lisp support (#92)
 * Add HLSL support (#93)
+* Add GLSL support (#94)
 
 ## 0.2.0
 > Released Sep 01, 2023

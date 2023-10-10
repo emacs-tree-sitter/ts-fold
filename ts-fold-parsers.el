@@ -210,6 +210,12 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
+(defun ts-fold-parsers-glsl ()
+  "Rule set for GLSL."
+  '((field_declaration_list . ts-fold-range-seq)
+    (compound_statement     . ts-fold-range-seq)
+    (comment                . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-go ()
   "Rule set for Go."
   '((block                  . ts-fold-range-seq)
