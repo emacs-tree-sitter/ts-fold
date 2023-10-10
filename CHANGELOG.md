@@ -23,6 +23,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add Make support (#90)
 * Add SQL support (#91)
 * Add Common Lisp support (#92)
+* Add HLSL support (#93)
 
 ## 0.2.0
 > Released Sep 01, 2023
