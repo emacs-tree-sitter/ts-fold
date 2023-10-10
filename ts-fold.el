@@ -77,6 +77,7 @@
     (erlang-mode            . ,(ts-fold-parsers-erlang))
     (ess-r-mode             . ,(ts-fold-parsers-r))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
+    (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
     (hlsl-mode              . ,(ts-fold-parsers-hlsl))
