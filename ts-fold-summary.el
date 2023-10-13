@@ -218,6 +218,7 @@ type of content by checking the word boundary's existence."
 ;; TODO(everyone): keep this alist alphabetically sorted
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode      . ts-fold-summary-javadoc)
+    (arduino-mode           . ts-fold-summary-c)
     (fasm-mode              . ts-fold-summary-elisp)
     (masm-mode              . ts-fold-summary-elisp)
     (nasm-mode              . ts-fold-summary-elisp)

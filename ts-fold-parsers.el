@@ -90,6 +90,10 @@
   "Rule set for Agda."
   '(()))
 
+(defun ts-fold-parsers-arduino ()
+  "Rule set for Arduino."
+  (append (ts-fold-parsers-c++)))
+
 (defun ts-fold-parsers-asm ()
   "Rule set for Assembly."
   '((label . ts-fold-range-asm-label)

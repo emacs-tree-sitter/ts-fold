@@ -112,7 +112,7 @@ If evil mode is loaded, then these commands are also added to the evil folding l
 
 These languages are fairly complete:
 
-- Assembly
+- Arduino / Assembly
 - Bash / Beancount
 - C / C++ / C# / Clojure / CMake / CSS
 - Dart
