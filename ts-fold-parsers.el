@@ -207,6 +207,12 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "%")))))
 
+(defun ts-fold-parsers-fish ()
+  "Rules set for Fish."
+  '((comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."
   '((body . (ts-fold-range-seq -1 1))
