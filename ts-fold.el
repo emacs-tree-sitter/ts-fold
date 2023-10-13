@@ -60,6 +60,7 @@
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
   `((agda-mode              . ,(ts-fold-parsers-agda))
+    (arduino-mode           . ,(ts-fold-parsers-arduino))
     (fasm-mode              . ,(ts-fold-parsers-asm))
     (masm-mode              . ,(ts-fold-parsers-asm))
     (nasm-mode              . ,(ts-fold-parsers-asm))

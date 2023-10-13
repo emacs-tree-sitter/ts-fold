@@ -25,6 +25,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Common Lisp` support (#92)
 * Add `HLSL` support (#93)
 * Add `GLSL` support (#94)
+* Add `Arduino` support (#95)
 
 ## 0.2.0
 > Released Sep 01, 2023
