@@ -77,6 +77,7 @@
     (elixir-mode            . ,(ts-fold-parsers-elixir))
     (erlang-mode            . ,(ts-fold-parsers-erlang))
     (ess-r-mode             . ,(ts-fold-parsers-r))
+    (fish-mode              . ,(ts-fold-parsers-fish))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
@@ -691,6 +692,43 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (ts-fold-range-erlang-signature node offset "when"))
+
+(defun ts-fold-range-fish-function (node offset)
+  "Define fold range for `function' in Fish.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((func-name (tsc-get-nth-child node 1))
+              (beg (tsc-node-end-position func-name))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-fish-if (node offset)
+  "Define fold range for `if_statement' in Fish.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (beg (ts-fold--eol beg))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-fish-case (node offset)
+  "Define fold range for `case_clause' in Fish.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (beg (ts-fold--eol beg))
+              (end (tsc-node-end-position node))
+              (end (1- end)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-haskell-function (node offset)
   "Define fold range for `function' in Haskell.

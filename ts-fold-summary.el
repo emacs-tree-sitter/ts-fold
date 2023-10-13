@@ -234,6 +234,7 @@ type of content by checking the word boundary's existence."
     (emacs-lisp-mode        . ts-fold-summary-elisp)
     (elixir-mode            . ts-fold-summary-ruby-doc)
     (erlang-mode            . ts-fold-summary-tex-doc)
+    (fish-mode              . ts-fold-summary-javadoc)
     (gdscript-mode          . ts-fold-summary-ruby-doc)
     (glsl-mode              . ts-fold-summary-c)
     (go-mode                . ts-fold-summary-go)
