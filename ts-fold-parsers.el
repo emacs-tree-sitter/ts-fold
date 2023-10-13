@@ -50,6 +50,9 @@
 (declare-function ts-fold-range-elixir "ts-fold.el")
 (declare-function ts-fold-range-erlang-clause-body "ts-fold.el")
 (declare-function ts-fold-range-erlang-type-guards "ts-fold.el")
+(declare-function ts-fold-range-fish-function "ts-fold.el")
+(declare-function ts-fold-range-fish-if "ts-fold.el")
+(declare-function ts-fold-range-fish-case "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia "ts-fold.el")
@@ -209,7 +212,13 @@
 
 (defun ts-fold-parsers-fish ()
   "Rules set for Fish."
-  '((comment
+  '((function_definition . ts-fold-range-fish-function)
+    (if_statement        . ts-fold-range-fish-if)
+    (switch_statement    . ts-fold-range-fish-if)
+    (for_statement       . ts-fold-range-fish-if)
+    (while_statement     . ts-fold-range-fish-if)
+    (case_clause         . ts-fold-range-fish-case)
+    (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
