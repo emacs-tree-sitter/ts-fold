@@ -29,7 +29,6 @@
 (require 'seq)
 (require 'subr-x)
 
-(require 'ht)
 (require 'fringe-helper)
 
 (require 'ts-fold-util)
