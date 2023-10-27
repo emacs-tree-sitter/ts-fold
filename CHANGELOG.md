@@ -27,6 +27,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `GLSL` support (#94)
 * Add `Arduino` support (#95)
 * Add `Fish` support (#96)
+* perf: Render indicators in display range (#97)
 
 ## 0.2.0
 > Released Sep 01, 2023
