@@ -110,6 +110,7 @@
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
+        (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
         (ts-fold-indicators--render-buffer))
     (ts-fold-indicators-mode -1)))
@@ -118,6 +119,7 @@
   "Disable `ts-fold-indicators' mode."
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
   (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
+  (remove-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
   (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
   (ts-fold-indicators--remove-ovs-buffer))
 
@@ -279,6 +281,11 @@ Argument FOLDED holds folding state; it's a boolean."
               (beg (car range)) (end (cdr range)))
     (let ((folded (ts-fold-overlay-at node)))
       (ts-fold-indicators--create-overlays beg end folded))))
+
+(defun ts-fold-indicators--size-change (&optional frame &rest _)
+  "Render indicators for all visible windows."
+  (ts-fold--with-no-redisplay
+    (dolist (win (window-list frame)) (ts-fold-indicators--render-window win))))
 
 (defun ts-fold-indicators--scroll (&optional window &rest _)
   "Render indicators on WINDOW."
