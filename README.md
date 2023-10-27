@@ -477,6 +477,11 @@ turn off `ts-fold-mode`
           ;; Return the face of it's function.
           (line-reminder--get-face (line-number-at-pos pos t))))
 
+  (setq line-reminder-add-line-function
+        (lambda (&rest _)
+          (null (ts-fold--overlays-in 'ts-fold-indicators-window (selected-window)
+                                      (line-beginning-position) (line-end-position)))))
+
   (advice-add 'line-reminder-transfer-to-saved-lines :after
               ;; Refresh indicators for package `ts-fold'.
               #'ts-fold-indicators-refresh)
