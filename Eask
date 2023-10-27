@@ -15,6 +15,7 @@
 
 (depends-on "emacs" "26.1")
 (depends-on "tree-sitter")
+(depends-on "ht")
 (depends-on "s")
 (depends-on "fringe-helper")
 

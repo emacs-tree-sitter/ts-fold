@@ -26,6 +26,25 @@
 ;;; Code:
 
 ;;
+;; (@* "Redisplay" )
+;;
+
+(defmacro ts-fold--with-no-redisplay (&rest body)
+  "Execute BODY without any redisplay execution."
+  (declare (indent 0) (debug t))
+  `(let ((inhibit-redisplay t)
+         (inhibit-modification-hooks t)
+         after-focus-change-function
+         buffer-list-update-hook
+         display-buffer-alist
+         window-configuration-change-hook
+         window-scroll-functions
+         window-size-change-functions
+         window-state-change-hook
+         jit-lock-mode)
+     ,@body))
+
+;;
 ;; (@* "String" )
 ;;
 
@@ -126,6 +145,28 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 (defun ts-fold-listify (obj)
   "Ensure OBJ is a list."
   (if (listp obj) obj (list obj)))
+
+;;
+;; (@* "Window" )
+;;
+
+(defmacro ts-fold--with-selected-window (window &rest body)
+  "Same with `with-selected-window' but safe.
+
+See macro `with-selected-window' description for arguments WINDOW and BODY."
+  (declare (indent 1) (debug t))
+  `(when (window-live-p ,window) (with-selected-window ,window ,@body)))
+
+(defun ts-fold--within-window (node)
+  "Return nil if NODE is not with in the current window display range."
+  (when-let* ((wend (window-end nil t))
+              (wstart (window-start))
+              (start (tsc-node-start-position node))
+              (end (tsc-node-end-position node))
+              ((or (and (<= wstart start) (<= end wend))    ; with in range
+                   (and (<= wstart end) (<= start wstart))  ; just one above
+                   (and (<= wend end) (<= start wend)))))   ; just one below
+    node))
 
 ;;
 ;; (@* "TS node" )
