@@ -294,7 +294,7 @@ Argument FOLDED holds folding state; it's a boolean."
 
 (defun ts-fold-indicators--render-buffer ()
   "Render indicators for current buffer."
-  (dolist (window (get-buffer-window-list))
+  (dolist (window (get-buffer-window-list nil nil t))
     (ts-fold-indicators--render-window window)))
 
 (defun ts-fold-indicators--render-window (window)
@@ -333,7 +333,7 @@ Argument FOLDED holds folding state; it's a boolean."
 
 (defun ts-fold-indicators--remove-ovs-buffer ()
   "Remove all indicators overlays for this buffer."
-  (dolist (window (get-buffer-window-list))
+  (dolist (window (get-buffer-window-list nil nil t))
     (ts-fold-indicators--remove-ovs window)))
 
 (provide 'ts-fold-indicators)
