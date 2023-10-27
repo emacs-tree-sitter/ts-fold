@@ -111,8 +111,7 @@
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
-        (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
-        (ignore-errors (ts-fold-indicators-refresh)))
+        (ts-fold-indicators--scroll))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
@@ -120,7 +119,6 @@
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
   (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
   (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
-  (remove-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
   (ts-fold-indicators--remove-ovs-buffer))
 
 ;;;###autoload
@@ -290,7 +288,7 @@ Argument FOLDED holds folding state; it's a boolean."
 (defun ts-fold-indicators--render-window (window)
   "Render indicators for WINDOW."
   (ts-fold--with-selected-window window
-    (ts-fold-indicators-refresh)))
+    (ignore-errors (ts-fold-indicators-refresh))))
 
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
@@ -305,9 +303,11 @@ Argument FOLDED holds folding state; it's a boolean."
            (query (ignore-errors
                     (tsc-make-query tree-sitter-language patterns)))
            (nodes-to-fold (tsc-query-captures query node #'ignore))
+           (wend (window-end nil t))
+           (wstart (window-start))
            (nodes-to-fold
             (cl-remove-if-not (lambda (node)
-                                (ts-fold--within-window (cdr node)))
+                                (ts-fold--within-window (cdr node) wend wstart))
                               nodes-to-fold)))
         (ts-fold-indicators--remove-ovs)
         (thread-last nodes-to-fold

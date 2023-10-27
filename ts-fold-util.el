@@ -157,10 +157,10 @@ See macro `with-selected-window' description for arguments WINDOW and BODY."
   (declare (indent 1) (debug t))
   `(when (window-live-p ,window) (with-selected-window ,window ,@body)))
 
-(defun ts-fold--within-window (node)
+(defun ts-fold--within-window (node &optional wend wstart)
   "Return nil if NODE is not with in the current window display range."
-  (when-let* ((wend (window-end nil t))
-              (wstart (window-start))
+  (when-let* ((wend (or wend (window-end nil t)))
+              (wstart (or wstart (window-start)))
               (start (tsc-node-start-position node))
               (end (tsc-node-end-position node))
               ((or (and (<= wstart start) (<= end wend))    ; with in range
