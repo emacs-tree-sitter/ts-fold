@@ -274,8 +274,8 @@ Return nil if there is no fold to be made."
           ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
           (t (user-error "Bad folding function for node")))))
 
-(defun ts-fold--foldable-node-p (node mode-ranges)
-  "Return non-nil if NODE is foldable in MODE-RANGES."
+(defun ts-fold--non-foldable-node-p (node mode-ranges)
+  "Return non-nil if NODE is a non-foldable in MODE-RANGES."
   (or (not (alist-get (tsc-node-type node) mode-ranges))  ; Not registered, continue.
       (let ((range (ts-fold--get-fold-range node)))
         (or (not range)                                   ; Range not defined, continue.
@@ -294,7 +294,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
          ;; Used for looping
          (current node))
     (while (and current
-                (ts-fold--foldable-node-p current mode-ranges))
+                (ts-fold--non-foldable-node-p current mode-ranges))
       (setq current (tsc-get-parent current)))
     current))
 
@@ -473,10 +473,6 @@ in backward direction."
         (setq break t))
       (setq iter-node (ts-fold--next-prev-node-skip-newline iter-node next)))
     last-node))
-
-(defun ts-fold--one-liner-node (node)
-  "Helper function to check if NODE is on one line only."
-  (= (car (aref (tsc-node-range node) 2)) (car (aref (tsc-node-range node) 3))))
 
 (defun ts-fold-range-seq (node offset)
   "Return the fold range in sequence starting from NODE.
@@ -893,59 +889,55 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (unless (ts-fold--one-liner-node node)
-    (when-let* ((text (tsc-node-text node))
-                (beg  (+ (if (string-prefix-p "(* " text) 2 3)
-                         (tsc-node-start-position node)))
-                (end  (- (tsc-node-end-position node) 2)))
-      (ts-fold--cons-add (cons beg end) offset))))
+  (when-let* ((text (tsc-node-text node))
+              (beg  (+ (if (string-prefix-p "(* " text) 2 3)
+                       (tsc-node-start-position node)))
+              (end  (- (tsc-node-end-position node) 2)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ocaml-module-definition (node offset)
   "Define fold range for `module_definition'.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (unless (ts-fold--one-liner-node node)
-    (when-let*
-        ((module-binding (tsc-get-nth-named-child node 0))
-         (body           (tsc-get-child-by-field module-binding :body))
-         ;; body is struct ... end
-         (beg            (+ 6 (tsc-node-start-position body)))
-         (end            (- (tsc-node-end-position node) 3)))
-      (ts-fold--cons-add (cons beg end) offset))))
+  (when-let*
+      ((module-binding (tsc-get-nth-named-child node 0))
+       (body           (tsc-get-child-by-field module-binding :body))
+       ;; body is struct ... end
+       (beg            (+ 6 (tsc-node-start-position body)))
+       (end            (- (tsc-node-end-position node) 3)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ocaml-type-definition (node offset)
   "Define fold range for `type_definition'.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (unless (ts-fold--one-liner-node node)
-    (when-let*
-        ((type-definition (tsc-get-nth-named-child node 0))
-         (body            (tsc-get-child-by-field type-definition :body))
-         (text            (tsc-node-text (tsc-get-nth-child body 0)))
-         (beg
-          (if (string-equal "{" text)
-              (1+ (tsc-node-start-position body))
-            (tsc-node-end-position (tsc-get-prev-sibling body))))
-         (end
-          (if (string-equal "{" text)
-              (1- (tsc-node-end-position node))
-            (tsc-node-end-position node))))
-      (ts-fold--cons-add (cons beg end) offset))))
+  (when-let*
+      ((type-definition (tsc-get-nth-named-child node 0))
+       (body            (tsc-get-child-by-field type-definition :body))
+       (text            (tsc-node-text (tsc-get-nth-child body 0)))
+       (beg
+        (if (string-equal "{" text)
+            (1+ (tsc-node-start-position body))
+          (tsc-node-end-position (tsc-get-prev-sibling body))))
+       (end
+        (if (string-equal "{" text)
+            (1- (tsc-node-end-position node))
+          (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-ocaml-value-definition (node offset)
   "Define fold range for `value_definition'.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (unless (ts-fold--one-liner-node node)
-    (when-let*
-        ((let-binding  (tsc-get-nth-named-child node 0))
-         (body         (tsc-get-child-by-field let-binding :body))
-         (beg          (tsc-node-end-position (tsc-get-prev-sibling body)))
-         (end          (tsc-node-end-position node)))
-      (ts-fold--cons-add (cons beg end) offset))))
+  (when-let*
+      ((let-binding  (tsc-get-nth-named-child node 0))
+       (body         (tsc-get-child-by-field let-binding :body))
+       (beg          (tsc-node-end-position (tsc-get-prev-sibling body)))
+       (end          (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 ;;- OCaml
 

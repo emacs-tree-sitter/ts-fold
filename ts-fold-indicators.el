@@ -283,7 +283,7 @@ Argument FOLDED holds folding state; it's a boolean."
       (ts-fold-indicators--create-overlays beg end folded))))
 
 (defun ts-fold-indicators--size-change (&optional frame &rest _)
-  "Render indicators for all visible windows."
+  "Render indicators for all visible windows from FRAME."
   (ts-fold--with-no-redisplay
     (dolist (win (window-list frame)) (ts-fold-indicators--render-window win))))
 
@@ -320,7 +320,12 @@ Argument FOLDED holds folding state; it's a boolean."
            (nodes-to-fold
             (cl-remove-if-not (lambda (node)
                                 (ts-fold--within-window (cdr node) wend wstart))
-                              nodes-to-fold)))
+                              nodes-to-fold))
+           (mode-ranges (alist-get major-mode ts-fold-range-alist))
+           (nodes-to-fold
+            (cl-remove-if (lambda (node)
+                            (ts-fold--non-foldable-node-p (cdr node) mode-ranges))
+                          nodes-to-fold)))
         (ts-fold-indicators--remove-ovs)
         (thread-last nodes-to-fold
                      (mapcar #'cdr)
