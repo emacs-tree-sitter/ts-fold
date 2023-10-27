@@ -158,7 +158,9 @@ See macro `with-selected-window' description for arguments WINDOW and BODY."
   `(when (window-live-p ,window) (with-selected-window ,window ,@body)))
 
 (defun ts-fold--within-window (node &optional wend wstart)
-  "Return nil if NODE is not with in the current window display range."
+  "Return nil if NODE is not within the current window display range.
+
+Optional arguments WEND and WSTART are the range for caching."
   (when-let* ((wend (or wend (window-end nil t)))
               (wstart (or wstart (window-start)))
               (start (tsc-node-start-position node))
