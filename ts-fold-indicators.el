@@ -110,14 +110,16 @@
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
-        (ignore-errors (ts-fold-indicators-refresh)))
+        (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
+        (ts-fold-indicators--render-buffer))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
   (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
-  (ts-fold-indicators--remove-overlays))
+  (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
+  (ts-fold-indicators--remove-ovs-buffer))
 
 ;;;###autoload
 (define-minor-mode ts-fold-indicators-mode
@@ -136,15 +138,19 @@
   :lighter nil
   :init-value nil
   :global t
-  (if global-ts-fold-indicators-mode
-      (progn
-        (add-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
-        (global-ts-fold-mode 1)
-        (dolist (buf (buffer-list))
-          (with-current-buffer buf
-            (when (and ts-fold-mode (not ts-fold-indicators-mode))
-              (ts-fold-indicators-mode)))))
-    (remove-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)))
+  (cond (global-ts-fold-indicators-mode
+         (add-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
+         (global-ts-fold-mode 1)  ; Must enabled!
+         (dolist (buf (buffer-list))
+           (with-current-buffer buf
+             (when (and ts-fold-mode (not ts-fold-indicators-mode))
+               (ts-fold-indicators-mode 1)))))
+        (t
+         (remove-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
+         (dolist (buf (buffer-list))
+           (with-current-buffer buf
+             (when (and ts-fold-mode ts-fold-indicators-mode)
+               (ts-fold-indicators-mode -1)))))))
 
 ;;
 ;; (@* "Events" )
@@ -179,7 +185,7 @@
   "Create indicator overlay at current point."
   (let* ((pos (line-beginning-position))
          (ov (make-overlay pos (1+ pos))))
-    (overlay-put ov 'creator 'ts-fold-indicators)
+    (overlay-put ov 'ts-fold-indicators-window (selected-window))
     ov))
 
 (defun ts-fold-indicators--create-overlays (beg end folded)
@@ -274,26 +280,54 @@ Argument FOLDED holds folding state; it's a boolean."
     (let ((folded (ts-fold-overlay-at node)))
       (ts-fold-indicators--create-overlays beg end folded))))
 
+(defun ts-fold-indicators--scroll (&optional window &rest _)
+  "Render indicators on WINDOW."
+  (ts-fold--with-no-redisplay
+    (ts-fold-indicators--render-window window)))
+
+(defun ts-fold-indicators--render-buffer ()
+  "Render indicators for current buffer."
+  (dolist (window (get-buffer-window-list))
+    (ts-fold-indicators--render-window window)))
+
+(defun ts-fold-indicators--render-window (window)
+  "Render indicators for WINDOW."
+  (ts-fold--with-selected-window window
+    (ignore-errors (ts-fold-indicators-refresh))))
+
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
   (when (and tree-sitter-mode ts-fold-indicators-mode)
     (ts-fold--ensure-ts
-      (when-let* ((node (ignore-errors (tsc-root-node tree-sitter-tree)))
-                  (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
-                                        (alist-get major-mode ts-fold-range-alist)
-                                        'vector))
-                  (query (ignore-errors
-                           (tsc-make-query tree-sitter-language patterns)))
-                  (nodes-to-fold (tsc-query-captures query node #'ignore)))
-        (ts-fold-indicators--remove-overlays)
+      (when-let*
+          ((node (ignore-errors (tsc-root-node tree-sitter-tree)))
+           (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                                 (alist-get major-mode ts-fold-range-alist)
+                                 'vector))
+           (query (ignore-errors
+                    (tsc-make-query tree-sitter-language patterns)))
+           (nodes-to-fold (tsc-query-captures query node #'ignore))
+           (wend (window-end nil t))
+           (wstart (window-start))
+           (nodes-to-fold
+            (cl-remove-if-not (lambda (node)
+                                (ts-fold--within-window (cdr node) wend wstart))
+                              nodes-to-fold)))
+        (ts-fold-indicators--remove-ovs)
         (thread-last nodes-to-fold
                      (mapcar #'cdr)
                      (mapc #'ts-fold-indicators--create))))))
 
-(defun ts-fold-indicators--remove-overlays ()
-  "Remove all indicators overlays."
-  (remove-overlays (point-min) (point-max) 'creator 'ts-fold-indicators))
+(defun ts-fold-indicators--remove-ovs (&optional window)
+  "Remove all indicators overlays in this WINDOW."
+  (remove-overlays (point-min) (point-max) 'ts-fold-indicators-window
+                   (or window (selected-window))))
+
+(defun ts-fold-indicators--remove-ovs-buffer ()
+  "Remove all indicators overlays for this buffer."
+  (dolist (window (get-buffer-window-list))
+    (ts-fold-indicators--remove-ovs window)))
 
 (provide 'ts-fold-indicators)
 ;;; ts-fold-indicators.el ends here
