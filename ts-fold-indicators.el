@@ -111,7 +111,7 @@
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
-        (ts-fold-indicators--scroll))
+        (ts-fold-indicators--render-buffer))
     (ts-fold-indicators-mode -1)))
 
 (defun ts-fold-indicators--disable ()
@@ -283,6 +283,11 @@ Argument FOLDED holds folding state; it's a boolean."
 (defun ts-fold-indicators--scroll (&optional window &rest _)
   "Render indicators on WINDOW."
   (ts-fold--with-no-redisplay
+    (ts-fold-indicators--render-window window)))
+
+(defun ts-fold-indicators--render-buffer ()
+  "Render indicators for current buffer."
+  (dolist (window (get-buffer-window-list))
     (ts-fold-indicators--render-window window)))
 
 (defun ts-fold-indicators--render-window (window)
