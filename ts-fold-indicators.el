@@ -186,8 +186,10 @@
 (defun ts-fold-indicators--create-overlay-at-point ()
   "Create indicator overlay at current point."
   (let* ((pos (line-beginning-position))
-         (ov (make-overlay pos (1+ pos))))
-    (overlay-put ov 'ts-fold-indicators-window (selected-window))
+         (ov (make-overlay pos (1+ pos)))
+         (window (selected-window)))
+    (overlay-put ov 'ts-fold-indicators-window window)
+    (overlay-put ov 'window window)
     ov))
 
 (defun ts-fold-indicators--create-overlays (beg end folded)
