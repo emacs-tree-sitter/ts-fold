@@ -246,6 +246,12 @@
     (interface_type         . (lambda (node offset)
                                 (ts-fold-range-markers node offset "{" "}")))))
 
+(defun ts-fold-parsers-groovy ()
+  "Rule set for Groovy."
+  '((block         . ts-fold-range-groovy-block)
+    (line_comment  . ts-fold-range-c-like-comment)
+    (block_comment . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-haskell ()
   "Rule set for Haskell."
   '((function . ts-fold-range-haskell-function)

@@ -29,6 +29,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Fish` support (#96)
 * perf: Render indicators in display range (#97)
 * fix: Don't render indicators on non-foldable node (342eb5ee1f242ac03bc7e7bbe8d67be8711423ae)
+* Add `Groovy` and `Jenkinsfile` support (#98)
 
 ## 0.2.0
 > Released Sep 01, 2023
