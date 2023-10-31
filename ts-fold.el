@@ -81,6 +81,8 @@
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
+    (groovy-mode            . ,(ts-fold-parsers-groovy))
+    (jenkinsfile-mode       . ,(ts-fold-parsers-groovy))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
     (hlsl-mode              . ,(ts-fold-parsers-hlsl))
     (html-mode              . ,(ts-fold-parsers-html))
@@ -722,6 +724,18 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-start-position node))
               (beg (ts-fold--eol beg))
+              (end (tsc-node-end-position node))
+              (end (1- end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-groovy-block (node offset)
+  "Define fold range for `block' in Groovy.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((open-bracket (car (ts-fold-find-children node "{")))
+              (beg (tsc-node-start-position open-bracket))
+              (beg (1+ beg))
               (end (tsc-node-end-position node))
               (end (1- end)))
     (ts-fold--cons-add (cons beg end) offset)))

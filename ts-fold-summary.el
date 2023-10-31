@@ -238,6 +238,8 @@ type of content by checking the word boundary's existence."
     (gdscript-mode          . ts-fold-summary-ruby-doc)
     (glsl-mode              . ts-fold-summary-c)
     (go-mode                . ts-fold-summary-go)
+    (groovy-mode            . ts-fold-summary-javadoc)
+    (jenkinsfile-mode       . ts-fold-summary-javadoc)
     (haskell-mode           . ts-fold-summary-lua-doc)
     (hlsl-mode              . ts-fold-summary-c)
     (html-mode              . ts-fold-summary-xml)
