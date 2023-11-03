@@ -133,6 +133,7 @@
     (vhdl-mode              . ,(ts-fold-parsers-vhdl))
     (nxml-mode              . ,(ts-fold-parsers-xml))
     (yaml-mode              . ,(ts-fold-parsers-yaml))
+    (k8s-mode               . ,(ts-fold-parsers-yaml))
     (zig-mode               . ,(ts-fold-parsers-zig)))
   "An alist of (major-mode . (foldable-node-type . function)).
 
