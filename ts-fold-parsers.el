@@ -58,7 +58,6 @@
 (declare-function ts-fold-range-julia "ts-fold.el")
 (declare-function ts-fold-range-kotlin-when "ts-fold.el")
 (declare-function ts-fold-range-lisp-function "ts-fold.el")
-(declare-function ts-fold-range-lisp-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-function "ts-fold.el")
 (declare-function ts-fold-range-lua-if "ts-fold.el")
