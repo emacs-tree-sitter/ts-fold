@@ -130,6 +130,12 @@ Optional argument TRIM, see function `ts-fold--get-face'."
   "Return line end position at POINT."
   (save-excursion (goto-char point) (line-end-position)))
 
+(defun ts-fold--indentation (pos)
+  "Return current indentation."
+  (goto-char pos)
+  (beginning-of-visual-line)
+  (back-to-indentation) (current-column))
+
 ;;
 ;; (@* "Math" )
 ;;

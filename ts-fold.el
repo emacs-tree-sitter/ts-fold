@@ -461,16 +461,20 @@ then return the last iterated node.
 
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
-  (let ((iter-node node) (last-node node)
-        (last-line (car (tsc-node-start-point node))) line text break
-        (line-range 1) (last-line-range 1) max-line-range)
+  (let* ((iter-node node) (last-node node)
+         (last-line (car (tsc-node-start-point node))) line text break
+         (line-range 1) (last-line-range 1) max-line-range
+         (indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
+         next-indentation)
     (while (and iter-node (not break))
-      (setq text (tsc-node-text iter-node)
+      (setq text (string-trim (tsc-node-text iter-node))
             line (car (tsc-node-start-point iter-node))
             line-range (1+ (ts-fold--count-matches "\n" text))
-            max-line-range (max line-range last-line-range))
+            max-line-range (max line-range last-line-range)
+            next-indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
       (if (and (ts-fold--in-range-p line (- last-line max-line-range) (+ last-line max-line-range))
-               (string-prefix-p prefix text))
+               (string-prefix-p prefix text)
+               (= indentation next-indentation))
           (setq last-node iter-node last-line line
                 last-line-range (1+ (ts-fold--count-matches "\n" text)))
         (setq break t))
@@ -512,13 +516,14 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information.
 
 Argument PREFIX is the comment prefix in string."
-  (when-let* ((ts-fold-line-comment-mode)  ; XXX: Check enabled!?
-              (first-node (ts-fold--continuous-node-prefix node prefix nil))
-              (last-node (ts-fold--continuous-node-prefix node prefix t))
-              (prefix-len (length prefix))
-              (beg (+ (tsc-node-start-position first-node) prefix-len))
-              (end (tsc-node-end-position last-node)))
-    (ts-fold--cons-add (cons beg end) offset)))
+  (save-excursion
+    (when-let* ((ts-fold-line-comment-mode)  ; XXX: Check enabled!?
+                (first-node (ts-fold--continuous-node-prefix node prefix nil))
+                (last-node (ts-fold--continuous-node-prefix node prefix t))
+                (prefix-len (length prefix))
+                (beg (+ (tsc-node-start-position first-node) prefix-len))
+                (end (tsc-node-end-position last-node)))
+      (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-block-comment (node offset)
   "Define fold range for block comment.
