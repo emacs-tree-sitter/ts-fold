@@ -111,6 +111,7 @@
     (noir-mode              . ,(ts-fold-parsers-noir))
     (nix-mode               . ,(ts-fold-parsers-nix))
     (ocaml-mode             . ,(ts-fold-parsers-ocaml))
+    (org-mode               . ,(ts-fold-parsers-org))
     (pascal-mode            . ,(ts-fold-parsers-pascal))
     (perl-mode              . ,(ts-fold-parsers-perl))
     (php-mode               . ,(ts-fold-parsers-php))
@@ -960,6 +961,16 @@ more information."
     (ts-fold--cons-add (cons beg end) offset)))
 
 ;;- OCaml
+
+(defun ts-fold-range-org-body (node offset)
+  "Define fold range for `body' in Org.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let*
+      ((parent (tsc-get-parent node))
+       (parent (tsc-get-parent parent)))
+    (ts-fold--cons-add (cons -1 0) (ts-fold-range-seq node offset))))
 
 (defun ts-fold-range-pascal-comment (node offset)
   "Define fold range for `comment' in Pascal.
