@@ -125,7 +125,7 @@ These languages are fairly complete:
 - LaTex / Lisp / Lua
 - Make / Markdown
 - Nix / Noir
-- OCaml
+- OCaml / Org
 - Perl / PHP / Python
 - R / Ruby / Rust / reStructuredText
 - Scala / Scheme / SQL / Swift
