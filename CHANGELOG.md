@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
-## 0.3.0 (Unreleased)
+## 0.4.0 (Unreleased)
 > Released N/A
+
+* N/A
+
+## 0.3.0
+> Released Nov 29, 2023
 
 * Add `Noir` support (#77)
 * Improve `Elixir` UX (#78)
