@@ -108,6 +108,7 @@
     (makefile-bsdmake-mode  . ,(ts-fold-parsers-make))
     (makefile-imake-mode    . ,(ts-fold-parsers-make))
     (markdown-mode          . ,(ts-fold-parsers-markdown))
+    (mermaid-mode           . ,(ts-fold-parsers-mermaid))
     (noir-mode              . ,(ts-fold-parsers-noir))
     (nix-mode               . ,(ts-fold-parsers-nix))
     (ocaml-mode             . ,(ts-fold-parsers-ocaml))
@@ -901,6 +902,28 @@ more information."
   (when-let* ((last-child (ts-fold-last-child node))
               (beg (tsc-node-start-position node))
               (end (tsc-node-end-position last-child)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-mermaid-diagram (node offset)
+  "Define fold range for any diagram in Mermaid.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((first-child (tsc-get-nth-child node 0))
+              (beg (tsc-node-end-position first-child))
+              (beg (ts-fold--eol beg))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-mermaid-block (node offset)
+  "Define fold range for any block in Mermaid.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg-bracket (car (ts-fold-find-children node "{")))
+              (end-bracket (ts-fold-last-child node))
+              (beg (tsc-node-end-position beg-bracket))
+              (end (tsc-node-start-position end-bracket)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 ;;+ OCaml

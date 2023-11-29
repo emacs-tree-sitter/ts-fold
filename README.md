@@ -123,7 +123,7 @@ These languages are fairly complete:
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
 - LaTex / Lisp / Lua
-- Make / Markdown
+- Make / Markdown / Mermaid
 - Nix / Noir
 - OCaml / Org
 - Perl / PHP / Python
