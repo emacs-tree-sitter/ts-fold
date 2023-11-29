@@ -66,6 +66,8 @@
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-make-recipe "ts-fold.el")
+(declare-function ts-fold-range-mermaid-diagram "ts-fold.el")
+(declare-function ts-fold-range-mermaid-block "ts-fold.el")
 (declare-function ts-fold-range-ocaml-comment "ts-fold.el")
 (declare-function ts-fold-range-ocaml-module-definition "ts-fold.el")
 (declare-function ts-fold-range-ocaml-type-definition "ts-fold.el")
@@ -378,6 +380,20 @@
   "Rule set for Markdown."
   '((fenced_code_block . (ts-fold-range-seq 2 -2))
     (html_block        . ts-fold-range-html)))
+
+(defun ts-fold-parsers-mermaid ()
+  "Rule set for Mermaid."
+  '((diagram_flow         . ts-fold-range-mermaid-diagram)
+    (diagram_sequence     . ts-fold-range-mermaid-diagram)
+    (diagram_class        . ts-fold-range-mermaid-diagram)
+    (diagram_er           . ts-fold-range-mermaid-diagram)
+    (class_stmt_class     . ts-fold-range-mermaid-block)
+    (er_stmt_entity_block . ts-fold-range-mermaid-block)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     "%%")))))
 
 (defun ts-fold-parsers-noir ()
   "Rule set for Noir."

@@ -170,6 +170,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Markdown block."
   (ts-fold-summary--doc-extract doc-str '("-" "```")))
 
+(defun ts-fold-summary-mermaid (doc-str)
+  "Extract summary from DOC-STR in Mermaid comment."
+  (ts-fold-summary--generic doc-str '("%%")))
+
 (defun ts-fold-summary-org (doc-str)
   "Extract summary from DOC-STR in Org block."
   (ts-fold-summary--doc-extract doc-str '()))
@@ -263,6 +267,7 @@ type of content by checking the word boundary's existence."
     (makefile-bsdmake-mode  . ts-fold-summary-ruby-doc)
     (makefile-imake-mode    . ts-fold-summary-ruby-doc)
     (markdown-mode          . ts-fold-summary-markdown)
+    (mermaid-mode           . ts-fold-summary-mermaid)
     (nix-mode               . ts-fold-summary-ruby-doc)
     (noir-mode              . ts-fold-summary-rust-doc)
     (objc-mode              . ts-fold-summary-c)
