@@ -166,7 +166,7 @@ For example, Lua, Ruby, etc."
   :group 'ts-fold)
 
 (defface ts-fold-replacement-face
-  '((t :foreground "#808080" :box '(:line-width -1 :style 'pressed-button)))
+  '((t :foreground "#808080" :box (:line-width -1 :style pressed-button)))
   "Face used to display the fold replacement text."
   :group 'ts-fold)
 
