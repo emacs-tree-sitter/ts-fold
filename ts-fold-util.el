@@ -136,8 +136,7 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 (defun ts-fold--indentation (pos)
   "Return current indentation by POS."
   (goto-char pos)
-  (beginning-of-visual-line)
-  (back-to-indentation) (current-column))
+  (current-indentation))
 
 ;;
 ;; (@* "Math" )
