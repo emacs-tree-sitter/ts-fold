@@ -804,6 +804,27 @@ more information."
               (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-llvm--find-last-instruction (node)
+  "Find the last instruction node by starting NODE."
+  (let* ((iter-node (ts-fold--next-prev-node-skip-newline node t))
+         (last iter-node))
+    (while (and iter-node
+                (not (member (ts-fold-2str (tsc-node-type iter-node))
+                             (ts-fold-listify '("label" "}")))))
+      (setq last iter-node
+            iter-node (ts-fold--next-prev-node-skip-newline iter-node t)))
+    last))  ; return last insturction node
+
+(defun ts-fold-range-llvm-label (node offset)
+  "Define fold range for `label' in LLVM.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-end-position node))
+              (end (ts-fold-range-llvm--find-last-instruction node))
+              (end (tsc-node-end-position end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-lua-comment (node offset)
   "Define fold range for Lua comemnt.
 
