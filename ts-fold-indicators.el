@@ -50,6 +50,14 @@
   :type 'function
   :group 'ts-fold)
 
+;; TODO: We eventually want to remove this. Therefore, we get fast and
+;; accurate results!
+(defcustom ts-fold-indicators-render-method 'partial
+  "Method used to display indicators."
+  :type '(choice (const :tag "Accurate rendering but cost more performance" full)
+                 (const :tag "Inaccurate rendering but fast" partial))
+  :group 'ts-fold)
+
 (fringe-helper-define 'ts-fold-indicators-fr-plus nil
   "XXXXXXX"
   "X.....X"
@@ -304,6 +312,27 @@ Argument FOLDED holds folding state; it's a boolean."
   (ts-fold--with-selected-window window
     (ignore-errors (ts-fold-indicators-refresh))))
 
+(defun ts-fold-indicators--within-window (node &optional wend wstart)
+  "Return nil if NODE is not within the current window display range.
+
+Optional arguments WEND and WSTART are the range for caching."
+  (when-let*
+      ((wend (or wend (window-end nil t)))
+       (wstart (or wstart (window-start)))
+       (range (cl-case ts-fold-indicators-render-method
+                (`full
+                 (ignore-errors (ts-fold--get-fold-range node)))
+                (`partial (cons (tsc-node-start-position node)
+                                (tsc-node-end-position node)))
+                (t
+                 (user-error "Invalid render method: %s" ts-fold-indicators-render-method))))
+       (start (car range))
+       (end (cdr range))
+       ((or (and (<= wstart start) (<= end wend))    ; with in range
+            (and (<= wstart end) (<= start wstart))  ; just one above
+            (and (<= wend end) (<= start wend)))))   ; just one below
+    node))
+
 ;;;###autoload
 (defun ts-fold-indicators-refresh (&rest _)
   "Refresh indicators for all folding range."
@@ -321,7 +350,7 @@ Argument FOLDED holds folding state; it's a boolean."
            (wstart (window-start))
            (nodes-to-fold
             (cl-remove-if-not (lambda (node)
-                                (ts-fold--within-window (cdr node) wend wstart))
+                                (ts-fold-indicators--within-window (cdr node) wend wstart))
                               nodes-to-fold))
            (mode-ranges (alist-get major-mode ts-fold-range-alist))
            (nodes-to-fold

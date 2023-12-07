@@ -26,12 +26,6 @@
 ;;; Code:
 
 ;;
-;; (@* "Externals" )
-;;
-
-(declare-function ts-fold--get-fold-range "ts-fold.el")
-
-;;
 ;; (@* "Redisplay" )
 ;;
 
@@ -171,20 +165,6 @@ Optional argument TRIM, see function `ts-fold--get-face'."
 See macro `with-selected-window' description for arguments WINDOW and BODY."
   (declare (indent 1) (debug t))
   `(when (window-live-p ,window) (with-selected-window ,window ,@body)))
-
-(defun ts-fold--within-window (node &optional wend wstart)
-  "Return nil if NODE is not within the current window display range.
-
-Optional arguments WEND and WSTART are the range for caching."
-  (when-let* ((wend (or wend (window-end nil t)))
-              (wstart (or wstart (window-start)))
-              (range (ignore-errors (ts-fold--get-fold-range node)))
-              (start (car range))
-              (end (cdr range))
-              ((or (and (<= wstart start) (<= end wend))    ; with in range
-                   (and (<= wstart end) (<= start wstart))  ; just one above
-                   (and (<= wend end) (<= start wend)))))   ; just one below
-    node))
 
 ;;
 ;; (@* "TS node" )
