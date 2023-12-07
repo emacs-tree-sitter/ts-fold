@@ -100,6 +100,7 @@
     (latex-mode             . ,(ts-fold-parsers-latex))
     (lisp-mode              . ,(ts-fold-parsers-lisp))
     (lisp-interaction-mode  . ,(ts-fold-parsers-lisp))
+    (llvm-mode              . ,(ts-fold-parsers-llvm))
     (lua-mode               . ,(ts-fold-parsers-lua))
     (makefile-mode          . ,(ts-fold-parsers-make))
     (makefile-automake-mode . ,(ts-fold-parsers-make))

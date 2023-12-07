@@ -357,6 +357,14 @@
                                      (ts-fold--cons-add offset '(0 . -1))
                                      ";;")))))
 
+(defun ts-fold-parsers-llvm ()
+  "Rule set for LLVM."
+  '((function_body . ts-fold-range-seq)
+    (label         . ts-fold-range-asm-label)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
+
 (defun ts-fold-parsers-lua ()
   "Rule set for Lua."
   '((expression_list      . ts-fold-range-seq)

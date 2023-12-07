@@ -144,6 +144,9 @@ These languages are in development:
 - Pascal
 - Smithy
 
+*P.S. We don't list trivial languages here. e.g., LLVM IR (`.ll`) files, etc.
+Please see the variable `ts-fold-range-alist` for the fully supported list!*
+
 ## 📝 Customization
 
 Although ts-fold aims to have good folding out of the box for all supported
