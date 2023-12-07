@@ -8,7 +8,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 0.4.0 (Unreleased)
 > Released N/A
 
-* Add `LLVM` support (#102)
+* Add `LLVM` support (#103)
 
 ## 0.3.0
 > Released Nov 29, 2023
