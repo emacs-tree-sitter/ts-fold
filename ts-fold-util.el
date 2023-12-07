@@ -26,6 +26,12 @@
 ;;; Code:
 
 ;;
+;; (@* "Externals" )
+;;
+
+(declare-function ts-fold--get-fold-range "ts-fold.el")
+
+;;
 ;; (@* "Redisplay" )
 ;;
 
@@ -172,8 +178,9 @@ See macro `with-selected-window' description for arguments WINDOW and BODY."
 Optional arguments WEND and WSTART are the range for caching."
   (when-let* ((wend (or wend (window-end nil t)))
               (wstart (or wstart (window-start)))
-              (start (tsc-node-start-position node))
-              (end (tsc-node-end-position node))
+              (range (ignore-errors (ts-fold--get-fold-range node)))
+              (start (car range))
+              (end (cdr range))
               ((or (and (<= wstart start) (<= end wend))    ; with in range
                    (and (<= wstart end) (<= start wstart))  ; just one above
                    (and (<= wend end) (<= start wend)))))   ; just one below
