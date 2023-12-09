@@ -130,6 +130,7 @@
     (scala-mode             . ,(ts-fold-parsers-scala))
     (sql-mode               . ,(ts-fold-parsers-sql))
     (swift-mode             . ,(ts-fold-parsers-swift))
+    (tablegen-mode          . ,(ts-fold-parsers-tablegen))
     (toml-mode              . ,(ts-fold-parsers-toml))
     (conf-toml-mode         . ,(ts-fold-parsers-toml))
     (tuareg-mode            . ,(ts-fold-parsers-ocaml))

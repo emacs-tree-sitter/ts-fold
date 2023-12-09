@@ -287,6 +287,7 @@ type of content by checking the word boundary's existence."
     (sh-mode                . ts-fold-summary-javadoc)
     (sql-mode               . ts-fold-summary-c)
     (swift-mode             . ts-fold-summary-c)
+    (tablegen-mode          . ts-fold-summary-javadoc)
     (toml-mode              . ts-fold-summary-javadoc)
     (conf-toml-mode         . ts-fold-summary-javadoc)
     (typescript-mode        . ts-fold-summary-javadoc)

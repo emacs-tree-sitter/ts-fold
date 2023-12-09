@@ -550,6 +550,12 @@
     (extension_declaration . ts-fold-range-seq)
     (comment               . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-tablegen ()
+  "Rule set for Tablegen."
+  '((record_body       . ts-fold-range-seq)
+    (multiline_comment . ts-fold-range-c-like-comment)
+    (comment           . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-toml ()
   "Rule set for TOML."
   '((table . ts-fold-range-toml-table)
