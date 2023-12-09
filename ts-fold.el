@@ -102,6 +102,7 @@
     (lisp-mode              . ,(ts-fold-parsers-lisp))
     (lisp-interaction-mode  . ,(ts-fold-parsers-lisp))
     (llvm-mode              . ,(ts-fold-parsers-llvm))
+    (llvm-mir-mode          . ,(ts-fold-parsers-llvm-mir))
     (lua-mode               . ,(ts-fold-parsers-lua))
     (makefile-mode          . ,(ts-fold-parsers-make))
     (makefile-automake-mode . ,(ts-fold-parsers-make))
@@ -858,6 +859,19 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-end-position node))
               (end (ts-fold-range-llvm--find-last-instruction node))
+              (end (tsc-node-end-position end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-llvm-mir-label (node offset)
+  "Define fold range for `label' in LLVM MIR.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((label (car (ts-fold-find-children node "label")))
+              (colon (tsc-get-next-sibling label))
+              (beg (tsc-node-end-position colon))
+              (beg (ts-fold--eol beg))
+              (end (ts-fold-range-llvm--find-last-instruction label))
               (end (tsc-node-end-position end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
