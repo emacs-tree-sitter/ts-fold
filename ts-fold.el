@@ -118,6 +118,7 @@
     (perl-mode              . ,(ts-fold-parsers-perl))
     (php-mode               . ,(ts-fold-parsers-php))
     (python-mode            . ,(ts-fold-parsers-python))
+    (qss-mode               . ,(ts-fold-parsers-qss))
     (rjsx-mode              . ,(ts-fold-parsers-javascript))
     (rst-mode               . ,(ts-fold-parsers-rst))
     (ruby-mode              . ,(ts-fold-parsers-ruby))

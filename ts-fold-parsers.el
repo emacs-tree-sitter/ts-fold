@@ -472,6 +472,10 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
+(defun ts-fold-parsers-qss ()
+  "Rule set for QSS."
+  (append (ts-fold-parsers-css)))
+
 (defun ts-fold-parsers-r ()
   "Rule set for R."
   '((brace_list . ts-fold-range-seq)))
