@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > Released N/A
 
 * Add `LLVM` support (#103)
+* Add `ActionScript` support (#106)
 
 ## 0.3.0
 > Released Nov 29, 2023
