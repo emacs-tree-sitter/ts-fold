@@ -61,6 +61,7 @@
 (declare-function ts-fold-range-kotlin-when "ts-fold.el")
 (declare-function ts-fold-range-lisp-function "ts-fold.el")
 (declare-function ts-fold-range-llvm-label "ts-fold.el")
+(declare-function ts-fold-range-llvm-mir-label "ts-fold.el")
 (declare-function ts-fold-range-lua-comment "ts-fold.el")
 (declare-function ts-fold-range-lua-function "ts-fold.el")
 (declare-function ts-fold-range-lua-if "ts-fold.el")
@@ -373,6 +374,13 @@
   "Rule set for LLVM."
   '((function_body . ts-fold-range-seq)
     (label         . ts-fold-range-llvm-label)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
+
+(defun ts-fold-parsers-llvm-mir ()
+  "Rule set for LLVM MIR."
+  '((basic_block . ts-fold-range-llvm-mir-label)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset ";;")))))

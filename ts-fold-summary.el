@@ -260,6 +260,7 @@ type of content by checking the word boundary's existence."
     (lisp-mode              . ts-fold-summary-elisp)
     (lisp-interaction-mode  . ts-fold-summary-elisp)
     (llvm-mode              . ts-fold-summary-elisp)
+    (llvm-mir-mode          . ts-fold-summary-elisp)
     (lua-mode               . ts-fold-summary-lua-doc)
     (makefile-mode          . ts-fold-summary-ruby-doc)
     (makefile-automake-mode . ts-fold-summary-ruby-doc)

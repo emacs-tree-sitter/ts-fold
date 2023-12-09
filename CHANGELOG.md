@@ -11,6 +11,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `LLVM` support (#103)
 * Add `ActionScript` support (#106)
 * Add `Tablegen` support (#107)
+* Add `LLVM MIR` support (#108)
 
 ## 0.3.0
 > Released Nov 29, 2023
