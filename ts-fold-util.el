@@ -96,10 +96,8 @@ Like function `s-count-matches' but faster."
 (defun ts-fold--get-face (obj trim)
   "Return face name from OBJ.
 If argument TRIM is non-nil, trim the OBJ."
-  (let ((obj (if trim (string-trim obj) obj))
-        (len (length obj)))
-    (or (get-text-property 0 'face obj)
-        (get-text-property (max 0 (1- len)) 'face obj))))
+  (let ((obj (if trim (string-trim obj) obj)))
+    (get-text-property 0 'face obj)))
 
 (defun ts-fold--is-face (obj lst-face &optional trim)
   "Return non-nil if OBJ's face is define inside list LST-FACE.

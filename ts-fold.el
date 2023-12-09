@@ -770,17 +770,50 @@ more information."
          (end (tsc-node-start-position end-node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
-(defun ts-fold-range-julia (node offset)
+(defun ts-fold-range-julia-function (node offset)
   "Return the fold range for a NODE in Julia.
 
 It excludes the NODE's first child and the `end' keyword.  For
 argument OFFSET, see function `ts-fold-range-seq' for more
 information."
-  (let* ((identifier (tsc-get-nth-named-child node 0))
-         (end-position (byte-to-position (aref (tsc-node-range identifier) 1)))
-         (start-position (byte-to-position (aref (tsc-node-range node) 0)))
-         (fold-begin (1- (- end-position start-position))))
-    (ts-fold-range-seq node (ts-fold--cons-add (cons fold-begin -2) offset))))
+  (when-let* ((identifier (tsc-get-nth-named-child node 0))
+              (params (tsc-get-nth-named-child node 1))
+              (beg (tsc-node-end-position params))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-julia-if (node offset)
+  "Define fold range for if statement in Julia.
+
+It excludes the NODE's first child and the `end' keyword.  For
+argument OFFSET, see function `ts-fold-range-seq' for more
+information."
+  (when-let* ((params (car (ts-fold-find-children node "call_expression")))
+              (beg (tsc-node-end-position params))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-julia-let (node offset)
+  "Define fold range for let statement in Julia.
+
+It excludes the NODE's first child and the `end' keyword.  For
+argument OFFSET, see function `ts-fold-range-seq' for more
+information."
+  (when-let* ((vars (ts-fold-find-children node "variable_declaration"))
+              (last-var (last vars))
+              (last-var (car last-var))
+              (beg (tsc-node-end-position last-var))
+              (end (tsc-node-end-position node))
+              (end (- end 3)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-kotlin-when (node offset)
   "Return the fold range for `when' NODE in Kotlin.

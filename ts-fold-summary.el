@@ -183,8 +183,8 @@ type of content by checking the word boundary's existence."
   (ts-fold-summary--generic doc-str "-"))
 
 (defun ts-fold-summary-julia-doc (doc-str)
-  "Extract summary from DOC-STR in julia."
-  (ts-fold-summary--generic doc-str "\"\"\""))
+  "Extract summary from DOC-STR in Julia."
+  (ts-fold-summary--generic doc-str '("#" "\"\"\"")))
 
 ;;
 ;; (@* "Core" )
