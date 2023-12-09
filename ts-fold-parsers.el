@@ -98,6 +98,12 @@
 
 ;; TODO(everyone): keep the function alphabetically sorted
 
+(defun ts-fold-parsers-actionscript ()
+  "Rule set for ActionScript."
+  '((statement_block . ts-fold-range-seq)
+    (line_comment    . ts-fold-range-c-like-comment)
+    (block_comment   . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-agda ()
   "Rule set for Agda."
   '(()))

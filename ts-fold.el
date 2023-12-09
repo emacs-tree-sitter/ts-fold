@@ -59,7 +59,8 @@
 ;; TODO(everyone): This is a bit messy, but try to keep this alist
 ;; alphabetically sorted
 (defcustom ts-fold-range-alist
-  `((agda-mode              . ,(ts-fold-parsers-agda))
+  `((actionscript-mode      . ,(ts-fold-parsers-actionscript))
+    (agda-mode              . ,(ts-fold-parsers-agda))
     (arduino-mode           . ,(ts-fold-parsers-arduino))
     (fasm-mode              . ,(ts-fold-parsers-asm))
     (masm-mode              . ,(ts-fold-parsers-asm))
