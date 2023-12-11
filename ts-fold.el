@@ -110,6 +110,7 @@
     (makefile-makepp-mode   . ,(ts-fold-parsers-make))
     (makefile-bsdmake-mode  . ,(ts-fold-parsers-make))
     (makefile-imake-mode    . ,(ts-fold-parsers-make))
+    (matlab-mode            . ,(ts-fold-parsers-matlab))
     (markdown-mode          . ,(ts-fold-parsers-markdown))
     (mermaid-mode           . ,(ts-fold-parsers-mermaid))
     (noir-mode              . ,(ts-fold-parsers-noir))
@@ -1104,6 +1105,55 @@ more information."
               (beg (tsc-node-start-position string-node))
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons (+ beg 3) (- end 3)) offset)))
+
+(defun ts-fold-range-matlab-function (node offset)
+  "Define fold range for MATLAB function definitions.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((named-node (or (tsc-get-child-by-field node :superclass)
+                              (tsc-get-child-by-field node :properties)
+			      (tsc-get-child-by-field node :methods)			     
+                              (tsc-get-child-by-field node :function_arguments)
+                              (tsc-get-child-by-field node :function_output)
+			      (tsc-get-child-by-field node :name)))
+	      (beg (tsc-node-end-position (tsc-get-next-sibling named-node)))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-matlab-statements (node offset)
+  "Define fold range for MATLAB statements.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
+more information."
+  (when-let* ((named-node (car (ts-fold-find-children node "\n")))
+	      (beg (tsc-node-start-position named-node))
+	      (ins (append
+		    (ts-fold-find-children node "catch_clause")
+		    (ts-fold-find-children node "case_clause")
+		    (ts-fold-find-children node "otherwise_clause")
+		    (ts-fold-find-children node "elseif_clause")
+		    (ts-fold-find-children node "else_clause")
+		    (ts-fold-find-children node "end")))  ;; can include parts maybe
+              (end (tsc-node-start-position (car (ts-fold-find-children node "end")))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-matlab-blocks (node offset)
+  "Define fold range for MATLAB blocks.
+
+Each block is delimited by a line starting with '%%'.
+For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
+more information."
+  (when (string-prefix-p "%%" (ts-node-text node))
+    (let* ((beg (ts-node-end-position node))
+	   (end (or (save-excursion
+		      (progn (goto-char beg)
+			     (when (re-search-forward "^\s*\^L%%" nil t)
+			       (forward-line -1) (end-of-line)
+			       (point))))
+		    (ts-node-end-position (ts-get-parent node)))))
+      (message (format "%d %d" beg end))
+      (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-rst-body (node offset)
   "Define fold range for `body' in reStructuredText.
