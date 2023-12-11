@@ -138,6 +138,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Python."
   (ts-fold-summary--generic doc-str "\"\"\""))
 
+(defun ts-fold-summary-matlab-doc (doc-str)
+  "Extract summary from MATLAB DOC-STR."
+  (ts-fold-summary--generic doc-str "%"))
+
 (defun ts-fold-summary-rst-doc (doc-str)
   "Extract summary from DOC-STR in reStructuredText."
   (ts-fold-summary--generic doc-str ".."))
@@ -278,6 +282,7 @@ type of content by checking the word boundary's existence."
     (php-mode               . ts-fold-summary-javadoc)
     (pascal-mode            . ts-fold-summary-pascal-doc)
     (python-mode            . ts-fold-summary-python-doc)
+    (matlab-mode            . ts-fold-summary-matlab-doc)
     (qss-mode               . ts-fold-summary-css)
     (rjsx-mode              . ts-fold-summary-javadoc)
     (rst-mode               . ts-fold-summary-rst-doc)
