@@ -110,7 +110,6 @@
     (makefile-makepp-mode   . ,(ts-fold-parsers-make))
     (makefile-bsdmake-mode  . ,(ts-fold-parsers-make))
     (makefile-imake-mode    . ,(ts-fold-parsers-make))
-    (matlab-mode            . ,(ts-fold-parsers-matlab))
     (markdown-mode          . ,(ts-fold-parsers-markdown))
     (matlab-mode            . ,(ts-fold-parsers-matlab))
     (mermaid-mode           . ,(ts-fold-parsers-mermaid))
