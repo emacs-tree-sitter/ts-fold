@@ -138,10 +138,6 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Python."
   (ts-fold-summary--generic doc-str "\"\"\""))
 
-(defun ts-fold-summary-matlab-doc (doc-str)
-  "Extract summary from MATLAB DOC-STR."
-  (ts-fold-summary--generic doc-str "%"))
-
 (defun ts-fold-summary-rst-doc (doc-str)
   "Extract summary from DOC-STR in reStructuredText."
   (ts-fold-summary--generic doc-str ".."))
@@ -173,6 +169,10 @@ type of content by checking the word boundary's existence."
 (defun ts-fold-summary-markdown (doc-str)
   "Extract summary from DOC-STR in Markdown block."
   (ts-fold-summary--doc-extract doc-str '("-" "```")))
+
+(defun ts-fold-summary-matlab-doc (doc-str)
+  "Extract summary from MATLAB DOC-STR."
+  (ts-fold-summary--generic doc-str "%"))
 
 (defun ts-fold-summary-mermaid (doc-str)
   "Extract summary from DOC-STR in Mermaid comment."
