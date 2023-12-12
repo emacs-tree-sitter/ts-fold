@@ -359,7 +359,12 @@
 
 (defun ts-fold-parsers-latex ()
   "Rule set for LaTex."
-  '((curly_group . ts-fold-range-seq)
+  '((generic_environment . ts-fold-range-latex-environment)
+    (math_environment . ts-fold-range-latex-environment)
+    (section		 . ts-fold-range-latex-section)
+    (subsection		 . ts-fold-range-latex-section)
+    (subsubsection	 . ts-fold-range-latex-section)
+    (curly_group	 . ts-fold-range-seq)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "%")))))
