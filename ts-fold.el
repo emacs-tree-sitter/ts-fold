@@ -977,6 +977,22 @@ more information."
               (end (tsc-node-end-position last-child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-matlab-blocks (node offset)
+  "Define fold range for MATLAB blocks.
+
+Each block is delimited by a line starting with '%%'.
+For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
+more information."
+  (when (string-prefix-p "%%" (tsc-node-text node))
+    (let* ((beg (tsc-node-end-position node))
+           (end (or (save-excursion
+                      (progn (goto-char beg)
+                             (when (re-search-forward "^\s*\^L%%" nil t)
+                               (forward-line -1) (end-of-line)
+                               (point))))
+                    (tsc-node-end-position (tsc-get-parent node)))))
+      (ts-fold--cons-add (cons beg end) offset))))
+
 (defun ts-fold-range-matlab-function (node offset)
   "Define fold range for MATLAB function definitions.
 
@@ -1008,22 +1024,6 @@ more information."
                     (ts-fold-find-children node "end")))  ;; can include parts maybe
               (end (tsc-node-start-position (car (ts-fold-find-children node "end")))))
     (ts-fold--cons-add (cons beg end) offset)))
-
-(defun ts-fold-range-matlab-blocks (node offset)
-  "Define fold range for MATLAB blocks.
-
-Each block is delimited by a line starting with '%%'.
-For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
-more information."
-  (when (string-prefix-p "%%" (tsc-node-text node))
-    (let* ((beg (tsc-node-end-position node))
-           (end (or (save-excursion
-                      (progn (goto-char beg)
-                             (when (re-search-forward "^\s*\^L%%" nil t)
-                               (forward-line -1) (end-of-line)
-                               (point))))
-                    (tsc-node-end-position (tsc-get-parent node)))))
-      (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-mermaid-diagram (node offset)
   "Define fold range for any diagram in Mermaid.
@@ -1154,16 +1154,6 @@ more information."
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons (+ beg 3) (- end 3)) offset)))
 
-(defun ts-fold-range-latex-section (node offset)
-  "Define fold range for latex section.
-
-For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
-more information."
-  (when-let* ((lab-node (car (ts-fold-find-children node "curly_group")))
-              (beg (tsc-node-end-position lab-node))
-              (end (tsc-node-end-position node)))
-    (ts-fold--cons-add (cons beg end) offset)))
-
 (defun ts-fold-range-latex-environment (node offset)
   "Define fold range for latex environments.
 
@@ -1173,6 +1163,16 @@ more information."
               (end-node (tsc-get-child-by-field node :end))
               (beg (tsc-node-end-position beg-node))
               (end (tsc-node-start-position end-node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-latex-section (node offset)
+  "Define fold range for latex section.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((lab-node (car (ts-fold-find-children node "curly_group")))
+              (beg (tsc-node-end-position lab-node))
+              (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rst-body (node offset)

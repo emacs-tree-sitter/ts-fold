@@ -363,10 +363,10 @@
   "Rule set for LaTex."
   '((generic_environment . ts-fold-range-latex-environment)
     (math_environment . ts-fold-range-latex-environment)
-    (section		 . ts-fold-range-latex-section)
-    (subsection		 . ts-fold-range-latex-section)
-    (subsubsection	 . ts-fold-range-latex-section)
-    (curly_group	 . ts-fold-range-seq)
+    (section             . ts-fold-range-latex-section)
+    (subsection          . ts-fold-range-latex-section)
+    (subsubsection       . ts-fold-range-latex-section)
+    (curly_group         . ts-fold-range-seq)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "%")))))
@@ -512,13 +512,13 @@
   "Rule set for MATLAB."
   '((expression_list     . ts-fold-range-seq)
     (function_definition . ts-fold-range-matlab-function)
-    (class_definition	 . ts-fold-range-matlab-function)
-    (if_statement	 . ts-fold-range-matlab-statements)
-    (for_statement	 . ts-fold-range-matlab-statements)
-    (while_statement	 . ts-fold-range-matlab-statements)
-    (switch_statement	 . ts-fold-range-matlab-statements)
-    (try_statement	 . ts-fold-range-matlab-statements)
-    (comment		 . ts-fold-range-matlab-blocks)))
+    (class_definition    . ts-fold-range-matlab-function)
+    (if_statement        . ts-fold-range-matlab-statements)
+    (for_statement       . ts-fold-range-matlab-statements)
+    (while_statement     . ts-fold-range-matlab-statements)
+    (switch_statement    . ts-fold-range-matlab-statements)
+    (try_statement       . ts-fold-range-matlab-statements)
+    (comment             . ts-fold-range-matlab-blocks)))
 
 (defun ts-fold-parsers-qss ()
   "Rule set for QSS."
