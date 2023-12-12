@@ -18,33 +18,34 @@ to provide code folding based on the tree-sitter syntax tree.
     `M-x replace-regexp #[^-a-zA-Z] <ret> # <ret>` -->
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-
 **Table of Contents**
 
-- [💾 Installation](#-installation)
-  - [🔍 Method 1. with `straight.el` and `use-package`:](#-method-1-with-straightel-and-use-package)
-  - [🔍 Method 2. Manual](#-method-2-manual)
-- [🖥 Usage](#-usage)
-  - [📇 Commands](#-commands)
-  - [🔨 Supported languages](#-supported-languages)
-- [📝 Customization](#-customization)
-  - [⚪ Folding on new nodes](#-folding-on-new-nodes)
-    - [❔ Example](#-example)
+- [💾 Installation](#💾-installation)
+  - [🔍 Method 1. with `straight.el` and `use-package`:](#🔍-method-1-with-straightel-and-use-package)
+  - [🔍 Method 2. Manual](#🔍-method-2-manual)
+- [🖥 Usage](#🖥-usage)
+  - [📇 Commands](#📇-commands)
+  - [🔨 Supported languages](#🔨-supported-languages)
+- [📝 Customization](#📝-customization)
+  - [⚪ Folding on new nodes](#⚪-folding-on-new-nodes)
+    - [❔ Example](#❔-example)
     - [↔ Offset](#-offset)
-  - [🔍 Writing new fold functions](#-writing-new-fold-functions)
-- [🔌 Plugins](#-plugins)
-  - [⚖️ Indicators Mode](#-indicators-mode)
-    - [💾 Installation](#-installation-1)
-    - [🖥 Usage](#-usage-1)
-  - [📝 Summary](#-summary)
-    - [🖥 Usage](#-usage-2)
-    - [📝 Customization](#-customization-1)
-  - [🌫️ Line-Comment folding](#-line-comment-folding)
-    - [🖥 Usage](#-usage-3)
-- [🔰 Contribute](#-contribute)
-  - [❓ How to add a folding parser?](#-how-to-add-a-folding-parser)
-  - [🔍 Where can I look for tree-sitter node?](#-where-can-i-look-for-tree-sitter-node)
-  - [❓ How to create a summary parser?](#-how-to-create-a-summary-parser)
+  - [🔍 Writing new fold functions](#🔍-writing-new-fold-functions)
+- [🔌 Plugins](#🔌-plugins)
+  - [⚖ Indicators Mode](#⚖-indicators-mode)
+    - [💾 Installation](#💾-installation-1)
+    - [🖥 Usage](#🖥-usage-1)
+  - [📝 Summary](#📝-summary)
+    - [🖥 Usage](#🖥-usage-2)
+    - [📝 Customization](#📝-customization-1)
+  - [🌫 Line-Comment folding](#🌫-line-comment-folding)
+    - [🖥 Usage](#🖥-usage-3)
+- [🔰 Contribute](#🔰-contribute)
+  - [🔬 Development](#🔬-development)
+  - [❓ How to add a folding parser?](#❓-how-to-add-a-folding-parser)
+    - [🔍 Where can I look for tree-sitter node?](#🔍-where-can-i-look-for-tree-sitter-node)
+  - [❓ How to create a summary parser?](#❓-how-to-create-a-summary-parser)
+- [⚜️ License](#⚜️-license)
 
 <!-- markdown-toc end -->
 
@@ -123,7 +124,7 @@ These languages are fairly complete:
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
 - LaTex / Lisp / Lua
-- Make / Markdown / Mermaid
+- Make / MATLAB / Markdown / Mermaid
 - Nix / Noir
 - OCaml / Org
 - Perl / PHP / Python
@@ -572,6 +573,48 @@ out queries that determine what syntax nodes should be foldable and how to fold
 them. [emacs-tree-sitter](https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/queries/)
 has an excellent documentation on how to write `tree-sitter` queries.
 
+### 🔬 Development
+
+To run the test locally, you will need the following tools:
+
+- [Eask](https://emacs-eask.github.io/)
+- [Make](https://www.gnu.org/software/make/) (optional)
+
+Install all dependencies and development dependencies:
+
+```sh
+$ eask install-deps --dev
+```
+
+To test the package's installation:
+
+```sh
+$ eask package
+$ eask install
+```
+
+To test compilation:
+
+```sh
+$ eask compile
+```
+
+**🪧 The following steps are optional, but we recommend you follow these lint results!**
+
+The built-in `checkdoc` linter:
+
+```sh
+$ eask lint checkdoc
+```
+
+The standard `package` linter:
+
+```sh
+$ eask lint package
+```
+
+*📝 P.S. For more information, find the Eask manual at https://emacs-eask.github.io/.*
+
 ### ❓ How to add a folding parser?
 
 When adding a new folding parser, add the folding definition function to
@@ -618,3 +661,20 @@ The display and shortening will be handled by the module itself.
 Functions should be named with the prefix `ts-fold-summary-` followed by
 `style name`. For example, to create a summary parser for Javadoc style, then it
 should be named `ts-fold-summary-javadoc`.
+
+## ⚜️ License
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+See [`LICENSE`](./LICENSE.txt) for details.

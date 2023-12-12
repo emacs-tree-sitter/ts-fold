@@ -70,6 +70,9 @@
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-make-recipe "ts-fold.el")
+(declare-function ts-fold-range-matlab-function "ts-fold.el")
+(declare-function ts-fold-range-matlab-statements "ts-fold.el")
+(declare-function ts-fold-range-matlab-blocks "ts-fold.el")
 (declare-function ts-fold-range-mermaid-diagram "ts-fold.el")
 (declare-function ts-fold-range-mermaid-block "ts-fold.el")
 (declare-function ts-fold-range-ocaml-comment "ts-fold.el")
@@ -413,6 +416,18 @@
   "Rule set for Markdown."
   '((fenced_code_block . (ts-fold-range-seq 2 -2))
     (html_block        . ts-fold-range-html)))
+
+(defun ts-fold-parsers-matlab ()
+  "Rule set for MATLAB."
+  '((expression_list     . ts-fold-range-seq)
+    (function_definition . ts-fold-range-matlab-function)
+    (class_definition    . ts-fold-range-matlab-function)
+    (if_statement        . ts-fold-range-matlab-statements)
+    (for_statement       . ts-fold-range-matlab-statements)
+    (while_statement     . ts-fold-range-matlab-statements)
+    (switch_statement    . ts-fold-range-matlab-statements)
+    (try_statement       . ts-fold-range-matlab-statements)
+    (comment             . ts-fold-range-matlab-blocks)))
 
 (defun ts-fold-parsers-mermaid ()
   "Rule set for Mermaid."
