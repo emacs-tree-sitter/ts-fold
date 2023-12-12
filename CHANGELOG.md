@@ -12,6 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `ActionScript` support (#106)
 * Add `Tablegen` support (#107)
 * Add `LLVM MIR` support (#108)
+* Add `MATLAB` support (#110)
 
 ## 0.3.0
 > Released Nov 29, 2023
