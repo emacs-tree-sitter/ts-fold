@@ -518,8 +518,7 @@
     (while_statement	 . ts-fold-range-matlab-statements)
     (switch_statement	 . ts-fold-range-matlab-statements)
     (try_statement	 . ts-fold-range-matlab-statements)
-    (comment		 . ts-fold-range-matlab-blocks)
-    ))
+    (comment		 . ts-fold-range-matlab-blocks)))
 
 (defun ts-fold-parsers-qss ()
   "Rule set for QSS."
