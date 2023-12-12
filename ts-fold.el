@@ -1023,7 +1023,6 @@ more information."
                                (forward-line -1) (end-of-line)
                                (point))))
                     (tsc-node-end-position (tsc-get-parent node)))))
-      (message (format "%d %d" beg end))
       (ts-fold--cons-add (cons beg end) offset))))
 
 (defun ts-fold-range-mermaid-diagram (node offset)
