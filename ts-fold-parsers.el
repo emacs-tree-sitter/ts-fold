@@ -59,6 +59,8 @@
 (declare-function ts-fold-range-julia-if "ts-fold.el")
 (declare-function ts-fold-range-julia-let "ts-fold.el")
 (declare-function ts-fold-range-kotlin-when "ts-fold.el")
+(declare-function ts-fold-range-latex-environment "ts-fold.el")
+(declare-function ts-fold-range-latex-section "ts-fold.el")
 (declare-function ts-fold-range-lisp-function "ts-fold.el")
 (declare-function ts-fold-range-llvm-label "ts-fold.el")
 (declare-function ts-fold-range-llvm-mir-label "ts-fold.el")
