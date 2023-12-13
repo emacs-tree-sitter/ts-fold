@@ -831,6 +831,27 @@ information."
               (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-latex-environment (node offset)
+  "Define fold range for latex environments.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg-node (tsc-get-child-by-field node :begin))
+              (end-node (tsc-get-child-by-field node :end))
+              (beg (tsc-node-end-position beg-node))
+              (end (tsc-node-start-position end-node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-latex-section (node offset)
+  "Define fold range for latex section.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((lab-node (car (ts-fold-find-children node "curly_group")))
+              (beg (tsc-node-end-position lab-node))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-lisp-function (node offset)
   "Define fold range for function in Lisp .
 
@@ -1153,27 +1174,6 @@ more information."
               (beg (tsc-node-start-position string-node))
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons (+ beg 3) (- end 3)) offset)))
-
-(defun ts-fold-range-latex-environment (node offset)
-  "Define fold range for latex environments.
-
-For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
-more information."
-  (when-let* ((beg-node (tsc-get-child-by-field node :begin))
-              (end-node (tsc-get-child-by-field node :end))
-              (beg (tsc-node-end-position beg-node))
-              (end (tsc-node-start-position end-node)))
-    (ts-fold--cons-add (cons beg end) offset)))
-
-(defun ts-fold-range-latex-section (node offset)
-  "Define fold range for latex section.
-
-For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
-more information."
-  (when-let* ((lab-node (car (ts-fold-find-children node "curly_group")))
-              (beg (tsc-node-end-position lab-node))
-              (end (tsc-node-end-position node)))
-    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-rst-body (node offset)
   "Define fold range for `body' in reStructuredText.
