@@ -123,7 +123,13 @@
   '((label . ts-fold-range-asm-label)
     (line_comment
      . (lambda (node offset)
-         (ts-fold-range-line-comment node offset ";;")))))
+         (let ((text (tsc-node-text node)))
+           (cond ((string-prefix-p ";;" text)
+                  (ts-fold-range-line-comment node offset ";;"))
+                 ((string-prefix-p "#" text)
+                  (ts-fold-range-line-comment node offset "#"))
+                 (t
+                  (ts-fold-range-c-like-comment node offset))))))))
 
 (defun ts-fold-parsers-bash ()
   "Rule set for Bash."

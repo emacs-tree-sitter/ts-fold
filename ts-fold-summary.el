@@ -227,9 +227,11 @@ type of content by checking the word boundary's existence."
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode      . ts-fold-summary-javadoc)
     (arduino-mode           . ts-fold-summary-c)
+    (asm-mode               . ts-fold-summary-elisp)
     (fasm-mode              . ts-fold-summary-elisp)
     (masm-mode              . ts-fold-summary-elisp)
     (nasm-mode              . ts-fold-summary-elisp)
+    (gas-mode               . ts-fold-summary-elisp)
     (bat-mode               . ts-fold-summary-batch)
     (beancount-mode         . ts-fold-summary-elisp)
     (c-mode                 . ts-fold-summary-c)
