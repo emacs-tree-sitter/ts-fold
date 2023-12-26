@@ -83,6 +83,7 @@
 (declare-function ts-fold-range-ocaml-value-definition "ts-fold.el")
 (declare-function ts-fold-range-org-body "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
+(declare-function ts-fold-range-cmake-body "ts-fold.el")
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
@@ -173,7 +174,7 @@
 
 (defun ts-fold-parsers-cmake ()
   "Rule set for CMake."
-  '((body . ts-fold-range-seq)
+  '((body . ts-fold-range-cmake-body)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))

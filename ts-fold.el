@@ -654,6 +654,17 @@ more information."
       (setq beg (ts-fold--last-eol beg)))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-cmake-body (node offset)
+  "Return the fold range for `body' NODE in CMake.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (end (tsc-node-end-position node)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-elisp-function (node offset)
   "Return the fold range for `macro_definition' and `function_definition' NODE
 in Elisp.
