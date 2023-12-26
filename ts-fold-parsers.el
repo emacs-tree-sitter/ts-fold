@@ -451,6 +451,15 @@
                                      (ts-fold--cons-add offset '(0 . -1))
                                      "%%")))))
 
+(defun ts-fold-parsers-ninja ()
+  "Rule set for Ninja."
+  '((build . (ts-fold-range-seq 4 0))
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     "#")))))
+
 (defun ts-fold-parsers-noir ()
   "Rule set for Noir."
   '((body    . ts-fold-range-seq)

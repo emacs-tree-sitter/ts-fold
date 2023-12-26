@@ -115,6 +115,7 @@
     (markdown-mode          . ,(ts-fold-parsers-markdown))
     (matlab-mode            . ,(ts-fold-parsers-matlab))
     (mermaid-mode           . ,(ts-fold-parsers-mermaid))
+    (ninja-mode             . ,(ts-fold-parsers-ninja))
     (noir-mode              . ,(ts-fold-parsers-noir))
     (nix-mode               . ,(ts-fold-parsers-nix))
     (ocaml-mode             . ,(ts-fold-parsers-ocaml))

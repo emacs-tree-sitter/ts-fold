@@ -13,6 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Tablegen` support (#107)
 * Add `LLVM MIR` support (#108)
 * Add `MATLAB` support (#110)
+* Add `Ninja` support (#112)
 
 ## 0.3.0
 > Released Nov 29, 2023
