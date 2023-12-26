@@ -277,6 +277,7 @@ type of content by checking the word boundary's existence."
     (markdown-mode          . ts-fold-summary-markdown)
     (matlab-mode            . ts-fold-summary-matlab-doc)
     (mermaid-mode           . ts-fold-summary-mermaid)
+    (ninja-mode             . ts-fold-summary-ruby-doc)
     (nix-mode               . ts-fold-summary-ruby-doc)
     (noir-mode              . ts-fold-summary-rust-doc)
     (objc-mode              . ts-fold-summary-c)
