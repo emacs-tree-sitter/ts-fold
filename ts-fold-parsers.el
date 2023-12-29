@@ -121,7 +121,8 @@
 
 (defun ts-fold-parsers-asm ()
   "Rule set for Assembly."
-  '((label . ts-fold-range-asm-label)
+  '((label         . ts-fold-range-asm-label)
+    (block_comment . ts-fold-range-c-like-comment)
     (line_comment
      . (lambda (node offset)
          (let ((text (tsc-node-text node)))
