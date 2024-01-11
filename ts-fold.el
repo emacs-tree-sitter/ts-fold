@@ -1022,7 +1022,7 @@ more information."
     (let* ((beg (tsc-node-end-position node))
            (end (or (save-excursion
                       (progn (goto-char beg)
-                             (when (re-search-forward "^\s*\^L%%" nil t)
+                             (when (re-search-forward "^\s*\^L*%%" nil t)
                                (forward-line -1) (end-of-line)
                                (point))))
                     (tsc-node-end-position (tsc-get-parent node)))))
