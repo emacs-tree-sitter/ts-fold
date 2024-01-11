@@ -796,7 +796,7 @@ information."
 It excludes the NODE's first child and the `end' keyword.  For
 argument OFFSET, see function `ts-fold-range-seq' for more
 information."
-  (when-let* ((params (car (ts-fold-find-children node "call_expression")))
+  (when-let* ((params (car (ts-fold-find-children node "if")))
               (beg (tsc-node-end-position params))
               (end (tsc-node-end-position node))
               (end (- end 3)))
