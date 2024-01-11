@@ -1,7 +1,7 @@
 ;;; ts-fold.el --- Code folding using tree-sitter  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Junyi Hou
-;; Copyright (C) 2021-2023  Shen, Jen-Chieh
+;; Copyright (C) 2021-2024  Shen, Jen-Chieh
 
 ;; Created date 2021-08-11 14:12:37
 
@@ -62,9 +62,11 @@
   `((actionscript-mode      . ,(ts-fold-parsers-actionscript))
     (agda-mode              . ,(ts-fold-parsers-agda))
     (arduino-mode           . ,(ts-fold-parsers-arduino))
+    (asm-mode               . ,(ts-fold-parsers-asm))
     (fasm-mode              . ,(ts-fold-parsers-asm))
     (masm-mode              . ,(ts-fold-parsers-asm))
     (nasm-mode              . ,(ts-fold-parsers-asm))
+    (gas-mode               . ,(ts-fold-parsers-asm))
     (beancount-mode         . ,(ts-fold-parsers-beancount))
     (c-mode                 . ,(ts-fold-parsers-c))
     (c++-mode               . ,(ts-fold-parsers-c++))
@@ -113,6 +115,7 @@
     (markdown-mode          . ,(ts-fold-parsers-markdown))
     (matlab-mode            . ,(ts-fold-parsers-matlab))
     (mermaid-mode           . ,(ts-fold-parsers-mermaid))
+    (ninja-mode             . ,(ts-fold-parsers-ninja))
     (noir-mode              . ,(ts-fold-parsers-noir))
     (nix-mode               . ,(ts-fold-parsers-nix))
     (ocaml-mode             . ,(ts-fold-parsers-ocaml))
@@ -649,6 +652,17 @@ more information."
               (end (1- (tsc-node-end-position node))))
     (unless ts-fold-on-next-line  ; display nicely
       (setq beg (ts-fold--last-eol beg)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-cmake-body (node offset)
+  "Return the fold range for `body' NODE in CMake.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (tsc-node-start-position node))
+              (end (tsc-node-end-position node)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elisp-function (node offset)

@@ -1,6 +1,6 @@
 ;;; ts-fold-parsers.el --- Adapter layer to Tree-Sitter  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-2023  Shen, Jen-Chieh
+;; Copyright (C) 2021-2024  Shen, Jen-Chieh
 ;; Created date 2021-10-04 17:45:48
 
 ;; This file is NOT part of GNU Emacs.
@@ -83,6 +83,7 @@
 (declare-function ts-fold-range-ocaml-value-definition "ts-fold.el")
 (declare-function ts-fold-range-org-body "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
+(declare-function ts-fold-range-cmake-body "ts-fold.el")
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
@@ -120,10 +121,17 @@
 
 (defun ts-fold-parsers-asm ()
   "Rule set for Assembly."
-  '((label . ts-fold-range-asm-label)
+  '((label         . ts-fold-range-asm-label)
+    (block_comment . ts-fold-range-c-like-comment)
     (line_comment
      . (lambda (node offset)
-         (ts-fold-range-line-comment node offset ";;")))))
+         (let ((text (tsc-node-text node)))
+           (cond ((string-prefix-p ";;" text)
+                  (ts-fold-range-line-comment node offset ";;"))
+                 ((string-prefix-p "#" text)
+                  (ts-fold-range-line-comment node offset "#"))
+                 (t
+                  (ts-fold-range-c-like-comment node offset))))))))
 
 (defun ts-fold-parsers-bash ()
   "Rule set for Bash."
@@ -167,7 +175,7 @@
 
 (defun ts-fold-parsers-cmake ()
   "Rule set for CMake."
-  '((body . ts-fold-range-seq)
+  '((body . ts-fold-range-cmake-body)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
@@ -444,6 +452,15 @@
          (ts-fold-range-line-comment node
                                      (ts-fold--cons-add offset '(0 . -1))
                                      "%%")))))
+
+(defun ts-fold-parsers-ninja ()
+  "Rule set for Ninja."
+  '((build . (ts-fold-range-seq 4 0))
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     "#")))))
 
 (defun ts-fold-parsers-noir ()
   "Rule set for Noir."
