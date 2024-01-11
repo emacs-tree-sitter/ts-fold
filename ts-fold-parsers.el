@@ -341,7 +341,7 @@
 (defun ts-fold-parsers-julia ()
   "Rule set for Julia."
   '((block_comment       . (ts-fold-range-seq 1 -1))
-    (for_statement       . (ts-fold-range-seq 2 -2))
+    (for_statement       . ts-fold-range-julia-if)
     (function_definition . ts-fold-range-julia-function)
     (if_statement        . ts-fold-range-julia-if)
     (let_statement       . ts-fold-range-julia-let)
