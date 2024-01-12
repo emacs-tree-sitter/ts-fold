@@ -1023,8 +1023,13 @@ more information."
            (end (or (save-excursion
                       (progn (goto-char beg)
                              (when (re-search-forward "^\s*\^L*%%" nil t)
-                               (forward-line -1) (end-of-line)
-                               (point))))
+                               (beginning-of-line)
+                               (if (or (eq (char-after) ?\C-l)
+                                       (not (save-excursion (previous-line)
+                                                            (eq (char-after) ?\C-l))))
+                                   (forward-line -1)
+                                 (forward-line -2))
+                               (end-of-line) (point))))
                     (tsc-node-end-position (tsc-get-parent node)))))
       (ts-fold--cons-add (cons beg end) offset))))
 
