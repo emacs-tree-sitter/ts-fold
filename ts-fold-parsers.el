@@ -431,6 +431,8 @@
   "Rule set for MATLAB."
   '((expression_list     . ts-fold-range-seq)
     (function_definition . ts-fold-range-matlab-function)
+    (properties		 . ts-fold-range-matlab-function)
+    (methods		 . ts-fold-range-matlab-function)
     (class_definition    . ts-fold-range-matlab-function)
     (if_statement        . ts-fold-range-matlab-statements)
     (for_statement       . ts-fold-range-matlab-statements)
