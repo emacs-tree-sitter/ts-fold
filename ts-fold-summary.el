@@ -295,6 +295,7 @@ type of content by checking the word boundary's existence."
     (scheme-mode            . ts-fold-summary-elisp)
     (sh-mode                . ts-fold-summary-javadoc)
     (sql-mode               . ts-fold-summary-c)
+    (svelte-mode            . ts-fold-summary-xml)
     (swift-mode             . ts-fold-summary-c)
     (tablegen-mode          . ts-fold-summary-javadoc)
     (toml-mode              . ts-fold-summary-javadoc)

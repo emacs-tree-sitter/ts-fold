@@ -586,6 +586,10 @@
     (list       . ts-fold-range-seq)
     (marginalia . ts-fold-range-c-like-comment)))  ; This is the comment!
 
+(defun ts-fold-parsers-svelte ()
+  "Rule set for Svelte."
+  (append (ts-fold-parsers-html)))
+
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
   '((switch_statement      . ts-fold-range-seq)
