@@ -14,7 +14,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `LLVM MIR` support (#108)
 * Add `MATLAB` support (#110)
 * Add `Ninja` support (#112)
-* Add `Svelte` support (#113)
+* Add `Svelte` support (#116)
 
 ## 0.3.0
 > Released Nov 29, 2023
