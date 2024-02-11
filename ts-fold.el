@@ -134,6 +134,7 @@
     (sh-mode                . ,(ts-fold-parsers-bash))
     (scala-mode             . ,(ts-fold-parsers-scala))
     (sql-mode               . ,(ts-fold-parsers-sql))
+    (svelte-mode            . ,(ts-fold-parsers-svelte))
     (swift-mode             . ,(ts-fold-parsers-swift))
     (tablegen-mode          . ,(ts-fold-parsers-tablegen))
     (toml-mode              . ,(ts-fold-parsers-toml))
