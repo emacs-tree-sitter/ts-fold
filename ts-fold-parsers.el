@@ -286,6 +286,11 @@
   '((function . ts-fold-range-haskell-function)
     (comment  . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-haxe ()
+  "Rule set for Haxe."
+  '((block    . ts-fold-range-seq)
+    (comment  . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-hlsl ()
   "Rule set for HLSL."
   '((field_declaration_list . ts-fold-range-seq)

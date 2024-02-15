@@ -15,6 +15,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `MATLAB` support (#110)
 * Add `Ninja` support (#112)
 * Add `Svelte` support (#116)
+* Add `Haxe` support (#117)
 
 ## 0.3.0
 > Released Nov 29, 2023
