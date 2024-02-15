@@ -251,6 +251,7 @@ type of content by checking the word boundary's existence."
     (groovy-mode            . ts-fold-summary-javadoc)
     (jenkinsfile-mode       . ts-fold-summary-javadoc)
     (haskell-mode           . ts-fold-summary-lua-doc)
+    (haxe-mode              . ts-fold-summary-javadoc)
     (hlsl-mode              . ts-fold-summary-c)
     (html-mode              . ts-fold-summary-xml)
     (jai-mode               . ts-fold-summary-c)
