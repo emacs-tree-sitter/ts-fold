@@ -660,8 +660,15 @@
 
 (defun ts-fold-parsers-zig ()
   "Rule set for Zig."
-  '((Block        . ts-fold-range-seq)
-    (line_comment . ts-fold-range-c-like-comment)))
+  '((ErrorSetDecl  . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (ContainerDecl . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (SwitchExpr    . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (Block         . ts-fold-range-seq)
+    (InitList      . ts-fold-range-seq)
+    (line_comment  . ts-fold-range-c-like-comment)))
 
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here
