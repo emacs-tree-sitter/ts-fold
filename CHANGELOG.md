@@ -16,6 +16,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Ninja` support (#112)
 * Add `Svelte` support (#116)
 * Add `Haxe` support (#117)
+* feat: Add more `Zig` folding rules (#118)
 
 ## 0.3.0
 > Released Nov 29, 2023
