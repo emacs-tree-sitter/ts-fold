@@ -176,6 +176,11 @@ For example, Lua, Ruby, etc."
   :type 'string
   :group 'ts-fold)
 
+(defcustom ts-fold-priority 30
+  "Fold range overlay's priority."
+  :type 'integer
+  :group 'ts-fold)
+
 (defface ts-fold-replacement-face
   '((t :foreground "#808080" :box (:line-width -1 :style pressed-button)))
   "Face used to display the fold replacement text."
@@ -325,6 +330,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
            (end (cdr range))
            (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'ts-fold)
+      (overlay-put ov 'priority ts-fold-priority)
       (overlay-put ov 'invisible 'ts-fold)
       (overlay-put ov 'display (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
