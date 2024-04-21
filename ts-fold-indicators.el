@@ -41,7 +41,7 @@
   :group 'ts-fold)
 
 (defcustom ts-fold-indicators-priority 30
-  "Indicators fringe priority."
+  "Indicators overlay's priority."
   :type 'integer
   :group 'ts-fold)
 

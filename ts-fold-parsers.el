@@ -286,6 +286,11 @@
   '((function . ts-fold-range-haskell-function)
     (comment  . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-haxe ()
+  "Rule set for Haxe."
+  '((block    . ts-fold-range-seq)
+    (comment  . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-hlsl ()
   "Rule set for HLSL."
   '((field_declaration_list . ts-fold-range-seq)
@@ -600,6 +605,10 @@
     (list       . ts-fold-range-seq)
     (marginalia . ts-fold-range-c-like-comment)))  ; This is the comment!
 
+(defun ts-fold-parsers-svelte ()
+  "Rule set for Svelte."
+  (append (ts-fold-parsers-html)))
+
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
   '((switch_statement      . ts-fold-range-seq)
@@ -665,8 +674,15 @@
 
 (defun ts-fold-parsers-zig ()
   "Rule set for Zig."
-  '((Block        . ts-fold-range-seq)
-    (line_comment . ts-fold-range-c-like-comment)))
+  '((ErrorSetDecl  . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (ContainerDecl . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (SwitchExpr    . (lambda (node offset)
+                       (ts-fold-range-markers node offset "{")))
+    (Block         . ts-fold-range-seq)
+    (InitList      . ts-fold-range-seq)
+    (line_comment  . ts-fold-range-c-like-comment)))
 
 (provide 'ts-fold-parsers)
 ;;; ts-fold-parsers.el ends here

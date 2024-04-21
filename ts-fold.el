@@ -87,6 +87,7 @@
     (groovy-mode            . ,(ts-fold-parsers-groovy))
     (jenkinsfile-mode       . ,(ts-fold-parsers-groovy))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
+    (haxe-mode              . ,(ts-fold-parsers-haxe))
     (hlsl-mode              . ,(ts-fold-parsers-hlsl))
     (html-mode              . ,(ts-fold-parsers-html))
     (jai-mode               . ,(ts-fold-parsers-jai))
@@ -134,6 +135,7 @@
     (sh-mode                . ,(ts-fold-parsers-bash))
     (scala-mode             . ,(ts-fold-parsers-scala))
     (sql-mode               . ,(ts-fold-parsers-sql))
+    (svelte-mode            . ,(ts-fold-parsers-svelte))
     (swift-mode             . ,(ts-fold-parsers-swift))
     (tablegen-mode          . ,(ts-fold-parsers-tablegen))
     (toml-mode              . ,(ts-fold-parsers-toml))
@@ -172,6 +174,11 @@ For example, Lua, Ruby, etc."
 (defcustom ts-fold-replacement "..."
   "Show this string instead of the folded text."
   :type 'string
+  :group 'ts-fold)
+
+(defcustom ts-fold-priority 30
+  "Fold range overlay's priority."
+  :type 'integer
   :group 'ts-fold)
 
 (defface ts-fold-replacement-face
@@ -323,6 +330,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
            (end (cdr range))
            (ov (make-overlay beg end)))
       (overlay-put ov 'creator 'ts-fold)
+      (overlay-put ov 'priority ts-fold-priority)
       (overlay-put ov 'invisible 'ts-fold)
       (overlay-put ov 'display (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
