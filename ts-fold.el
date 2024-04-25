@@ -102,6 +102,7 @@
     (julia-mode             . ,(ts-fold-parsers-julia))
     (kotlin-mode            . ,(ts-fold-parsers-kotlin))
     (latex-mode             . ,(ts-fold-parsers-latex))
+    (LaTeX-mode             . ,(ts-fold-parsers-latex))
     (lisp-mode              . ,(ts-fold-parsers-lisp))
     (lisp-interaction-mode  . ,(ts-fold-parsers-lisp))
     (llvm-mode              . ,(ts-fold-parsers-llvm))
