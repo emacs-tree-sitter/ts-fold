@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'tsc)
+
 ;;
 ;; (@* "Redisplay" )
 ;;
