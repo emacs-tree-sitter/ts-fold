@@ -589,10 +589,14 @@
 
 (defun ts-fold-parsers-sql ()
   "Rule set for SQL."
-  '((block      . ts-fold-range-sql-block)
-    (subquery   . ts-fold-range-seq)
-    (list       . ts-fold-range-seq)
-    (marginalia . ts-fold-range-c-like-comment)))  ; This is the comment!
+  '((block              . ts-fold-range-sql-block)
+    (subquery           . ts-fold-range-seq)
+    (list               . ts-fold-range-seq)
+    (column_definitions . ts-fold-range-seq)
+    (marginalia         . ts-fold-range-c-like-comment)  ; This is the comment!
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "--")))))
 
 (defun ts-fold-parsers-svelte ()
   "Rule set for Svelte."
