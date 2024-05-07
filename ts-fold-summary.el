@@ -27,6 +27,8 @@
 
 (require 's)
 
+(require 'ts-fold-util)
+
 (defcustom ts-fold-summary-show t
   "Flag to show summary if available."
   :type 'boolean
@@ -194,35 +196,6 @@ type of content by checking the word boundary's existence."
 ;; (@* "Core" )
 ;;
 
-(defun ts-fold-summary--keep-length (summary)
-  "Keep the SUMMARY length to `ts-fold-summary-max-length'."
-  (let ((len-sum (length summary))
-        (len-exc (length ts-fold-summary-exceeded-string)))
-    (when (< ts-fold-summary-max-length len-sum)
-      (setq summary (substring summary 0 (- ts-fold-summary-max-length len-exc))
-            summary (concat summary ts-fold-summary-exceeded-string))))
-  summary)
-
-(defun ts-fold-summary--apply-format (summary)
-  "Return the SUMMARY that has added the summary prefix."
-  (format ts-fold-summary-format summary))
-
-(defun ts-fold-summary--parser ()
-  "Return the summary parser from `ts-fold-summary-parsers-alist'."
-  (assoc (buffer-local-value 'major-mode (current-buffer)) ts-fold-summary-parsers-alist))
-
-(defun ts-fold-summary--get (doc-str)
-  "Extract summary from DOC-STR in order to display ontop of the overlay."
-  (let ((parser (cdr (ts-fold-summary--parser))) summary)
-    (when parser
-      (setq summary (funcall parser doc-str))
-      (when (integerp ts-fold-summary-max-length)
-        (setq summary (ts-fold-summary--keep-length summary)))
-      (when summary
-        (setq summary (ts-fold-summary--apply-format summary)
-              summary (propertize summary 'face 'ts-fold-replacement-face))))
-    summary))
-
 ;; TODO(everyone): keep this alist alphabetically sorted
 (defcustom ts-fold-summary-parsers-alist
   `((actionscript-mode      . ts-fold-summary-javadoc)
@@ -264,6 +237,7 @@ type of content by checking the word boundary's existence."
     (julia-mode             . ts-fold-summary-julia-doc)
     (kotlin-mode            . ts-fold-summary-javadoc)
     (latex-mode             . ts-fold-summary-tex-doc)
+    (LaTeX-mode             . ts-fold-summary-tex-doc)
     (lisp-mode              . ts-fold-summary-elisp)
     (lisp-interaction-mode  . ts-fold-summary-elisp)
     (llvm-mode              . ts-fold-summary-elisp)
@@ -311,6 +285,35 @@ type of content by checking the word boundary's existence."
   "Alist mapping `major-mode' to doc parser function."
   :type '(alist :key-type symbol :value-type function)
   :group 'ts-fold)
+
+(defun ts-fold-summary--keep-length (summary)
+  "Keep the SUMMARY length to `ts-fold-summary-max-length'."
+  (let ((len-sum (length summary))
+        (len-exc (length ts-fold-summary-exceeded-string)))
+    (when (< ts-fold-summary-max-length len-sum)
+      (setq summary (substring summary 0 (- ts-fold-summary-max-length len-exc))
+            summary (concat summary ts-fold-summary-exceeded-string))))
+  summary)
+
+(defun ts-fold-summary--apply-format (summary)
+  "Return the SUMMARY that has added the summary prefix."
+  (format ts-fold-summary-format summary))
+
+(defun ts-fold-summary--parser ()
+  "Return the summary parser from `ts-fold-summary-parsers-alist'."
+  (assoc (buffer-local-value 'major-mode (current-buffer)) ts-fold-summary-parsers-alist))
+
+(defun ts-fold-summary--get (doc-str)
+  "Extract summary from DOC-STR in order to display ontop of the overlay."
+  (let ((parser (cdr (ts-fold-summary--parser))) summary)
+    (when parser
+      (setq summary (funcall parser doc-str))
+      (when (integerp ts-fold-summary-max-length)
+        (setq summary (ts-fold-summary--keep-length summary)))
+      (when summary
+        (setq summary (ts-fold-summary--apply-format summary)
+              summary (propertize summary 'face 'ts-fold-replacement-face))))
+    summary))
 
 (provide 'ts-fold-summary)
 ;;; ts-fold-summary.el ends here

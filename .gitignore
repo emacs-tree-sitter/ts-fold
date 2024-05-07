@@ -13,3 +13,6 @@ dist/
 # packaging
 *-autoloads.el
 *-pkg.el
+
+# macOS specific
+.DS_Store
