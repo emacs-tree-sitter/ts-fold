@@ -1062,7 +1062,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
 more information."
-  (when-let* ((named-node (car (ts-fold-find-children node "\n")))
+  (when-let* ((cur-node (tree-sitter-node-at-pos))
+              (named-node (car (ts-fold-find-children node "\n")))
               (beg (tsc-node-start-position named-node))
               (ins (append
                     (ts-fold-find-children node "catch_clause")
@@ -1072,6 +1073,12 @@ more information."
                     (ts-fold-find-children node "else_clause")
                     (ts-fold-find-children node "end")))  ;; can include parts maybe
               (end (tsc-node-start-position (car (ts-fold-find-children node "end")))))
+    (when (string-suffix-p "clause" (format "%s" (tsc-node-type (tsc-get-parent cur-node))))
+      (if (or (equal (tsc-node-type cur-node) "otherwise")
+              (equal (tsc-node-type cur-node) "else"))
+          (setq beg (tsc-node-end-position cur-node))
+        (setq beg (tsc-node-end-position (tsc-get-next-sibling cur-node))))
+      (setq end (tsc-node-end-position (tsc-get-parent cur-node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-mermaid-diagram (node offset)
