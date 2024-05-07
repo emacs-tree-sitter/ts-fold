@@ -1078,7 +1078,7 @@ more information."
               (equal (tsc-node-type cur-node) "else"))
           (setq beg (tsc-node-end-position cur-node))
         (setq beg (tsc-node-end-position (tsc-get-next-sibling cur-node))))
-      (setq end (tsc-node-end-position (tsc-get-parent cur-node))))
+      (setq end (1- (tsc-node-end-position (tsc-get-parent cur-node)))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-mermaid-diagram (node offset)
