@@ -164,6 +164,11 @@ the fold in a cons cell.  See `ts-fold-range-python-def' for an example."
   :type 'hook
   :group 'ts-fold)
 
+(defcustom ts-fold-on-fold-hook nil
+  "Hook runs on folding."
+  :type 'hook
+  :group 'ts-fold)
+
 (defcustom ts-fold-on-next-line t
   "If non-nil, we leave ending keywords on the next line.
 
@@ -380,7 +385,8 @@ If no NODE is found in point, do nothing."
       (when-let* ((ov (ts-fold-overlay-at node)))
         (delete-overlay ov))
       (when-let* ((range (ts-fold--get-fold-range node)))
-        (ts-fold--create-overlay range)))))
+        (ts-fold--create-overlay range)
+        (run-hooks 'ts-fold-on-fold-hook)))))
 
 ;;;###autoload
 (defun ts-fold-open ()
@@ -391,6 +397,7 @@ If the current node is not folded or not foldable, do nothing."
     (when-let* ((node (ts-fold--foldable-node-at-pos))
                 (ov (ts-fold-overlay-at node)))
       (delete-overlay ov)
+      (run-hooks 'ts-fold-on-fold-hook)
       t)))
 
 ;;;###autoload
@@ -403,32 +410,37 @@ If the current node is not folded or not foldable, do nothing."
                 (end (tsc-node-end-position node)))
       (thread-last (overlays-in beg end)
                    (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-                   (mapc #'delete-overlay)))))
+                   (mapc #'delete-overlay))
+      (run-hooks 'ts-fold-on-fold-hook))))
 
 ;;;###autoload
 (defun ts-fold-close-all ()
   "Fold all foldable syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (let* ((ts-fold-indicators-mode)
-           (node (tsc-root-node tree-sitter-tree))
-           (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
-                                 (alist-get major-mode ts-fold-range-alist)
-                                 'vector))
-           (query (tsc-make-query tree-sitter-language patterns))
-           (nodes-to-fold (tsc-query-captures query node #'ignore)))
-      (thread-last nodes-to-fold
-                   (mapcar #'cdr)
-                   (mapc #'ts-fold-close)))))
+    (let (nodes)
+      (let* ((ts-fold-indicators-mode)
+             (ts-fold-on-fold-hook)
+             (node (tsc-root-node tree-sitter-tree))
+             (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                                   (alist-get major-mode ts-fold-range-alist)
+                                   'vector))
+             (query (tsc-make-query tree-sitter-language patterns)))
+        (setq nodes (tsc-query-captures query node #'ignore))
+        (thread-last nodes
+                     (mapcar #'cdr)
+                     (mapc #'ts-fold-close)))
+      (when nodes
+        (run-hooks 'ts-fold-on-fold-hook)))))
 
 ;;;###autoload
 (defun ts-fold-open-all ()
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (thread-last (overlays-in (point-min) (point-max))
-                 (seq-filter (lambda (ov) (eq (overlay-get ov 'invisible) 'ts-fold)))
-                 (mapc #'delete-overlay))))
+    (when-let ((nodes (ts-fold--overlays-in 'invisible 'ts-fold)))
+      (mapc #'delete-overlay nodes)
+      (run-hooks 'ts-fold-on-fold-hook))))
 
 ;;;###autoload
 (defun ts-fold-toggle ()
@@ -438,7 +450,10 @@ If the current syntax node is not foldable, do nothing."
   (ts-fold--ensure-ts
     (if-let* ((node (ts-fold--foldable-node-at-pos (point)))
               (ov (ts-fold-overlay-at node)))
-        (progn (delete-overlay ov) t)
+        (progn
+          (delete-overlay ov)
+          (run-hooks 'ts-fold-on-fold-hook)
+          t)
       (ts-fold-close))))
 
 (defun ts-fold--after-command (&rest _)
