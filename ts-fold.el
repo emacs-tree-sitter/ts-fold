@@ -819,7 +819,7 @@ information."
 It excludes the NODE's first child and the `end' keyword.  For
 argument OFFSET, see function `ts-fold-range-seq' for more
 information."
-  (when-let* ((params (car (ts-fold-find-children node "call_expression")))
+  (when-let* ((params (tsc-get-nth-named-child node 0))
               (beg (tsc-node-end-position params))
               (end (tsc-node-end-position node))
               (end (- end 3)))
@@ -1031,9 +1031,14 @@ more information."
     (let* ((beg (tsc-node-end-position node))
            (end (or (save-excursion
                       (progn (goto-char beg)
-                             (when (re-search-forward "^\s*\^L%%" nil t)
-                               (forward-line -1) (end-of-line)
-                               (point))))
+                             (when (re-search-forward "^\s*\^L*%%" nil t)
+                               (beginning-of-line)
+                               (if (or (eq (char-after) ?\C-l)
+                                       (not (save-excursion (forward-line -1)
+                                                            (eq (char-after) ?\C-l))))
+                                   (forward-line -1)
+                                 (forward-line -2))
+                               (end-of-line) (point))))
                     (tsc-node-end-position (tsc-get-parent node)))))
       (ts-fold--cons-add (cons beg end) offset))))
 
@@ -1057,7 +1062,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-line-comment' for
 more information."
-  (when-let* ((named-node (car (ts-fold-find-children node "\n")))
+  (when-let* ((cur-node (tree-sitter-node-at-pos))
+              (named-node (car (ts-fold-find-children node "\n")))
               (beg (tsc-node-start-position named-node))
               (ins (append
                     (ts-fold-find-children node "catch_clause")
@@ -1067,6 +1073,12 @@ more information."
                     (ts-fold-find-children node "else_clause")
                     (ts-fold-find-children node "end")))  ;; can include parts maybe
               (end (tsc-node-start-position (car (ts-fold-find-children node "end")))))
+    (when (string-suffix-p "clause" (format "%s" (tsc-node-type (tsc-get-parent cur-node))))
+      (if (or (equal (tsc-node-type cur-node) "otherwise")
+              (equal (tsc-node-type cur-node) "else"))
+          (setq beg (tsc-node-end-position cur-node))
+        (setq beg (tsc-node-end-position (tsc-get-next-sibling cur-node))))
+      (setq end (1- (tsc-node-end-position (tsc-get-parent cur-node)))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-mermaid-diagram (node offset)

@@ -346,7 +346,7 @@
 (defun ts-fold-parsers-julia ()
   "Rule set for Julia."
   '((block_comment       . (ts-fold-range-seq 1 -1))
-    (for_statement       . (ts-fold-range-seq 2 -2))
+    (for_statement       . ts-fold-range-julia-if)
     (function_definition . ts-fold-range-julia-function)
     (if_statement        . ts-fold-range-julia-if)
     (let_statement       . ts-fold-range-julia-let)
@@ -436,12 +436,19 @@
   "Rule set for MATLAB."
   '((expression_list     . ts-fold-range-seq)
     (function_definition . ts-fold-range-matlab-function)
+    (properties		 . ts-fold-range-matlab-function)
+    (methods		 . ts-fold-range-matlab-function)
     (class_definition    . ts-fold-range-matlab-function)
     (if_statement        . ts-fold-range-matlab-statements)
+    (elseif_clause       . ts-fold-range-matlab-statements)
+    (else_clause         . ts-fold-range-matlab-statements)
     (for_statement       . ts-fold-range-matlab-statements)
     (while_statement     . ts-fold-range-matlab-statements)
     (switch_statement    . ts-fold-range-matlab-statements)
+    (case_clause         . ts-fold-range-matlab-statements)
+    (otherwise_clause    . ts-fold-range-matlab-statements)
     (try_statement       . ts-fold-range-matlab-statements)
+    (catch_clause        . ts-fold-range-matlab-statements)
     (comment             . ts-fold-range-matlab-blocks)))
 
 (defun ts-fold-parsers-mermaid ()
