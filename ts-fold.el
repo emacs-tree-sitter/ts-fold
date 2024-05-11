@@ -386,7 +386,8 @@ If no NODE is found in point, do nothing."
         (delete-overlay ov))
       (when-let* ((range (ts-fold--get-fold-range node)))
         (ts-fold--create-overlay range)
-        (run-hooks 'ts-fold-on-fold-hook)))))
+        (run-hooks 'ts-fold-on-fold-hook)
+        t))))
 
 ;;;###autoload
 (defun ts-fold-open ()
@@ -410,7 +411,8 @@ If the current node is not folded or not foldable, do nothing."
                 (end (tsc-node-end-position node))
                 (nodes (ts-fold--overlays-in 'invisible 'ts-fold beg end)))
       (mapc #'delete-overlay nodes)
-      (run-hooks 'ts-fold-on-fold-hook))))
+      (run-hooks 'ts-fold-on-fold-hook)
+      t)))
 
 ;;;###autoload
 (defun ts-fold-close-all ()
@@ -430,7 +432,8 @@ If the current node is not folded or not foldable, do nothing."
                      (mapcar #'cdr)
                      (mapc #'ts-fold-close)))
       (when nodes
-        (run-hooks 'ts-fold-on-fold-hook)))))
+        (run-hooks 'ts-fold-on-fold-hook)
+        t))))
 
 ;;;###autoload
 (defun ts-fold-open-all ()
@@ -439,7 +442,8 @@ If the current node is not folded or not foldable, do nothing."
   (ts-fold--ensure-ts
     (when-let ((nodes (ts-fold--overlays-in 'invisible 'ts-fold)))
       (mapc #'delete-overlay nodes)
-      (run-hooks 'ts-fold-on-fold-hook))))
+      (run-hooks 'ts-fold-on-fold-hook)
+      t)))
 
 ;;;###autoload
 (defun ts-fold-toggle ()
