@@ -233,6 +233,7 @@ type of content by checking the word boundary's existence."
     (js-mode                . ts-fold-summary-javadoc)
     (js2-mode               . ts-fold-summary-javadoc)
     (js3-mode               . ts-fold-summary-javadoc)
+    (json-mode              . ts-fold-summary-javadoc)
     (jsonnet-mode           . ts-fold-summary-javadoc)
     (julia-mode             . ts-fold-summary-julia-doc)
     (kotlin-mode            . ts-fold-summary-javadoc)

@@ -334,8 +334,9 @@
 
 (defun ts-fold-parsers-json ()
   "Rule set for JSON."
-  '((object . ts-fold-range-seq)
-    (array  . ts-fold-range-seq)))
+  '((object  . ts-fold-range-seq)
+    (array   . ts-fold-range-seq)
+    (comment . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-jsonnet ()
   "Rule set for Jsonnet."
