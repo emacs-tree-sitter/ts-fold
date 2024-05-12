@@ -607,7 +607,10 @@
 
 (defun ts-fold-parsers-svelte ()
   "Rule set for Svelte."
-  (append (ts-fold-parsers-html)))
+  (append
+   (ts-fold-parsers-html)
+   '((script_element . ts-fold-range-html)
+     (style_element  . ts-fold-range-html))))
 
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
