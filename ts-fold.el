@@ -342,7 +342,8 @@ This function is borrowed from `tree-sitter-node-at-point'."
                                         (ts-fold-summary--get (buffer-substring beg end)))
                                    ts-fold-replacement))
       (overlay-put ov 'face 'ts-fold-replacement-face)
-      (overlay-put ov 'isearch-open-invisible #'ts-fold--isearch-open))))
+      (overlay-put ov 'isearch-open-invisible #'ts-fold--isearch-open)
+      ov)))
 
 (defun ts-fold--isearch-open (ov)
   "Open overlay OV during `isearch' session."
@@ -384,10 +385,10 @@ If no NODE is found in point, do nothing."
       ;; make sure I do not create multiple overlays for the same fold
       (when-let* ((ov (ts-fold-overlay-at node)))
         (delete-overlay ov))
-      (when-let* ((range (ts-fold--get-fold-range node)))
-        (ts-fold--create-overlay range)
+      (when-let* ((range (ts-fold--get-fold-range node))
+                  (ov (ts-fold--create-overlay range)))
         (run-hooks 'ts-fold-on-fold-hook)
-        t))))
+        ov))))
 
 ;;;###autoload
 (defun ts-fold-open ()
