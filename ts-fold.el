@@ -342,12 +342,34 @@ This function is borrowed from `tree-sitter-node-at-point'."
                                         (ts-fold-summary--get (buffer-substring beg end)))
                                    ts-fold-replacement))
       (overlay-put ov 'face 'ts-fold-replacement-face)
-      (overlay-put ov 'isearch-open-invisible #'ts-fold--isearch-open)
+      (overlay-put ov 'modification-hooks '(ts-fold--on-change))
+      (overlay-put ov 'insert-in-front-hooks '(ts-fold--on-change))
+      (overlay-put ov 'isearch-open-invisible #'ts-fold--on-change)
+      (overlay-put ov 'isearch-open-invisible-temporary
+                   (lambda (ov hide-p)
+                     (if hide-p (ts-fold--hide-ov ov)
+                       (ts-fold--show-ov ov))))
       ov)))
 
-(defun ts-fold--isearch-open (ov)
-  "Open overlay OV during `isearch' session."
+(defun ts-fold--on-change (ov &rest _)
+  "Open overlay OV during content is changed."
   (delete-overlay ov))
+
+(defun ts-fold--show-ov (ov &rest _)
+  "Show the OV."
+  (overlay-put ov 'invisible nil)
+  (overlay-put ov 'display nil)
+  (overlay-put ov 'face nil))
+
+(defun ts-fold--hide-ov (ov &rest _)
+  "Hide the OV."
+  (let ((beg (overlay-start ov))
+        (end (overlay-end ov)))
+    (overlay-put ov 'invisible 'ts-fold)
+    (overlay-put ov 'display (or (and ts-fold-summary-show
+                                      (ts-fold-summary--get (buffer-substring beg end)))
+                                 ts-fold-replacement))
+    (overlay-put ov 'face 'ts-fold-replacement-face)))
 
 (defun ts-fold-overlay-at (node)
   "Return the ts-fold overlay at NODE if NODE is foldable and folded.

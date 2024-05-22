@@ -17,6 +17,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Svelte` support (#116)
 * Add `Haxe` support (#117)
 * feat: Add more `Zig` folding rules (#118)
+* feat: Fully support `isearch` and modification conditions (#120)
 
 ## 0.3.0
 > Released Nov 29, 2023
@@ -68,7 +69,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Perl` support (#66)
 * Add `Markdown` support (#67)
 * Add `TOML` support (#68)
-* fix: Don't fold lint comment when only 1 line (#69) 
+* fix: Don't fold lint comment when only 1 line (#69)
 * Add `Kotlin` support (#70)
 * Add `Jai` support (#71)
 * Add `GDScript` support (#72)
