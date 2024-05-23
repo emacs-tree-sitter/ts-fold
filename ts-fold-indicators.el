@@ -138,8 +138,9 @@
   :lighter nil
   :keymap ts-fold-indicators-mode-map
   :init-value nil
-  (if ts-fold-indicators-mode (ts-fold-indicators--enable)
-    (ts-fold-indicators--disable)))
+  (tree-sitter--handle-dependent ts-fold-indicators-mode
+    #'ts-fold-indicators--enable
+    #'ts-fold-indicators--disable))
 
 ;;;###autoload
 (define-minor-mode global-ts-fold-indicators-mode

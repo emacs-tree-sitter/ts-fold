@@ -245,7 +245,9 @@ ts-fold can act on."
   :group 'ts-fold
   :init-value nil
   :lighter "TS-Fold"
-  (if ts-fold-mode (ts-fold--enable) (ts-fold--disable)))
+  (tree-sitter--handle-dependent ts-fold-mode
+    #'ts-fold--enable
+    #'ts-fold--disable))
 
 ;;;###autoload
 (define-minor-mode global-ts-fold-mode
