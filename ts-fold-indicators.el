@@ -58,6 +58,11 @@
                  (const :tag "Inaccurate rendering but fast" partial))
   :group 'ts-fold)
 
+(defcustom ts-fold-indicators-refresh-hook nil
+  "Hook run after indicators refresh."
+  :type 'hook
+  :group 'ts-fold)
+
 (fringe-helper-define 'ts-fold-indicators-fr-plus nil
   "XXXXXXX"
   "X.....X"
@@ -361,7 +366,8 @@ Optional arguments WEND and WSTART are the range for caching."
         (ts-fold-indicators--remove-ovs)
         (thread-last nodes-to-fold
                      (mapcar #'cdr)
-                     (mapc #'ts-fold-indicators--create))))))
+                     (mapc #'ts-fold-indicators--create))
+        (run-hooks 'ts-fold-indicators-refresh-hook)))))
 
 (defun ts-fold-indicators--remove-ovs (&optional window)
   "Remove all indicators overlays in this WINDOW."

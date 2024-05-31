@@ -475,7 +475,6 @@ turn off `ts-fold-mode`
   with this plugin.
 
   ```elisp
-
   (setq ts-fold-indicators-face-function
         (lambda (pos &rest _)
           ;; Return the face of it's function.
@@ -489,6 +488,11 @@ turn off `ts-fold-mode`
   (advice-add 'line-reminder-transfer-to-saved-lines :after
               ;; Refresh indicators for package `ts-fold'.
               #'ts-fold-indicators-refresh)
+
+  (add-hook 'ts-fold-indicators-refresh-hook
+            (lambda (&rest _)
+              (line-reminder--render-buffer)
+              (line-reminder--thumb-render-buffer)))
   ```
 
 ### 📝 Summary
