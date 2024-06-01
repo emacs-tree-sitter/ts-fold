@@ -303,12 +303,16 @@ Return nil if there is no fold to be made."
           ((listp fold-func) (funcall (nth 0 fold-func) node (cons (nth 1 fold-func) (nth 2 fold-func))))
           (t (user-error "Bad folding function for node")))))
 
+(defun ts-fold--node-range-on-same-line (node)
+  "Return non-nil when NODE range is on the same line."
+  (let ((range (ts-fold--get-fold-range node)))
+    (or (not range)                             ; Range not defined, continue.
+        (ts-fold--range-on-same-line range))))  ; On same line, continue.
+
 (defun ts-fold--non-foldable-node-p (node mode-ranges)
   "Return non-nil if NODE is a non-foldable in MODE-RANGES."
   (or (not (alist-get (tsc-node-type node) mode-ranges))  ; Not registered, continue.
-      (let ((range (ts-fold--get-fold-range node)))
-        (or (not range)                                   ; Range not defined, continue.
-            (ts-fold--range-on-same-line range)))))       ; On same line, continue.
+      (ts-fold--node-range-on-same-line node)))           ; On same line, continue.
 
 (defun ts-fold--foldable-node-at-pos (&optional pos)
   "Return the smallest foldable node at POS.  If POS is nil, use `point'.
@@ -456,7 +460,11 @@ If the current node is not folded or not foldable, do nothing."
                                    (alist-get major-mode ts-fold-range-alist)
                                    'vector))
              (query (tsc-make-query tree-sitter-language patterns)))
-        (setq nodes (tsc-query-captures query node #'ignore))
+        (setq nodes (tsc-query-captures query node #'ignore)
+              nodes (cl-remove-if (lambda (node)
+                                    ;; Removed if on same line
+                                    (ts-fold--node-range-on-same-line (cdr node)))
+                                  nodes))
         (thread-last nodes
                      (mapcar #'cdr)
                      (mapc #'ts-fold-close)))
