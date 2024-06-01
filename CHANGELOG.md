@@ -18,6 +18,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add `Haxe` support (#117)
 * feat: Add more `Zig` folding rules (#118)
 * feat: Fully support `isearch` and modification conditions (#120)
+* fix: Respect same line folding from close all (dea3ee7e21eb867b5293c9ce455704ff23a96cad)
 
 ## 0.3.0
 > Released Nov 29, 2023
