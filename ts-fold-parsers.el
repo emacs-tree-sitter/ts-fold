@@ -574,6 +574,7 @@
     (match_block            . ts-fold-range-seq)
     (macro_definition       . (ts-fold-range-rust-macro 1 -1))
     (block                  . ts-fold-range-seq)
+    (token_tree             . ts-fold-range-seq)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node
