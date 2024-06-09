@@ -488,11 +488,6 @@ turn off `ts-fold-mode`
   (advice-add 'line-reminder-transfer-to-saved-lines :after
               ;; Refresh indicators for package `ts-fold'.
               #'ts-fold-indicators-refresh)
-
-  (add-hook 'ts-fold-indicators-refresh-hook
-            (lambda (&rest _)
-              (line-reminder--render-buffer)
-              (line-reminder--thumb-render-buffer)))
   ```
 
 ### 📝 Summary
