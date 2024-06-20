@@ -192,6 +192,11 @@ For example, Lua, Ruby, etc."
   "Face used to display the fold replacement text."
   :group 'ts-fold)
 
+(defface ts-fold-replacement-mouse-face
+  '((t :foreground "#808080" :box (:line-width -1 :style released-button)))
+  "Face used to when mouse hovering replacement text."
+  :group 'ts-fold)
+
 (defface ts-fold-fringe-face
   '((t ()))
   "Face used to display fringe contents."
@@ -340,13 +345,18 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (when range
     (let* ((beg (car range))
            (end (cdr range))
-           (ov (make-overlay beg end)))
+           (ov (make-overlay beg end))
+           (map (make-sparse-keymap)))
+      (keymap-set map "<mouse-1>" #'ts-fold-open)
       (overlay-put ov 'creator 'ts-fold)
       (overlay-put ov 'priority ts-fold-priority)
       (overlay-put ov 'invisible 'ts-fold)
       (overlay-put ov 'display (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
-                                   ts-fold-replacement))
+                                   (propertize ts-fold-replacement
+                                               'mouse-face 'ts-fold-replacement-mouse-face
+                                               'help-echo "mouse-1: unfold this node"
+                                               'keymap map)))
       (overlay-put ov 'face 'ts-fold-replacement-face)
       (overlay-put ov 'modification-hooks '(ts-fold--on-change))
       (overlay-put ov 'insert-in-front-hooks '(ts-fold--on-change))
