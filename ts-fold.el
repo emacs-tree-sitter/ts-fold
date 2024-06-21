@@ -536,7 +536,7 @@ For arguments NODE and NEXT, please see the function `ts-fold--next-prev-node'
 for more information."
   (let ((iter-node (ts-fold--next-prev-node node next)))
     (while (and iter-node
-                (equal "\n" (tsc-node-text iter-node)))
+                (equal "\n" (ignore-errors (tsc-node-text iter-node))))
       (setq iter-node (ts-fold--next-prev-node iter-node next)))
     iter-node))
 
