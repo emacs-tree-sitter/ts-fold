@@ -603,8 +603,10 @@ more information.
 Argument PREFIX is the comment prefix in string."
   (save-excursion
     (when-let* ((ts-fold-line-comment-mode)  ; XXX: Check enabled!?
-                (first-node (ts-fold--continuous-node-prefix node prefix nil))
-                (last-node (ts-fold--continuous-node-prefix node prefix t))
+                (first-node (ignore-errors
+                              (ts-fold--continuous-node-prefix node prefix nil)))
+                (last-node (ignore-errors
+                             (ts-fold--continuous-node-prefix node prefix t)))
                 (prefix-len (length prefix))
                 (beg (+ (tsc-node-start-position first-node) prefix-len))
                 (end (tsc-node-end-position last-node)))
