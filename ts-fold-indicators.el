@@ -122,8 +122,8 @@
   (if (or ts-fold-mode (ts-fold-mode 1))  ; Enable `ts-fold-mode' automatically
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render nil t)
-        (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators--trigger-render nil t)
+        (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
         (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
         (ts-fold-indicators--render-buffer))
@@ -132,8 +132,8 @@
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render t)
-  (remove-hook 'post-command-hook #'ts-fold-indicators--post-command t)
   (remove-hook 'after-save-hook #'ts-fold-indicators--trigger-render t)
+  (remove-hook 'post-command-hook #'ts-fold-indicators--post-command t)
   (remove-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
   (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
   (ts-fold-indicators--remove-ovs-buffer))
