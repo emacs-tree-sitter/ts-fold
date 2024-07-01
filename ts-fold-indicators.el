@@ -121,8 +121,9 @@
   "Enable `ts-fold-indicators' mode."
   (if (or ts-fold-mode (ts-fold-mode 1))  ; Enable `ts-fold-mode' automatically
       (progn
-        (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh nil t)
-        (add-hook 'after-save-hook #'ts-fold-indicators-refresh nil t)
+        (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render nil t)
+        (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
+        (add-hook 'after-save-hook #'ts-fold-indicators--trigger-render nil t)
         (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
         (ts-fold-indicators--render-buffer))
@@ -130,8 +131,9 @@
 
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
-  (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators-refresh t)
-  (remove-hook 'after-save-hook #'ts-fold-indicators-refresh t)
+  (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render t)
+  (remove-hook 'post-command-hook #'ts-fold-indicators--post-command t)
+  (remove-hook 'after-save-hook #'ts-fold-indicators--trigger-render t)
   (remove-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
   (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
   (ts-fold-indicators--remove-ovs-buffer))
@@ -291,6 +293,9 @@ Argument FOLDED holds folding state; it's a boolean."
 ;; (@* "Update" )
 ;;
 
+(defvar-local ts-fold-indicators--render-this-command-p nil
+  "Set to non-nil if render current command.")
+
 (defun ts-fold-indicators--create (node)
   "Create indicators using NODE."
   (when-let* ((range (ts-fold--get-fold-range node))
@@ -318,14 +323,22 @@ Argument FOLDED holds folding state; it's a boolean."
   (ts-fold--with-selected-window window
     (ignore-errors (ts-fold-indicators-refresh))))
 
-(defun ts-fold-indicators--within-window (node &optional wend wstart)
+(defun ts-fold-indicators--trigger-render (&rest _)
+  "Trigger rendering on the next redisplay."
+  (setq ts-fold-indicators--render-this-command-p t))  ; Trigger render at the end.
+
+(defun ts-fold-indicators--post-command ()
+  "Post command."
+  (when ts-fold-indicators--render-this-command-p
+    (ts-fold-indicators-refresh)
+    (setq ts-fold-indicators--render-this-command-p nil)))
+
+(defun ts-fold-indicators--within-window (node wend wstart)
   "Return nil if NODE is not within the current window display range.
 
-Optional arguments WEND and WSTART are the range for caching."
+Arguments WEND and WSTART are the range for caching."
   (when-let*
-      ((wend (or wend (window-end nil t)))
-       (wstart (or wstart (window-start)))
-       (range (cl-case ts-fold-indicators-render-method
+      ((range (cl-case ts-fold-indicators-render-method
                 (`full
                  (ignore-errors (ts-fold--get-fold-range node)))
                 (`partial (cons (tsc-node-start-position node)

@@ -484,10 +484,6 @@ turn off `ts-fold-mode`
         (lambda (&rest _)
           (null (ts-fold--overlays-in 'ts-fold-indicators-window (selected-window)
                                       (line-beginning-position) (line-end-position)))))
-
-  (advice-add 'line-reminder-transfer-to-saved-lines :after
-              ;; Refresh indicators for package `ts-fold'.
-              #'ts-fold-indicators-refresh)
   ```
 
 ### 📝 Summary
