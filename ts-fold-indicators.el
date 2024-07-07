@@ -330,6 +330,7 @@ Argument FOLDED holds folding state; it's a boolean."
 (defun ts-fold-indicators--post-command ()
   "Post command."
   (when ts-fold-indicators--render-this-command-p
+    (set-window-parameter nil 'window-end nil)
     (ts-fold-indicators-refresh)
     (setq ts-fold-indicators--render-this-command-p nil)))
 
@@ -365,7 +366,9 @@ Arguments WEND and WSTART are the range for caching."
            (query (ignore-errors
                     (tsc-make-query tree-sitter-language patterns)))
            (nodes-to-fold (tsc-query-captures query node #'ignore))
-           (wend (window-end nil t))
+           (wend (or (window-parameter nil 'window-end)
+                     (set-window-parameter nil 'window-end
+                                           (window-end nil t))))
            (wstart (window-start))
            (nodes-to-fold
             (cl-remove-if-not (lambda (node)
