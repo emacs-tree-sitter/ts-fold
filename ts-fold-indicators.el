@@ -63,6 +63,11 @@
   :type 'hook
   :group 'ts-fold)
 
+(defcustom ts-fold-indicators-render-delay 0.1
+  "Seconds before rendering indicators."
+  :type 'float
+  :group 'ts-fold)
+
 (fringe-helper-define 'ts-fold-indicators-fr-plus nil
   "XXXXXXX"
   "X.....X"
@@ -308,8 +313,10 @@ Argument FOLDED holds folding state; it's a boolean."
   (let ((timer (window-parameter window 'ts-fold-indicators-render-timer)))
     (when (timerp timer)
       (cancel-timer timer))
-    (set-window-parameter window 'ts-fold-indicators-render-timer
-                          (run-with-timer 0.0 nil #'ts-fold-indicators-refresh window))))
+    (set-window-parameter
+     window 'ts-fold-indicators-render-timer
+     (run-with-idle-timer ts-fold-indicators-render-delay
+                          nil #'ts-fold-indicators-refresh window))))
 
 (defun ts-fold-indicators--size-change (&optional frame &rest _)
   "Render indicators for all visible windows from FRAME."
