@@ -123,7 +123,6 @@
       (progn
         (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render nil t)
         (add-hook 'after-save-hook #'ts-fold-indicators--trigger-render nil t)
-        (add-hook 'pre-command-hook #'ts-fold-indicators--pre-command nil t)
         (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
         (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
         (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
@@ -134,7 +133,6 @@
   "Disable `ts-fold-indicators' mode."
   (remove-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render t)
   (remove-hook 'after-save-hook #'ts-fold-indicators--trigger-render t)
-  (remove-hook 'pre-command-hook #'ts-fold-indicators--pre-command t)
   (remove-hook 'post-command-hook #'ts-fold-indicators--post-command t)
   (remove-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
   (remove-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
@@ -330,10 +328,6 @@ Argument FOLDED holds folding state; it's a boolean."
   "Trigger rendering on the next redisplay."
   (setq ts-fold-indicators--render-this-command-p t))  ; Trigger render at the end.
 
-(defun ts-fold-indicators--pre-command ()
-  "Pre command."
-  (set-window-parameter nil 'window-end nil))
-
 (defun ts-fold-indicators--post-command ()
   "Post command."
   (when ts-fold-indicators--render-this-command-p
@@ -372,9 +366,7 @@ Arguments WEND and WSTART are the range for caching."
            (query (ignore-errors
                     (tsc-make-query tree-sitter-language patterns)))
            (nodes-to-fold (tsc-query-captures query node #'ignore))
-           (wend (or (window-parameter nil 'window-end)
-                     (set-window-parameter nil 'window-end
-                                           (window-end nil t))))
+           (wend   (window-end nil t))
            (wstart (window-start))
            (nodes-to-fold
             (cl-remove-if-not (lambda (node)
