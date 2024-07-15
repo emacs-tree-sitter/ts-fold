@@ -308,7 +308,8 @@ Argument FOLDED holds folding state; it's a boolean."
 (defun ts-fold-indicators--size-change (&optional frame &rest _)
   "Render indicators for all visible windows from FRAME."
   (ts-fold--with-no-redisplay
-    (dolist (win (window-list frame)) (ts-fold-indicators--render-window win))))
+    (dolist (win (get-buffer-window-list))
+      (ts-fold-indicators--render-window win))))
 
 (defun ts-fold-indicators--scroll (&optional window &rest _)
   "Render indicators on WINDOW."
