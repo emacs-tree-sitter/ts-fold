@@ -305,7 +305,7 @@ Argument FOLDED holds folding state; it's a boolean."
     (let ((folded (ts-fold-overlay-at node)))
       (ts-fold-indicators--create-overlays beg end folded))))
 
-(defun ts-fold-indicators--size-change (&optional frame &rest _)
+(defun ts-fold-indicators--size-change (&optional _frame &rest _)
   "Render indicators for all visible windows from FRAME."
   (ts-fold--with-no-redisplay
     (dolist (win (get-buffer-window-list))
