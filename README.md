@@ -637,7 +637,7 @@ To look for the correct node you have three options:
 - `(message "%S" (tsc-node-to-sexp))` in your function to display what your
   function is seeing
 
-> ⚠️ Warning
+> [!WARNING]
 >
 > Make sure you look into the correct repository. Repositories are managed
 > under [tree-sitter-langs](https://github.com/emacs-tree-sitter/tree-sitter-langs)'s
