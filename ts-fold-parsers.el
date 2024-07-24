@@ -72,6 +72,8 @@
 (declare-function ts-fold-range-lua-do-loop "ts-fold.el")
 (declare-function ts-fold-range-lua-repeat "ts-fold.el")
 (declare-function ts-fold-range-make-recipe "ts-fold.el")
+(declare-function ts-fold-markdown-heading "treesit-fold.el")
+(declare-function ts-fold-markdown-code-block "treesit-fold.el")
 (declare-function ts-fold-range-matlab-function "ts-fold.el")
 (declare-function ts-fold-range-matlab-statements "ts-fold.el")
 (declare-function ts-fold-range-matlab-blocks "ts-fold.el")
@@ -430,7 +432,8 @@
 
 (defun ts-fold-parsers-markdown ()
   "Rule set for Markdown."
-  '((fenced_code_block . (ts-fold-range-seq 2 -2))
+  '((fenced_code_block . ts-fold-markdown-code-block)
+    (section           . ts-fold-markdown-heading)
     (html_block        . ts-fold-range-html)))
 
 (defun ts-fold-parsers-matlab ()
