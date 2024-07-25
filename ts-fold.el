@@ -536,13 +536,13 @@ then return the last iterated node.
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
   (let* ((iter-node node) (last-node node)
-         (last-line (car (tsc-node-start-position node))) line text break
+         (last-line (car (tsc-node-start-point node))) line text break
          (line-range 1) (last-line-range 1) max-line-range
          (indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
          next-indentation)
     (while (and iter-node (not break))
       (setq text (string-trim (tsc-node-text iter-node))
-            line (car (tsc-node-start-position iter-node))
+            line (car (tsc-node-start-point iter-node))
             line-range (1+ (ts-fold--count-matches "\n" text))
             max-line-range (max line-range last-line-range)
             next-indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
