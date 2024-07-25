@@ -1088,7 +1088,7 @@ more information."
               (end (tsc-node-end-position last-child)))
     (ts-fold--cons-add (cons beg end) offset)))
 
-(defun ts-fold-markdown-next-heading (node siblings)
+(defun ts-fold-range-markdown-next-heading (node siblings)
   "Return first heading from SIBLINGS with start point after NODE.
 If there is no sibling, then return nil."
   (or
@@ -1100,7 +1100,7 @@ If there is no sibling, then return nil."
     (remove node siblings))
    (tsc-get-next-sibling (tsc-get-parent node))))
 
-(defun ts-fold-markdown-heading (node offset)
+(defun ts-fold-range-markdown-heading (node offset)
   "Define fold range for Markdown headings.
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
@@ -1111,12 +1111,12 @@ more information."
        (beg  (tsc-node-start-position node))
        (siblings (ts-fold-find-children parent "section"))
        (end (1- (or (ignore-errors (tsc-node-start-position
-                                    (ts-fold-markdown-next-heading node siblings)))
+                                    (ts-fold-range-markdown-next-heading node siblings)))
                     (point-max))))
        (name (length (string-trim (or (tsc-node-text head) "")))))
     (ts-fold--cons-add (cons beg end) (cons name 0) offset)))
 
-(defun ts-fold-markdown-code-block (node offset)
+(defun ts-fold-range-markdown-code-block (node offset)
   "Define fold range for Markdown code blocks.
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
@@ -1126,6 +1126,15 @@ more information."
                      (or (tsc-node-text (tsc-get-nth-child node 1))
                          "")))))
     (ts-fold--cons-add (cons beg end) (cons name -2) offset)))
+
+(defun ts-fold-range-markdown-html-block (node offset)
+  "Define fold range for Markdown `html_block'.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (+ (tsc-node-start-position node) 2))
+         (end (- (tsc-node-end-position node) 3)))
+    (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-matlab-blocks (node offset)
   "Define fold range for MATLAB blocks.

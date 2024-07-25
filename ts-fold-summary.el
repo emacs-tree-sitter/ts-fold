@@ -89,7 +89,8 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--doc-extract (doc-str sym)
   "Default way to extract the doc summary from DOC-STR using SYM."
-  (let* ((lines (ts-fold-summary--extract-summary doc-str sym)) (summary (nth 0 lines)))
+  (let* ((lines (ts-fold-summary--extract-summary doc-str sym))
+         (summary (nth 0 lines)))
     (when summary (setq summary (string-trim summary)))
     (if (string-empty-p summary) nil summary)))
 
@@ -159,8 +160,8 @@ type of content by checking the word boundary's existence."
 (defun ts-fold-summary-c-macro (doc-str)
   "Parse C macro summary from DOC-STR."
   (when (ts-fold--is-face doc-str
-                          '(font-lock-preprocessor-face
-                            preproc-font-lock-preprocessor-background))
+                          '( font-lock-preprocessor-face
+                             preproc-font-lock-preprocessor-background))
     (ts-fold-summary--doc-extract doc-str "")))
 
 (defun ts-fold-summary-c (doc-str)

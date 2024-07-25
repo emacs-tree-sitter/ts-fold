@@ -90,13 +90,13 @@ Like function `s-count-matches' but faster."
 ;;
 
 (defvar ts-fold--doc-faces
-  '(font-lock-doc-face
-    font-lock-comment-face
-    font-lock-comment-delimiter-face
-    tree-sitter-hl-face:comment
-    tree-sitter-hl-face:doc
-    hl-todo
-    rst-comment)
+  '( font-lock-doc-face
+     font-lock-comment-face
+     font-lock-comment-delimiter-face
+     tree-sitter-hl-face:comment
+     tree-sitter-hl-face:doc
+     hl-todo
+     rst-comment)
   "List of face that apply for document string.")
 
 (defun ts-fold--get-face (obj trim)
