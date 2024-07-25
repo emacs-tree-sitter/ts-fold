@@ -547,13 +547,13 @@ then return the last iterated node.
 Argument NEXT is a boolean type.  If non-nil iterate forward; otherwise iterate
 in backward direction."
   (let* ((iter-node node) (last-node node)
-         (last-line (car (tsc-node-start-point node))) line text break
+         (last-line (car (tsc-node-start-position node))) line text break
          (line-range 1) (last-line-range 1) max-line-range
          (indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
          next-indentation)
     (while (and iter-node (not break))
       (setq text (string-trim (tsc-node-text iter-node))
-            line (car (tsc-node-start-point iter-node))
+            line (car (tsc-node-start-position iter-node))
             line-range (1+ (ts-fold--count-matches "\n" text))
             max-line-range (max line-range last-line-range)
             next-indentation (ts-fold--indentation (tsc-node-start-position iter-node)))
@@ -1086,6 +1086,54 @@ more information."
   (when-let* ((last-child (ts-fold-last-child node))
               (beg (tsc-node-start-position node))
               (end (tsc-node-end-position last-child)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-markdown-next-heading (node siblings)
+  "Return first heading from SIBLINGS with start point after NODE.
+If there is no sibling, then return nil."
+  (or
+   (seq-find
+    (lambda (n)
+      (when-let ((child (tsc-get-nth-child n 0)))
+        (and (> (tsc-node-start-position child) (tsc-node-start-position node))
+             (ts-fold--compare-type child "atx_heading"))))
+    (remove node siblings))
+   (tsc-get-next-sibling (tsc-get-parent node))))
+
+(defun ts-fold-range-markdown-heading (node offset)
+  "Define fold range for Markdown headings.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let*
+      ((parent (tsc-get-parent node))
+       (head (tsc-get-nth-child node 0))
+       (beg  (tsc-node-start-position node))
+       (siblings (ts-fold-find-children parent "section"))
+       (end (1- (or (ignore-errors (tsc-node-start-position
+                                    (ts-fold-range-markdown-next-heading node siblings)))
+                    (point-max))))
+       (name (length (string-trim (or (tsc-node-text head) "")))))
+    (ts-fold--cons-add (cons beg end) (cons name 0) offset)))
+
+(defun ts-fold-range-markdown-code-block (node offset)
+  "Define fold range for Markdown code blocks.
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (1+ (tsc-node-start-position node)))
+         (end (1- (tsc-node-end-position node)))
+         (name (+ 2 (length
+                     (or (tsc-node-text (tsc-get-nth-child node 1))
+                         "")))))
+    (ts-fold--cons-add (cons beg end) (cons name -2) offset)))
+
+(defun ts-fold-range-markdown-html-block (node offset)
+  "Define fold range for Markdown `html_block'.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (let* ((beg (+ (tsc-node-start-position node) 2))
+         (end (- (tsc-node-end-position node) 3)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-matlab-blocks (node offset)
