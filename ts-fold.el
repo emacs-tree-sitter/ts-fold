@@ -347,16 +347,17 @@ This function is borrowed from `tree-sitter-node-at-point'."
            (end (cdr range))
            (ov (make-overlay beg end))
            (map (make-sparse-keymap)))
-      (keymap-set map "<mouse-1>" #'ts-fold-open)
+      (define-key map (kbd "<mouse-1>") #'ts-fold-open)
       (overlay-put ov 'creator 'ts-fold)
       (overlay-put ov 'priority ts-fold-priority)
       (overlay-put ov 'invisible 'ts-fold)
-      (overlay-put ov 'display (or (and ts-fold-summary-show
+      (overlay-put ov 'display
+                   (propertize (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
-                                   (propertize ts-fold-replacement
-                                               'mouse-face 'ts-fold-replacement-mouse-face
-                                               'help-echo "mouse-1: unfold this node"
-                                               'keymap map)))
+                                   ts-fold-replacement)
+                               'mouse-face 'ts-fold-replacement-mouse-face
+                               'help-echo "mouse-1: unfold this node"
+                               'keymap map))
       (overlay-put ov 'face 'ts-fold-replacement-face)
       (overlay-put ov 'modification-hooks '(ts-fold--on-change))
       (overlay-put ov 'insert-in-front-hooks '(ts-fold--on-change))
