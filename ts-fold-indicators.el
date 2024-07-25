@@ -119,15 +119,12 @@
 
 (defun ts-fold-indicators--enable ()
   "Enable `ts-fold-indicators' mode."
-  (if (or ts-fold-mode (ts-fold-mode 1))  ; Enable `ts-fold-mode' automatically
-      (progn
-        (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render nil t)
-        (add-hook 'after-save-hook #'ts-fold-indicators--trigger-render nil t)
-        (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
-        (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
-        (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
-        (ts-fold-indicators--render-buffer))
-    (ts-fold-indicators-mode -1)))
+  (add-hook 'tree-sitter-after-change-functions #'ts-fold-indicators--trigger-render nil t)
+  (add-hook 'after-save-hook #'ts-fold-indicators--trigger-render nil t)
+  (add-hook 'post-command-hook #'ts-fold-indicators--post-command nil t)
+  (add-hook 'window-size-change-functions #'ts-fold-indicators--size-change)
+  (add-hook 'window-scroll-functions #'ts-fold-indicators--scroll)
+  (ts-fold-indicators--render-buffer))
 
 (defun ts-fold-indicators--disable ()
   "Disable `ts-fold-indicators' mode."
@@ -150,25 +147,14 @@
     #'ts-fold-indicators--disable))
 
 ;;;###autoload
-(define-minor-mode global-ts-fold-indicators-mode
-  "Global minor mode for turning on ts-fold with indicators whenever avaliable."
-  :group 'ts-fold
-  :lighter nil
-  :init-value nil
-  :global t
-  (cond (global-ts-fold-indicators-mode
-         (add-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
-         (global-ts-fold-mode 1)  ; Must enabled!
-         (dolist (buf (buffer-list))
-           (with-current-buffer buf
-             (when (and ts-fold-mode (not ts-fold-indicators-mode))
-               (ts-fold-indicators-mode 1)))))
-        (t
-         (remove-hook 'ts-fold-mode-hook #'ts-fold-indicators-mode)
-         (dolist (buf (buffer-list))
-           (with-current-buffer buf
-             (when (and ts-fold-mode ts-fold-indicators-mode)
-               (ts-fold-indicators-mode -1)))))))
+(define-globalized-minor-mode global-ts-fold-indicators-mode
+  ts-fold-indicators-mode ts-fold-indicators--trigger
+  :group 'ts-fold)
+
+(defun ts-fold-indicators--trigger ()
+  "Enable `ts-fold-indicators-mode' when `ts-fold-mode' can be enabled."
+  (when (or ts-fold-mode (ts-fold-mode 1))
+    (ts-fold-indicators-mode 1)))
 
 ;;
 ;; (@* "Events" )

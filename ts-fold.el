@@ -240,9 +240,8 @@ For example, Lua, Ruby, etc."
 (defun ts-fold--tree-sitter-trigger ()
   "Turn `ts-fold-mode' on and off alongside `tree-sitter-mode' when in a mode
 ts-fold can act on."
-  (if (and tree-sitter-mode (ts-fold-usable-mode-p))
-      (ts-fold-mode 1)
-    (ts-fold-mode -1)))
+  (when (and tree-sitter-mode (ts-fold-usable-mode-p))
+    (ts-fold-mode 1)))
 
 ;;;###autoload
 (define-minor-mode ts-fold-mode
@@ -255,20 +254,9 @@ ts-fold can act on."
     #'ts-fold--disable))
 
 ;;;###autoload
-(define-minor-mode global-ts-fold-mode
-  "Use `ts-fold-mode' wherever possible."
-  :group 'ts-fold
-  :init-value nil
-  :lighter nil
-  :global t
-  (if global-ts-fold-mode
-      (progn
-        (add-hook 'tree-sitter-mode-hook #'ts-fold--tree-sitter-trigger)
-        ;; try to turn on in all buffers.
-        (dolist (buf (buffer-list))
-          (with-current-buffer buf
-            (ts-fold--tree-sitter-trigger))))
-    (remove-hook 'tree-sitter-mode-hook #'ts-fold--tree-sitter-trigger)))
+(define-globalized-minor-mode global-ts-fold-mode
+  ts-fold-mode ts-fold--tree-sitter-trigger
+  :group 'treesit-fold)
 
 (defun ts-fold-usable-mode-p (&optional mode)
   "Return non-nil if `ts-fold' has defined folds for MODE."
