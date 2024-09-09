@@ -491,7 +491,9 @@
     (list_expression    . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
-         (ts-fold-range-line-comment node offset "#")))))
+         (if (string-prefix-p "#" (tsc-node-text node))
+             (ts-fold-range-line-comment node offset "#")
+           (ts-fold-range-c-like-comment node offset))))))
 
 (defun ts-fold-parsers-ocaml ()
   "Rule set for OCaml."
