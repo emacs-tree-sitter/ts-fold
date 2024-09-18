@@ -1,6 +1,6 @@
 # These are supported funding model platforms
 
-github: jcs090218
+github: [emacs-tree-sitter, jcs090218]
 patreon: jcs090218  # Replace with a single Patreon username
 open_collective: # replace with a single OpenCollective username
 ko_fi: # Replace with a single Ko-fi username
