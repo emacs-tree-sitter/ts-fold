@@ -88,6 +88,7 @@
     (jenkinsfile-mode       . ,(ts-fold-parsers-groovy))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
     (haxe-mode              . ,(ts-fold-parsers-haxe))
+    (heex-mode              . ,(ts-fold-parsers-heex))
     (hlsl-mode              . ,(ts-fold-parsers-hlsl))
     (html-mode              . ,(ts-fold-parsers-html))
     (jai-mode               . ,(ts-fold-parsers-jai))
