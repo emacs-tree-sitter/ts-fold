@@ -294,7 +294,7 @@
   '((block    . ts-fold-range-seq)
     (comment  . ts-fold-range-c-like-comment)))
 
-(defun treesit-fold-parsers-heex ()
+(defun ts-fold-parsers-heex ()
   "Rule set for Heex."
   '((tag       . ts-fold-range-html)
     (component . ts-fold-range-html)
