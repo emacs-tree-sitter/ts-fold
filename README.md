@@ -120,7 +120,7 @@ These languages are fairly complete:
 - Elisp / Elixir / Erlang
 - Fish
 - GDScript / GLSL / Go / Groovy (Jenkinsfile)
-- Haskell / Haxe / HLSL / HTML
+- Haskell / Haxe / HEEx / HLSL / HTML
 - Jai / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
 - LaTex / Lisp / Lua
