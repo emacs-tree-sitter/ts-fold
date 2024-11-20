@@ -40,6 +40,15 @@
                  (integer :tag "positive integer number"))
   :group 'ts-fold)
 
+(defcustom ts-fold-summary-format " <S> %s "
+  "Prefix string added before summary overlay."
+  :type 'string
+  :group 'ts-fold)
+
+;;
+;; (@* "Obsolete" )
+;;
+
 (defcustom ts-fold-summary-exceeded-string "..."
   "String that added after display summary.
 This happens only when summary length is larger than variable
@@ -47,10 +56,11 @@ This happens only when summary length is larger than variable
   :type 'string
   :group 'ts-fold)
 
-(defcustom ts-fold-summary-format " <S> %s "
-  "Prefix string added before summary overlay."
-  :type 'string
-  :group 'ts-fold)
+(define-obsolete-variable-alias
+  'ts-fold-summary-exceeded-string
+  'truncate-string-ellipsis
+  "ts-fold 0.4.0"
+  "Use built-in variable instead.")
 
 ;;
 ;; (@* "Externals" )
@@ -215,6 +225,7 @@ type of content by checking the word boundary's existence."
     (csharp-mode            . ts-fold-summary-csharp)
     (css-mode               . ts-fold-summary-javadoc)
     (dart-mode              . ts-fold-summary-javadoc)
+    (editorconfig-conf-mode . ts-fold-summary-ruby-doc)
     (emacs-lisp-mode        . ts-fold-summary-elisp)
     (elixir-mode            . ts-fold-summary-ruby-doc)
     (erlang-mode            . ts-fold-summary-tex-doc)
@@ -291,11 +302,12 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--keep-length (summary)
   "Keep the SUMMARY length to `ts-fold-summary-max-length'."
-  (let ((len-sum (length summary))
-        (len-exc (length ts-fold-summary-exceeded-string)))
+  (let ((len-sum (length summary)))
     (when (< ts-fold-summary-max-length len-sum)
-      (setq summary (substring summary 0 (- ts-fold-summary-max-length len-exc))
-            summary (concat summary ts-fold-summary-exceeded-string))))
+      (setq summary (truncate-string-to-width summary
+                                              ts-fold-summary-max-length
+                                              0 nil
+                                              t))))
   summary)
 
 (defun ts-fold-summary--apply-format (summary)
