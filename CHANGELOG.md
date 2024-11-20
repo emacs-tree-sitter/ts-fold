@@ -21,6 +21,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * fix: Respect same line folding from close all (dea3ee7e21eb867b5293c9ce455704ff23a96cad)
 * feat: Add HEEx support (9d6ee0e46890acea9cb365b3b64b1261b1984920)
 * feat: Obsolete the variable `ts-fold-summary-exceeded-string`
+* feat: Add `EditorConfig` support (#126)
 
 ## 0.3.0
 > Released Nov 29, 2023

@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'mule-util)
+
 (require 's)
 
 (require 'ts-fold-util)
