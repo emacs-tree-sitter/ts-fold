@@ -87,6 +87,7 @@
 (declare-function ts-fold-range-org-body "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
 (declare-function ts-fold-range-cmake-body "ts-fold.el")
+(declare-function ts-fold-range-editorconfig-section "ts-fold.el")
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
@@ -214,6 +215,15 @@
     (comment               . ts-fold-range-c-like-comment)
     (documentation_comment . ts-fold-range-c-like-comment)
     (list_literal          . ts-fold-range-seq)))  ; array
+
+(defun ts-fold-parsers-editorconfig ()
+  "Rule set for EditorConfig."
+  '((section . ts-fold-range-editorconfig-section)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     "#")))))
 
 (defun ts-fold-parsers-elisp ()
   "Rule set for Elisp."
