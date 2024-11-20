@@ -76,6 +76,7 @@
     (csharp-mode            . ,(ts-fold-parsers-csharp))
     (css-mode               . ,(ts-fold-parsers-css))
     (dart-mode              . ,(ts-fold-parsers-dart))
+    (editorconfig-conf-mode . ,(ts-fold-parsers-editorconfig))
     (emacs-lisp-mode        . ,(ts-fold-parsers-elisp))
     (elixir-mode            . ,(ts-fold-parsers-elixir))
     (erlang-mode            . ,(ts-fold-parsers-erlang))
@@ -477,7 +478,7 @@ If the current node is not folded or not foldable, do nothing."
   "Unfold all syntax nodes in the buffer."
   (interactive)
   (ts-fold--ensure-ts
-    (when-let ((nodes (ts-fold--overlays-in 'invisible 'ts-fold)))
+    (when-let* ((nodes (ts-fold--overlays-in 'invisible 'ts-fold)))
       (mapc #'delete-overlay nodes)
       (run-hooks 'ts-fold-on-fold-hook)
       t)))
@@ -574,14 +575,14 @@ START-SEQ and LAST-SEQ can be named tree-sitter nodes or anonomous nodes.
 If no occurence is found for START-SEQ or END-SEQ or the
 occurences overlap, then the range returned is nil."
   (when start-seq
-    (when-let ((beg-node (car (ts-fold-find-children node start-seq)))
-               (end-node (if end-seq
-                             (car (last (ts-fold-find-children node end-seq)))
-                           node))
-               (beg (tsc-node-end-position beg-node))
-               (end (if end-seq
-                        (tsc-node-start-position end-node)
-                      (1- (tsc-node-end-position node)))))
+    (when-let* ((beg-node (car (ts-fold-find-children node start-seq)))
+                (end-node (if end-seq
+                              (car (last (ts-fold-find-children node end-seq)))
+                            node))
+                (beg (tsc-node-end-position beg-node))
+                (end (if end-seq
+                         (tsc-node-start-position end-node)
+                       (1- (tsc-node-end-position node)))))
       (unless (> beg end) (ts-fold--cons-add (cons beg end) offset)))))
 
 (defun ts-fold-range-line-comment (node offset prefix)
@@ -729,6 +730,26 @@ more information."
               (end (tsc-node-end-position node)))
     (when ts-fold-on-next-line  ; display nicely
       (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-editorconfig-end-section (node)
+  "Return the section NODE's end point."
+  (let ((pt (tsc-node-end-position node))
+        (children (reverse (ts-fold-get-children node))))
+    (cl-some (lambda (child)
+               (when (equal 'pair (tsc-node-type child))
+                 (setq pt (tsc-node-end-position child))))
+             children)
+    pt))
+
+(defun ts-fold-range-editorconfig-section (node offset)
+  "Return the fold range for `section' NODE in EditorConfig.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((end-bracket (car (ts-fold-find-children node "]")))
+              (beg (tsc-node-end-position end-bracket))
+              (end (1- (ts-fold-range-editorconfig-end-section node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-elisp-function (node offset)
@@ -1331,9 +1352,9 @@ more information."
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-start-position node))
-              (end (cond ((when-let ((next (tsc-get-next-sibling node)))
+              (end (cond ((when-let* ((next (tsc-get-next-sibling node)))
                             (tsc-node-start-position next)))
-                         ((when-let ((parent (ts-fold-find-parent node "if")))
+                         ((when-let* ((parent (ts-fold-find-parent node "if")))
                             (- (tsc-node-end-position parent) 3))))))
     (when ts-fold-on-next-line  ; display nicely
       (setq end (ts-fold--last-eol end)))
