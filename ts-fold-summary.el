@@ -48,23 +48,6 @@
   :group 'ts-fold)
 
 ;;
-;; (@* "Obsolete" )
-;;
-
-(defcustom ts-fold-summary-exceeded-string "..."
-  "String that added after display summary.
-This happens only when summary length is larger than variable
-`ts-fold-summary-max-length'."
-  :type 'string
-  :group 'ts-fold)
-
-(define-obsolete-variable-alias
-  'ts-fold-summary-exceeded-string
-  'truncate-string-ellipsis
-  "ts-fold 0.4.0"
-  "Use built-in variable instead.")
-
-;;
 ;; (@* "Externals" )
 ;;
 
