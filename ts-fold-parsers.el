@@ -328,6 +328,14 @@
     (block_comment    . ts-fold-range-block-comment)
     (inline_comment   . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-janet ()
+  "Rule set for Janet."
+  '((par_tup_lit . ts-fold-range-seq)
+    (sqr_tup_lit . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-java ()
   "Rule set for Java."
   '((switch_block                    . ts-fold-range-seq)

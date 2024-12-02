@@ -226,6 +226,7 @@ type of content by checking the word boundary's existence."
     (hlsl-mode              . ts-fold-summary-c)
     (html-mode              . ts-fold-summary-xml)
     (jai-mode               . ts-fold-summary-c)
+    (janet-mode             . ts-fold-summary-ruby-doc)
     (java-mode              . ts-fold-summary-javadoc)
     (javascript-mode        . ts-fold-summary-javadoc)
     (js-mode                . ts-fold-summary-javadoc)
