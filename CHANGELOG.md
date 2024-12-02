@@ -22,6 +22,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * feat: Add HEEx support (9d6ee0e46890acea9cb365b3b64b1261b1984920)
 * feat: Obsolete the variable `ts-fold-summary-exceeded-string` (#125)
 * feat: Add `EditorConfig` support (#126)
+* feat: Add `Janet` support (#127)
 
 ## 0.3.0
 > Released Nov 29, 2023

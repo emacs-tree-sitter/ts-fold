@@ -93,6 +93,7 @@
     (hlsl-mode              . ,(ts-fold-parsers-hlsl))
     (html-mode              . ,(ts-fold-parsers-html))
     (jai-mode               . ,(ts-fold-parsers-jai))
+    (janet-mode             . ,(ts-fold-parsers-janet))
     (java-mode              . ,(ts-fold-parsers-java))
     (javascript-mode        . ,(ts-fold-parsers-javascript))
     (js-mode                . ,(ts-fold-parsers-javascript))
