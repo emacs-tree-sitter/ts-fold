@@ -714,8 +714,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((param-node (car (ts-fold-find-children node "vec_lit")))
-              (next-node (tsc-get-next-sibling param-node))
+  (when-let* ((name-node (nth 1 (ts-fold-find-children node "sym_lit")))
+              (next-node (tsc-get-next-sibling name-node))
               (beg (tsc-node-start-position next-node))
               (end (1- (tsc-node-end-position node))))
     (unless ts-fold-on-next-line  ; display nicely

@@ -175,7 +175,9 @@
     (str_lit  . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
-         (ts-fold-range-line-comment node offset ";;")))))
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     ";;")))))
 
 (defun ts-fold-parsers-cmake ()
   "Rule set for CMake."
