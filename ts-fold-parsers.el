@@ -648,14 +648,12 @@
 
 (defun ts-fold-parsers-swift ()
   "Rule set for Swift."
-  '((switch_statement      . ts-fold-range-seq)
-    (function_declaration  . ts-fold-range-seq)
-    (enum_declaration      . ts-fold-range-seq)
-    (struct_declaration    . ts-fold-range-seq)
-    (class_declaration     . ts-fold-range-seq)
-    (protocol_declaration  . ts-fold-range-seq)
-    (extension_declaration . ts-fold-range-seq)
-    (comment               . ts-fold-range-c-like-comment)))
+  '((function_body     . ts-fold-range-seq)
+    (class_body        . ts-fold-range-seq)
+    (enum_class_body   . ts-fold-range-seq)
+    (protocol_body     . ts-fold-range-seq)
+    (multiline_comment . ts-fold-range-c-like-comment)
+    (comment           . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-tablegen ()
   "Rule set for Tablegen."
