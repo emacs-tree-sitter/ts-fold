@@ -744,11 +744,11 @@ more information."
   "Return the section NODE's end point."
   (let ((pt (tsc-node-end-position node))
         (children (reverse (ts-fold-get-children node))))
-    (cl-some (lambda (child)
-               (when (equal 'pair (tsc-node-type child))
-                 (setq pt (tsc-node-end-position child))))
-             children)
-    pt))
+    (or (cl-some (lambda (child)
+                   (when (equal 'pair (tsc-node-type child))
+                     (tsc-node-end-position child)))
+                 children)
+        pt)))
 
 (defun ts-fold-range-editorconfig-section (node offset)
   "Return the fold range for `section' NODE in EditorConfig.
