@@ -288,13 +288,11 @@ type of content by checking the word boundary's existence."
 
 (defun ts-fold-summary--keep-length (summary)
   "Keep the SUMMARY length to `ts-fold-summary-max-length'."
-  (let ((len-sum (length summary)))
-    (when (< ts-fold-summary-max-length len-sum)
-      (setq summary (truncate-string-to-width summary
-                                              ts-fold-summary-max-length
-                                              0 nil
-                                              t))))
-  summary)
+  (when summary
+    (truncate-string-to-width summary
+                              ts-fold-summary-max-length
+                              0 nil
+                              t)))
 
 (defun ts-fold-summary--apply-format (summary)
   "Return the SUMMARY that has added the summary prefix."

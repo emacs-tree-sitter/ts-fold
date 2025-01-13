@@ -37,6 +37,7 @@
 
 ;;; Code:
 
+(require 'mule-util)
 (require 'seq)
 (require 'subr-x)
 
@@ -178,11 +179,6 @@ the fold in a cons cell.  See `ts-fold-range-python-def' for an example."
 This is only used in languages that uses keyword to end the scope.
 For example, Lua, Ruby, etc."
   :type 'boolean
-  :group 'ts-fold)
-
-(defcustom ts-fold-replacement "..."
-  "Show this string instead of the folded text."
-  :type 'string
   :group 'ts-fold)
 
 (defcustom ts-fold-priority 30
@@ -345,7 +341,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
       (overlay-put ov 'display
                    (propertize (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
-                                   ts-fold-replacement)
+                                   (truncate-string-ellipsis))
                                'mouse-face 'ts-fold-replacement-mouse-face
                                'help-echo "mouse-1: unfold this node"
                                'keymap map))
@@ -379,7 +375,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
     (overlay-put ov 'invisible 'ts-fold)
     (overlay-put ov 'display (or (and ts-fold-summary-show
                                       (ts-fold-summary--get (buffer-substring beg end)))
-                                 ts-fold-replacement))
+                                 (truncate-string-ellipsis)))
     (overlay-put ov 'face 'ts-fold-replacement-face))
   (ts-fold-indicators-refresh))
 
