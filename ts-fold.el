@@ -327,6 +327,17 @@ This function is borrowed from `tree-sitter-node-at-point'."
 ;; (@* "Overlays" )
 ;;
 
+(declare-function truncate-string-ellipsis "ext:mule-util.el")
+
+(defun ts-fold--truncate-string-ellipsis ()
+  "Return the ellipsis string."
+  ;; XXX: Function is defined in later version of Emacs, otherwise just
+  ;; fallback to the variable.
+  (if (fboundp 'truncate-string-ellipsis)
+      (truncate-string-ellipsis)
+    (or truncate-string-ellipsis  ; fallback
+        "...")))
+
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
   (when range
@@ -341,7 +352,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
       (overlay-put ov 'display
                    (propertize (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
-                                   (truncate-string-ellipsis))
+                                   (ts-fold--truncate-string-ellipsis))
                                'mouse-face 'ts-fold-replacement-mouse-face
                                'help-echo "mouse-1: unfold this node"
                                'keymap map))
@@ -375,7 +386,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
     (overlay-put ov 'invisible 'ts-fold)
     (overlay-put ov 'display (or (and ts-fold-summary-show
                                       (ts-fold-summary--get (buffer-substring beg end)))
-                                 (truncate-string-ellipsis)))
+                                 (ts-fold--truncate-string-ellipsis)))
     (overlay-put ov 'face 'ts-fold-replacement-face))
   (ts-fold-indicators-refresh))
 
