@@ -37,6 +37,7 @@
 
 ;;; Code:
 
+(require 'mule-util)
 (require 'seq)
 (require 'subr-x)
 
@@ -178,11 +179,6 @@ the fold in a cons cell.  See `ts-fold-range-python-def' for an example."
 This is only used in languages that uses keyword to end the scope.
 For example, Lua, Ruby, etc."
   :type 'boolean
-  :group 'ts-fold)
-
-(defcustom ts-fold-replacement "..."
-  "Show this string instead of the folded text."
-  :type 'string
   :group 'ts-fold)
 
 (defcustom ts-fold-priority 30
@@ -331,6 +327,17 @@ This function is borrowed from `tree-sitter-node-at-point'."
 ;; (@* "Overlays" )
 ;;
 
+(declare-function truncate-string-ellipsis "ext:mule-util.el")
+
+(defun ts-fold--truncate-string-ellipsis ()
+  "Return the ellipsis string."
+  ;; XXX: Function is defined in later version of Emacs, otherwise just
+  ;; fallback to the variable.
+  (if (fboundp 'truncate-string-ellipsis)
+      (truncate-string-ellipsis)
+    (or truncate-string-ellipsis  ; fallback
+        "...")))
+
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
   (when range
@@ -345,7 +352,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
       (overlay-put ov 'display
                    (propertize (or (and ts-fold-summary-show
                                         (ts-fold-summary--get (buffer-substring beg end)))
-                                   ts-fold-replacement)
+                                   (ts-fold--truncate-string-ellipsis))
                                'mouse-face 'ts-fold-replacement-mouse-face
                                'help-echo "mouse-1: unfold this node"
                                'keymap map))
@@ -379,7 +386,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
     (overlay-put ov 'invisible 'ts-fold)
     (overlay-put ov 'display (or (and ts-fold-summary-show
                                       (ts-fold-summary--get (buffer-substring beg end)))
-                                 ts-fold-replacement))
+                                 (ts-fold--truncate-string-ellipsis)))
     (overlay-put ov 'face 'ts-fold-replacement-face))
   (ts-fold-indicators-refresh))
 
@@ -737,11 +744,11 @@ more information."
   "Return the section NODE's end point."
   (let ((pt (tsc-node-end-position node))
         (children (reverse (ts-fold-get-children node))))
-    (cl-some (lambda (child)
-               (when (equal 'pair (tsc-node-type child))
-                 (setq pt (tsc-node-end-position child))))
-             children)
-    pt))
+    (or (cl-some (lambda (child)
+                   (when (equal 'pair (tsc-node-type child))
+                     (tsc-node-end-position child)))
+                 children)
+        pt)))
 
 (defun ts-fold-range-editorconfig-section (node offset)
   "Return the fold range for `section' NODE in EditorConfig.

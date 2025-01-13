@@ -23,6 +23,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * feat: Obsolete the variable `ts-fold-summary-exceeded-string` (#125)
 * feat: Add `EditorConfig` support (#126)
 * feat: Add `Janet` support (#127)
+* refactor: Use built-in ellipsis (#128)
 
 ## 0.3.0
 > Released Nov 29, 2023
