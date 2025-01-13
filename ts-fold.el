@@ -37,7 +37,6 @@
 
 ;;; Code:
 
-(require 'mule-util)
 (require 'seq)
 (require 'subr-x)
 
@@ -326,17 +325,6 @@ This function is borrowed from `tree-sitter-node-at-point'."
 ;;
 ;; (@* "Overlays" )
 ;;
-
-(declare-function truncate-string-ellipsis "ext:mule-util.el")
-
-(defun ts-fold--truncate-string-ellipsis ()
-  "Return the ellipsis string."
-  ;; XXX: Function is defined in later version of Emacs, otherwise just
-  ;; fallback to the variable.
-  (if (fboundp 'truncate-string-ellipsis)
-      (truncate-string-ellipsis)
-    (or truncate-string-ellipsis  ; fallback
-        "...")))
 
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."

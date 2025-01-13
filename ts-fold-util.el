@@ -25,7 +25,15 @@
 
 ;;; Code:
 
+(require 'mule-util)
+
 (require 'tsc)
+
+;;
+;; (@* "Externals" )
+;;
+
+(declare-function truncate-string-ellipsis "ext:mule-util.el")
 
 ;;
 ;; (@* "Redisplay" )
@@ -59,6 +67,19 @@
 
 Like function `s-count-matches' but faster."
   (max 0 (1- (length (split-string str pattern)))))
+
+;;
+;; (@* "Ellipsis" )
+;;
+
+(defun ts-fold--truncate-string-ellipsis ()
+  "Return the ellipsis string."
+  ;; XXX: Function is defined in later version of Emacs, otherwise just
+  ;; fallback to the variable.
+  (if (fboundp 'truncate-string-ellipsis)
+      (truncate-string-ellipsis)
+    (or truncate-string-ellipsis  ; fallback
+        "...")))
 
 ;;
 ;; (@* "Cons" )
