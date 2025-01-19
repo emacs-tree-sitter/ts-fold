@@ -246,7 +246,7 @@ ts-fold can act on."
   "Folding code using tree sitter."
   :group 'ts-fold
   :init-value nil
-  :lighter "TS-Fold"
+  :lighter " TS-Fold"
   (tree-sitter--handle-dependent ts-fold-mode
     #'ts-fold--enable
     #'ts-fold--disable))
