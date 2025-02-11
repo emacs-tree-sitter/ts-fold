@@ -206,7 +206,9 @@ For example, Lua, Ruby, etc."
   :group 'ts-fold)
 
 (defcustom ts-fold-line-count-format
-  (concat (ts-fold--truncate-string-ellipsis) " %d " (ts-fold--truncate-string-ellipsis))
+  (concat (ts-fold--truncate-string-ellipsis)
+          " %d "
+          (ts-fold--truncate-string-ellipsis))
   "Format string for displaying line count in folded text.
 
 The %d will be replaced with the number of lines in the folded region."
@@ -342,15 +344,17 @@ This function is borrowed from `tree-sitter-node-at-point'."
 (defun ts-fold--format-overlay-text (beg end)
   "Return the text to display in the overlay for the fold from BEG to END."
   (let ((summary (and ts-fold-summary-show
-                      (ts-fold-summary--get (buffer-substring beg end))))
-        (line-count (and ts-fold-line-count-show (count-lines beg end))))
+                      (ts-fold-summary--get (buffer-substring beg end)))))
     (cond
-     ((and summary line-count)
-      (format "%s %s" summary (format ts-fold-line-count-format line-count)))
-     ((and summary (not line-count))
-      (format "%s %s" summary (ts-fold--truncate-string-ellipsis)))
-     ((and (not summary) line-count)
-      (format ts-fold-line-count-format line-count))
+     ;; Handle line count display.
+     ((when-let*
+          ((line-count (and ts-fold-line-count-show
+                            (count-lines beg end)))
+           (line-count-str (format ts-fold-line-count-format line-count)))
+        (concat (or summary "") line-count-str)))
+     ;; `summary' handles truncation itself; just return it if not nil.
+     (summary )
+     ;; Fallback to ellipsis.
      (t (ts-fold--truncate-string-ellipsis)))))
 
 (defun ts-fold--create-overlay (range)
