@@ -200,12 +200,13 @@ For example, Lua, Ruby, etc."
   "Face used to display fringe contents."
   :group 'ts-fold)
 
-(defcustom ts-fold-linecount-show t
+(defcustom ts-fold-line-count-show nil
   "Show the number of lines in folded text."
   :type 'boolean
   :group 'ts-fold)
 
-(defcustom ts-fold-linecount-replacement " ... %d ... "
+(defcustom ts-fold-line-count-replacement
+  (concat (ts-fold--truncate-string-ellipsis) " %d " (ts-fold--truncate-string-ellipsis))
   "Format string for displaying line count in folded text.
 The %d will be replaced with the number of lines in the folded region."
   :type 'string
@@ -341,18 +342,15 @@ This function is borrowed from `tree-sitter-node-at-point'."
   "Return the text to display in the overlay for the fold from BEG to END."
   (let ((summary (and ts-fold-summary-show
                       (ts-fold-summary--get (buffer-substring beg end))))
-        (line-count (and ts-fold-linecount-show (count-lines beg end))))
+        (line-count (and ts-fold-line-count-show (count-lines beg end))))
     (cond
      ((and summary line-count)
-      (format "%s %s" summary (format ts-fold-linecount-replacement line-count)))
+      (format "%s %s" summary (format ts-fold-line-count-replacement line-count)))
      ((and summary (not line-count))
       (format "%s %s" summary (ts-fold--truncate-string-ellipsis)))
      ((and (not summary) line-count)
-      (format ts-fold-linecount-replacement line-count))
-     ((and (not summary) (not line-count))
-      (ts-fold--truncate-string-ellipsis))
-     (t
-      (ts-fold--truncate-string-ellipsis)))))
+      (format ts-fold-line-count-replacement line-count))
+     (t (ts-fold--truncate-string-ellipsis)))))
 
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
