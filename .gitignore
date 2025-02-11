@@ -14,5 +14,5 @@ dist/
 *-autoloads.el
 *-pkg.el
 
-# macOS specific
+# OS generated
 .DS_Store
