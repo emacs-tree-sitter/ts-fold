@@ -205,9 +205,10 @@ For example, Lua, Ruby, etc."
   :type 'boolean
   :group 'ts-fold)
 
-(defcustom ts-fold-line-count-replacement
+(defcustom ts-fold-line-count-format
   (concat (ts-fold--truncate-string-ellipsis) " %d " (ts-fold--truncate-string-ellipsis))
   "Format string for displaying line count in folded text.
+
 The %d will be replaced with the number of lines in the folded region."
   :type 'string
   :group 'ts-fold)
@@ -345,11 +346,11 @@ This function is borrowed from `tree-sitter-node-at-point'."
         (line-count (and ts-fold-line-count-show (count-lines beg end))))
     (cond
      ((and summary line-count)
-      (format "%s %s" summary (format ts-fold-line-count-replacement line-count)))
+      (format "%s %s" summary (format ts-fold-line-count-format line-count)))
      ((and summary (not line-count))
       (format "%s %s" summary (ts-fold--truncate-string-ellipsis)))
      ((and (not summary) line-count)
-      (format ts-fold-line-count-replacement line-count))
+      (format ts-fold-line-count-format line-count))
      (t (ts-fold--truncate-string-ellipsis)))))
 
 (defun ts-fold--create-overlay (range)

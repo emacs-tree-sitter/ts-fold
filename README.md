@@ -415,7 +415,7 @@ The following variables let you toggle and customize the display of the line cou
   <img src="./etc/line-count-default.png" width="70%" height="70%"/>
   </p>
 
-- `ts-fold-line-count-replacement`
+- `ts-fold-line-count-format`
 
   This variable defines the format string used for displaying the line
   count in folded text. The `%d` will be replaced with the actual number
@@ -428,7 +428,7 @@ The following variables let you toggle and customize the display of the line cou
   Example:
 
   ```elisp
-  (setq ts-fold-line-count-replacement " <%d lines> ")
+  (setq ts-fold-line-count-format " <%d lines> ")
   ```
 
   <p align="center">
