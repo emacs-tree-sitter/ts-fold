@@ -200,6 +200,21 @@ For example, Lua, Ruby, etc."
   "Face used to display fringe contents."
   :group 'ts-fold)
 
+(defcustom ts-fold-line-count-show nil
+  "Show the number of lines in folded text."
+  :type 'boolean
+  :group 'ts-fold)
+
+(defcustom ts-fold-line-count-format
+  (concat (ts-fold--truncate-string-ellipsis)
+          " %d "
+          (ts-fold--truncate-string-ellipsis))
+  "Format string for displaying line count in folded text.
+
+The %d will be replaced with the number of lines in the folded region."
+  :type 'string
+  :group 'ts-fold)
+
 ;;
 ;; (@* "Externals" )
 ;;
@@ -326,6 +341,22 @@ This function is borrowed from `tree-sitter-node-at-point'."
 ;; (@* "Overlays" )
 ;;
 
+(defun ts-fold--format-overlay-text (beg end)
+  "Return the text to display in the overlay for the fold from BEG to END."
+  (let ((summary (and ts-fold-summary-show
+                      (ts-fold-summary--get (buffer-substring beg end)))))
+    (cond
+     ;; Handle line count display.
+     ((when-let*
+          ((line-count (and ts-fold-line-count-show
+                            (count-lines beg end)))
+           (line-count-str (format ts-fold-line-count-format line-count)))
+        (concat (or summary "") line-count-str)))
+     ;; `summary' handles truncation itself; just return it if not nil.
+     (summary )
+     ;; Fallback to ellipsis.
+     (t (ts-fold--truncate-string-ellipsis)))))
+
 (defun ts-fold--create-overlay (range)
   "Create invisible overlay in RANGE."
   (when range
@@ -338,9 +369,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
       (overlay-put ov 'priority ts-fold-priority)
       (overlay-put ov 'invisible 'ts-fold)
       (overlay-put ov 'display
-                   (propertize (or (and ts-fold-summary-show
-                                        (ts-fold-summary--get (buffer-substring beg end)))
-                                   (ts-fold--truncate-string-ellipsis))
+                   (propertize (ts-fold--format-overlay-text beg end)
                                'mouse-face 'ts-fold-replacement-mouse-face
                                'help-echo "mouse-1: unfold this node"
                                'keymap map))
@@ -372,9 +401,11 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (let ((beg (overlay-start ov))
         (end (overlay-end ov)))
     (overlay-put ov 'invisible 'ts-fold)
-    (overlay-put ov 'display (or (and ts-fold-summary-show
-                                      (ts-fold-summary--get (buffer-substring beg end)))
-                                 (ts-fold--truncate-string-ellipsis)))
+    (overlay-put ov 'display
+                 (propertize (ts-fold--format-overlay-text beg end)
+                             'mouse-face 'ts-fold-replacement-mouse-face
+                             'help-echo "mouse-1: unfold this node"
+                             'keymap (overlay-get ov 'keymap)))
     (overlay-put ov 'face 'ts-fold-replacement-face))
   (ts-fold-indicators-refresh))
 

@@ -31,6 +31,7 @@ to provide code folding based on the tree-sitter syntax tree.
     - [❔ Example](#-example)
     - [↔ Offset](#-offset)
   - [🔍 Writing new fold functions](#-writing-new-fold-functions)
+  - [🔢 Line Count Display](#-line-count-display)
 - [🔌 Plugins](#-plugins)
   - [⚖ Indicators Mode](#-indicators-mode)
     - [💾 Installation](#-installation-1)
@@ -391,6 +392,48 @@ basic `ts-fold-range-seq`.
         (end (1- (tsc-node-end-position node))))   ; node end position
     (ts-fold--cons-add (cons beg end) offset)))    ; return fold range
 ```
+
+### 🔢 Line Count Display
+
+The following variables let you toggle and customize the display of the line count for folded regions.
+
+- `ts-fold-line-count-show`
+
+  This variable controls whether or not the number of lines in a folded text region is displayed.
+
+  Type: `boolean`
+
+  Default: `nil` (line count is not shown)
+
+  If set to `t`, the number of lines in folded regions will be shown.
+
+  Example:
+  ```elisp
+  (setq ts-fold-line-count-show t)  ; Show line count in folded regions
+  ```
+  <p align="center">
+  <img src="./etc/line-count-default.png" width="70%" height="70%"/>
+  </p>
+
+- `ts-fold-line-count-format`
+
+  This variable defines the format string used for displaying the line
+  count in folded text. The `%d` will be replaced with the actual number
+  of lines in the folded region.
+
+  Type: `string`
+
+  Default: `(concat (ts-fold--truncate-string-ellipsis) " %d " (ts-fold--truncate-string-ellipsis))`
+
+  Example:
+
+  ```elisp
+  (setq ts-fold-line-count-format " <%d lines> ")
+  ```
+
+  <p align="center">
+  <img src="./etc/line-count-custom.png" width="70%" height="70%"/>
+  </p>
 
 ## 🔌 Plugins
 
