@@ -24,6 +24,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * feat: Add `EditorConfig` support (#126)
 * feat: Add `Janet` support (#127)
 * refactor: Use built-in ellipsis (#128)
+* feat: add line count to folded text overlay (#129)
 
 ## 0.3.0
 > Released Nov 29, 2023
