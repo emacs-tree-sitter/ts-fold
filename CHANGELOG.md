@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
-## 0.4.0 (Unreleased)
+## 0.5.0 (Unreleased)
 > Released N/A
+
+* N/A
+
+## 0.4.0
+> Released Feb 12, 2025
 
 * Add `LLVM` support (#103)
 * Add `ActionScript` support (#106)
