@@ -1,6 +1,6 @@
 > [!IMPORTANT]
 >
-> This package is code folding support for [tree-sitter.el][] (**support Emacs 26.1+**).
+> This package is code folding support for external [tree-sitter.el][] (**support Emacs 26.1+**).
 > 
 > For built-in [treesit.el][] (**since Emacs 29.1**), please use [treesit-fold][] instead.
 
