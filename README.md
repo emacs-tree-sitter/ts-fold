@@ -1,8 +1,8 @@
 > [!IMPORTANT]
 >
-> This package is code folding support for [tree-sitter.el][] (Emacs 26.1+).
+> This package is code folding support for [tree-sitter.el][] (**support Emacs 26.1+**).
 > 
-> For built-in [treesit.el][] (since Emacs 29.1), please use [treesit-fold][] instead.
+> For built-in [treesit.el][] (**since Emacs 29.1**), please use [treesit-fold][] instead.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![JCS-ELPA](https://raw.githubusercontent.com/jcs-emacs/badges/master/elpa/v/ts-fold.svg)](https://jcs-emacs.github.io/jcs-elpa/#/ts-fold)
@@ -722,6 +722,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 See [`LICENSE`](./LICENSE) for details.
+
 
 <!-- Links -->
 
