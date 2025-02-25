@@ -225,6 +225,11 @@ The %d will be replaced with the number of lines in the folded region."
 (declare-function ts-fold-indicators-mode "ts-fold-indicators.el")
 (declare-function ts-fold-indicators-refresh "ts-fold-indicators.el")
 
+(defun ts-fold--indicators-refresh ()
+  "Safe version of the `ts-fold-indicators-refresh' function."
+  (when (bound-and-true-p ts-fold-indicators-mode)
+    (ts-fold-indicators-refresh)))
+
 ;;
 ;; (@* "Entry" )
 ;;
@@ -282,8 +287,7 @@ ts-fold can act on."
   "Enable line comment folding."
   :group 'ts-fold
   :init-value nil
-  (when (bound-and-true-p ts-fold-indicators-mode)
-    (ts-fold-indicators-refresh)))
+  (ts-fold--indicators-refresh))
 
 ;;
 ;; (@* "Core" )
@@ -395,7 +399,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
   (overlay-put ov 'invisible nil)
   (overlay-put ov 'display nil)
   (overlay-put ov 'face nil)
-  (ts-fold-indicators-refresh))
+  (ts-fold--indicators-refresh))
 
 (defun ts-fold--hide-ov (ov &rest _)
   "Hide the OV."
@@ -408,7 +412,7 @@ This function is borrowed from `tree-sitter-node-at-point'."
                              'help-echo "mouse-1: unfold this node"
                              'keymap (overlay-get ov 'keymap)))
     (overlay-put ov 'face 'ts-fold-replacement-face))
-  (ts-fold-indicators-refresh))
+  (ts-fold--indicators-refresh))
 
 (defun ts-fold-overlay-at (node)
   "Return the ts-fold overlay at NODE if NODE is foldable and folded.
@@ -527,7 +531,7 @@ If the current syntax node is not foldable, do nothing."
 
 (defun ts-fold--after-command (&rest _)
   "Function call after interactive commands."
-  (ts-fold-indicators-refresh))
+  (ts-fold--indicators-refresh))
 
 (let ((commands '(ts-fold-close
                   ts-fold-open
