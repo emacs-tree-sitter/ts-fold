@@ -1,6 +1,7 @@
 ;;; ts-fold-util.el --- Utility module  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2025  emacs-tree-sitter maintainers
+
 ;; Created date 2021-10-04 20:19:42
 
 ;; This file is NOT part of GNU Emacs.
