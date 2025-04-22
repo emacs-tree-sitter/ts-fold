@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "ts-fold"
          "0.4.1"
          "Code folding using tree-sitter")
