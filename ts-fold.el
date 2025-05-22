@@ -274,7 +274,7 @@ ts-fold can act on."
 ;;;###autoload
 (define-globalized-minor-mode global-ts-fold-mode
   ts-fold-mode ts-fold--tree-sitter-trigger
-  :group 'treesit-fold)
+  :group 'ts-fold)
 
 (defun ts-fold-usable-mode-p (&optional mode)
   "Return non-nil if `ts-fold' has defined folds for MODE."
@@ -1324,6 +1324,34 @@ more information."
            (ts-fold-range-seq node (ts-fold--cons-add '(1 . -1) offset)))
           (t
            (ts-fold-range-c-like-comment node offset)))))
+
+(defun ts-fold-range-python-block (node offset)
+  "Define fold range for `if_statement' and other blocks.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((colon-node (car (ts-fold-find-children node ":")))
+              (beg (tsc-node-start-position colon-node)))
+    (let ((current-node (tsc-get-next-sibling colon-node))
+          (last-body-node)
+          (end))
+      ;; Iterate through siblings until we hit an elif or else clause
+      (while (and current-node
+                  (not (member (ts-fold-2str (tsc-node-type current-node))
+                               '("elif_clause" "else_clause" "except_clause"))))
+
+        ;; Only consider non-comment nodes as body nodes
+        (unless (string-match-p "comment" (ts-fold-2str (tsc-node-type current-node)))
+          (setq last-body-node current-node))
+        (setq current-node (tsc-get-next-sibling current-node)))
+
+      ;; Set end position based on the last body node or fallback to node end
+      (setq end (if last-body-node
+                    (tsc-node-end-position last-body-node)
+                  (tsc-node-end-position node)))
+
+      ;; Return the range and offset to fold
+      (ts-fold--cons-add (cons (+ beg 1) end) offset))))
 
 (defun ts-fold-range-python-def (node offset)
   "Define fold range for `function_definition' and `class_definition'.
