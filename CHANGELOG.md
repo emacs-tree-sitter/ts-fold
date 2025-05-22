@@ -8,7 +8,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 0.5.0 (Unreleased)
 > Released N/A
 
-* N/A
+* feat: Improve Python parser (#132)
 
 ## 0.4.0
 > Released Feb 12, 2025
