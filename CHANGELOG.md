@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > Released N/A
 
 * feat: Improve Python parser (#132)
+* feat: Basic `Magik` support (81ae6714387c69415ac3853609224124f6893aa6)
 
 ## 0.4.0
 > Released Feb 12, 2025
