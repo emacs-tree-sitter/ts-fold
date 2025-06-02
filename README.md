@@ -1,7 +1,7 @@
 > [!IMPORTANT]
 >
 > This package is code folding support for external [tree-sitter.el][] (**support Emacs 26.1+**).
-> 
+>
 > For built-in [treesit.el][] (**since Emacs 29.1**), please use [treesit-fold][] instead.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -149,6 +149,7 @@ These languages are in development:
 - Agda
 - Elm
 - Fortran
+- Magik
 - Pascal
 - Smithy
 

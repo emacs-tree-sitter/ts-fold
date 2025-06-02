@@ -452,6 +452,13 @@
     (repeat_statement     . ts-fold-range-lua-repeat)
     (comment              . ts-fold-range-lua-comment)))
 
+(defun ts-fold-parsers-magik ()
+  "Rule set for Magik."
+  '((method . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-make ()
   "Rule set for Make."
   '((recipe . ts-fold-range-make-recipe)

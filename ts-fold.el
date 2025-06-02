@@ -111,6 +111,7 @@
     (llvm-mode              . ,(ts-fold-parsers-llvm))
     (llvm-mir-mode          . ,(ts-fold-parsers-llvm-mir))
     (lua-mode               . ,(ts-fold-parsers-lua))
+    (magik-mode             . ,(ts-fold-parsers-magik))
     (makefile-mode          . ,(ts-fold-parsers-make))
     (makefile-automake-mode . ,(ts-fold-parsers-make))
     (makefile-gmake-mode    . ,(ts-fold-parsers-make))
