@@ -292,6 +292,11 @@
     (interface_type         . (lambda (node offset)
                                 (ts-fold-range-markers node offset "{" "}")))))
 
+(defun ts-fold-parsers-graphql ()
+  "Rule set for GraphQL."
+  '((fields_definition . ts-fold-range-seq)
+    (list_type         . ts-fold-range-seq)))
+
 (defun ts-fold-parsers-groovy ()
   "Rule set for Groovy."
   '((block         . ts-fold-range-groovy-block)

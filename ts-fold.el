@@ -85,6 +85,7 @@
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
+    (graphql-mode           . ,(ts-fold-parsers-graphql))
     (groovy-mode            . ,(ts-fold-parsers-groovy))
     (jenkinsfile-mode       . ,(ts-fold-parsers-groovy))
     (haskell-mode           . ,(ts-fold-parsers-haskell))
