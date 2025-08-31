@@ -126,7 +126,7 @@ These languages are fairly complete:
 - Dart
 - Elisp / Elixir / Erlang
 - Fish
-- GDScript / GLSL / Go / Groovy (Jenkinsfile)
+- GDScript / GLSL / Go / GraphQL / Groovy (Jenkinsfile)
 - Haskell / Haxe / HEEx / HLSL / HTML
 - Jai / Janet / Java / JavaScript / JSX / JSON / Jsonnet / Julia
 - Kotlin
