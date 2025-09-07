@@ -104,6 +104,7 @@
 (declare-function ts-fold-range-verilog-module "ts-fold.el")
 (declare-function ts-fold-range-vhdl-package "ts-fold.el")
 (declare-function ts-fold-range-vhdl-type "ts-fold.el")
+(declare-function ts-fold-range-yaml-seq-item "ts-fold.el")
 
 ;;
 ;; (@* "Parsers" )
@@ -730,6 +731,7 @@
   '((comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))
+    (block_sequence_item . ts-fold-range-yaml-seq-item)
     (block_mapping_pair
      . ((lambda (node offset)
           (ts-fold-range-markers node offset ":"))

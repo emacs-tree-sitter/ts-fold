@@ -1521,5 +1521,15 @@ more information."
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-yaml-seq-item (node offset)
+  "Return the fold range for `block_sequence_item' in YAML.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((first (car (ts-fold-find-children-traverse node "block_mapping_pair")))
+              (beg (tsc-node-end-position first))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (provide 'ts-fold)
 ;;; ts-fold.el ends here
