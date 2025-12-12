@@ -148,6 +148,7 @@
     (conf-toml-mode         . ,(ts-fold-parsers-toml))
     (tuareg-mode            . ,(ts-fold-parsers-ocaml))
     (typescript-mode        . ,(ts-fold-parsers-typescript))
+    (tsx-mode               . ,(ts-fold-parsers-tsx))
     (verilog-mode           . ,(ts-fold-parsers-verilog))
     (vhdl-mode              . ,(ts-fold-parsers-vhdl))
     (nxml-mode              . ,(ts-fold-parsers-xml))

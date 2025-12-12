@@ -707,6 +707,12 @@
      (named_imports . ts-fold-range-seq)
      (object_type   . ts-fold-range-seq))))
 
+(defun ts-fold-parsers-tsx ()
+  "Rule set for TSX files (TypeScript with JSX)."
+  (append
+   (ts-fold-parsers-typescript)
+   '((jsx_element . ts-fold-range-html))))
+
 (defun ts-fold-parsers-verilog ()
   "Rule set for Verilog."
   '((module_declaration       . ts-fold-range-verilog-module)
