@@ -609,8 +609,9 @@
 
 (defun ts-fold-parsers-ron ()
   "Rule set for RON."
-  '((array . ts-fold-range-seq)
-    (map   . ts-fold-range-seq)
+  '((array  . ts-fold-range-seq)
+    (map    . ts-fold-range-seq)
+    (struct . ts-fold-range-seq)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node
