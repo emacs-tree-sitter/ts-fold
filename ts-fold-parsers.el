@@ -607,6 +607,18 @@
   "Rule set for R."
   '((brace_list . ts-fold-range-seq)))
 
+(defun ts-fold-parsers-ron ()
+  "Rule set for RON."
+  '((array  . ts-fold-range-seq)
+    (map    . ts-fold-range-seq)
+    (struct . ts-fold-range-seq)
+    (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node
+                                     (ts-fold--cons-add offset '(0 . -1))
+                                     "///")))
+    (block_comment . ts-fold-range-block-comment)))
+
 (defun ts-fold-parsers-rst ()
   "Rule set for reStructuredText."
   '((body    . ts-fold-range-rst-body)
