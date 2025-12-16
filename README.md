@@ -135,7 +135,7 @@ These languages are fairly complete:
 - Ninja / Nix / Noir
 - OCaml / Org
 - Perl / PHP / Python
-- R / Ruby / Rust / reStructuredText
+- R / RON / Ruby / Rust / reStructuredText
 - Scala / Scheme / SQL / Svelte / Swift
 - TOML / TypeScript / TSX
 - Verilog / VHDL
