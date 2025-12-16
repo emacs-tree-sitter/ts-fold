@@ -266,6 +266,7 @@ type of content by checking the word boundary's existence."
     (python-mode            . ts-fold-summary-python-doc)
     (qss-mode               . ts-fold-summary-css)
     (rjsx-mode              . ts-fold-summary-javadoc)
+    (ron-mode               . ts-fold-summary-rust-doc)
     (rst-mode               . ts-fold-summary-rst-doc)
     (ruby-mode              . ts-fold-summary-ruby-doc)
     (rust-mode              . ts-fold-summary-rust-doc)

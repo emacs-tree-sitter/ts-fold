@@ -133,6 +133,7 @@
     (python-mode            . ,(ts-fold-parsers-python))
     (qss-mode               . ,(ts-fold-parsers-qss))
     (rjsx-mode              . ,(ts-fold-parsers-javascript))
+    (ron-mode               . ,(ts-fold-parsers-ron))
     (rst-mode               . ,(ts-fold-parsers-rst))
     (ruby-mode              . ,(ts-fold-parsers-ruby))
     (rust-mode              . ,(ts-fold-parsers-rust))
