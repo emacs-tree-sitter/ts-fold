@@ -93,6 +93,7 @@
 (declare-function ts-fold-range-python-block "treesit-fold.el")
 (declare-function ts-fold-range-python-def "ts-fold.el")
 (declare-function ts-fold-range-python-expression-statement "ts-fold.el")
+(declare-function ts-fold-range-ron-struct "ts-fold.el")
 (declare-function ts-fold-range-rst-body "ts-fold.el")
 (declare-function ts-fold-range-ruby-class-def "ts-fold.el")
 (declare-function ts-fold-range-ruby-if "ts-fold.el")
@@ -611,7 +612,7 @@
   "Rule set for RON."
   '((array  . ts-fold-range-seq)
     (map    . ts-fold-range-seq)
-    (struct . ts-fold-range-seq)
+    (struct . ts-fold-range-ron-struct)
     (line_comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node

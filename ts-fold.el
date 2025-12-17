@@ -1382,6 +1382,16 @@ more information."
               (end (tsc-node-end-position node)))
     (ts-fold--cons-add (cons (+ beg 3) (- end 3)) offset)))
 
+(defun ts-fold-range-ron-struct (node offset)
+  "Define fold range for `struct' in RON.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((node-bracket (car (ts-fold-find-children node "(")))
+              (beg (tsc-node-end-position node-bracket))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-rst-body (node offset)
   "Define fold range for `body' in reStructuredText.
 
