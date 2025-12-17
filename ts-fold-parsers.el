@@ -705,8 +705,9 @@
 
 (defun ts-fold-parsers-toml ()
   "Rule set for TOML."
-  '((table . ts-fold-range-toml-table)
-    (array . ts-fold-range-seq)
+  '((table        . ts-fold-range-toml-table)
+    (array        . ts-fold-range-seq)
+    (inline_table . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
