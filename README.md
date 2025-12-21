@@ -145,8 +145,7 @@ These languages are fairly complete:
 
 These languages are in development:
 
-- Ada
-- Agda
+- Ada / Agda
 - Elm
 - Fortran
 - Magik
