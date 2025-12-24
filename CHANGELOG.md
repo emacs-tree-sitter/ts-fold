@@ -14,6 +14,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * feat: Add folding for yaml sequence item ([#135](../../pull/135))
 * feat: Add RON support ([#137](../../pull/137))
 * feat: Add `Vimscript` support ([`398a818`](../../commit/398a81860e9d4acb0d6e313711d5c32d5a125f5a))
+* feat: Add `Nim` support ([`b5e292c`](../../commit/b5e292c7e38cd9eac73550e5417b8e1f3aacbcb6))
 
 ## 0.4.0
 > Released Feb 12, 2025

@@ -132,7 +132,7 @@ These languages are fairly complete:
 - Kotlin
 - LaTex / Lisp / Lua
 - Make / MATLAB / Markdown / Mermaid
-- Ninja / Nix / Noir
+- Ninja / Nim / Nix / Noir
 - OCaml / Org
 - Perl / PHP / Python
 - R / RON / Ruby / Rust / reStructuredText
