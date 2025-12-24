@@ -744,12 +744,13 @@
 
 (defun ts-fold-parsers-vim ()
   "Rule set for Vim."
-  '((for_loop         . ts-fold-range-vim-for-loop)
-    (while_loop       . ts-fold-range-vim-for-loop)
-    (if_statement     . ts-fold-range-vim-for-loop)
-    (elseif_statement . ts-fold-range-vim-for-loop)
-    (else_statement   . ts-fold-range-vim-for-loop)
-    (list             . ts-fold-range-seq)
+  '((function_definition . ts-fold-range-vim-for-loop)
+    (for_loop            . ts-fold-range-vim-for-loop)
+    (while_loop          . ts-fold-range-vim-for-loop)
+    (if_statement        . ts-fold-range-vim-for-loop)
+    (elseif_statement    . ts-fold-range-vim-for-loop)
+    (else_statement      . ts-fold-range-vim-for-loop)
+    (list                . ts-fold-range-seq)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "\"")))))
