@@ -124,6 +124,7 @@
     (mermaid-mode           . ,(ts-fold-parsers-mermaid))
     (ninja-mode             . ,(ts-fold-parsers-ninja))
     (noir-mode              . ,(ts-fold-parsers-noir))
+    (nim-mode               . ,(ts-fold-parsers-nim))
     (nix-mode               . ,(ts-fold-parsers-nix))
     (ocaml-mode             . ,(ts-fold-parsers-ocaml))
     (org-mode               . ,(ts-fold-parsers-org))

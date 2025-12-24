@@ -527,6 +527,14 @@
   '((body    . ts-fold-range-seq)
     (comment . ts-fold-range-c-like-comment)))
 
+(defun ts-fold-parsers-nim ()
+  "Rule set for Nim."
+  '((array_construction . ts-fold-range-seq)
+    (for                . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-nix ()
   "Rule set for Nix."
   '((attrset_expression . ts-fold-range-seq)
