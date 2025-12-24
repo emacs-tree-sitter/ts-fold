@@ -138,7 +138,7 @@ These languages are fairly complete:
 - R / RON / Ruby / Rust / reStructuredText
 - Scala / Scheme / SQL / Svelte / Swift
 - TOML / TypeScript / TSX
-- Verilog / VHDL
+- Verilog / VHDL / Vim
 - XML
 - YAML
 - Zig
