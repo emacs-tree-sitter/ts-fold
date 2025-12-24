@@ -105,6 +105,7 @@
 (declare-function ts-fold-range-verilog-module "ts-fold.el")
 (declare-function ts-fold-range-vhdl-package "ts-fold.el")
 (declare-function ts-fold-range-vhdl-type "ts-fold.el")
+(declare-function ts-fold-range-vim-for-loop "ts-fold.el")
 (declare-function ts-fold-range-yaml-seq-item "ts-fold.el")
 
 ;;
@@ -740,6 +741,18 @@
     (full_type_declaration       . ts-fold-range-vhdl-type)
     (enumeration_type_definition . ts-fold-range-seq)
     (comment                     . ts-fold-range-lua-comment)))
+
+(defun ts-fold-parsers-vim ()
+  "Rule set for Vim."
+  '((for_loop         . ts-fold-range-vim-for-loop)
+    (while_loop       . ts-fold-range-vim-for-loop)
+    (if_statement     . ts-fold-range-vim-for-loop)
+    (elseif_statement . ts-fold-range-vim-for-loop)
+    (else_statement   . ts-fold-range-vim-for-loop)
+    (list             . ts-fold-range-seq)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "\"")))))
 
 (defun ts-fold-parsers-xml ()
   "Rule set for XML."

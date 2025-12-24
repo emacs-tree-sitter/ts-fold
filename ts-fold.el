@@ -152,6 +152,7 @@
     (tsx-mode               . ,(ts-fold-parsers-tsx))
     (verilog-mode           . ,(ts-fold-parsers-verilog))
     (vhdl-mode              . ,(ts-fold-parsers-vhdl))
+    (vimrc-mode             . ,(ts-fold-parsers-vim))
     (nxml-mode              . ,(ts-fold-parsers-xml))
     (yaml-mode              . ,(ts-fold-parsers-yaml))
     (k8s-mode               . ,(ts-fold-parsers-yaml))
@@ -1529,6 +1530,19 @@ more information."
               (beg (tsc-node-end-position record))
               (end-child (car (ts-fold-find-children start-child "end")))
               (end (tsc-node-start-position end-child)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-vim-for-loop (node offset)
+  "Return the fold range for `for_loop' in Vim.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((body (car (ts-fold-find-children node "body")))
+              (prev (tsc-get-prev-sibling body))
+              (beg (tsc-node-end-position prev))
+              (end (tsc-node-end-position node)))
     (when ts-fold-on-next-line
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))

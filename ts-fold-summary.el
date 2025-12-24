@@ -181,6 +181,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Org block."
   (ts-fold-summary--doc-extract doc-str '()))
 
+(defun ts-fold-summary-vim-doc (doc-str)
+  "Extract summary from DOC-STR in Vim."
+  (ts-fold-summary--generic doc-str '("\"")))
+
 (defun ts-fold-summary-xml (doc-str)
   "Extract summary from DOC-STR in XML."
   (ts-fold-summary--generic doc-str "-"))
@@ -282,6 +286,7 @@ type of content by checking the word boundary's existence."
     (typescript-mode        . ts-fold-summary-javadoc)
     (verilog-mode           . ts-fold-summary-javadoc)
     (vhdl-mode              . ts-fold-summary-lua-doc)
+    (vimrc-mode             . ts-fold-summary-vim-doc)
     (nxml-mode              . ts-fold-summary-xml)
     (yaml-mode              . ts-fold-summary-ruby-doc)
     (k8s-mode               . ts-fold-summary-ruby-doc)
