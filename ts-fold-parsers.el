@@ -274,7 +274,7 @@
          (ts-fold-range-line-comment node offset "#")))))
 
 (defun ts-fold-parsers-fsharp ()
-  "Rules set for Fsharp."
+  "Rules set for F#."
   '((module_defn      . ts-fold-range-fsharp-module-defn)
     (list_expression  . ts-fold-range-seq)
     (record_type_defn . ts-fold-range-fsharp-record-type-defn)
