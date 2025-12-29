@@ -54,6 +54,8 @@
 (declare-function ts-fold-range-fish-function "ts-fold.el")
 (declare-function ts-fold-range-fish-if "ts-fold.el")
 (declare-function ts-fold-range-fish-case "ts-fold.el")
+(declare-function ts-fold-range-fsharp-module-defn "ts-fold.el")
+(declare-function ts-fold-range-fsharp-record-type-defn "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia-function "ts-fold.el")
@@ -270,6 +272,14 @@
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-fsharp ()
+  "Rules set for Fsharp."
+  '((module_defn      . ts-fold-range-fsharp-module-defn)
+    (list_expression  . ts-fold-range-seq)
+    (record_type_defn . ts-fold-range-fsharp-record-type-defn)
+    (line_comment     . ts-fold-range-c-like-comment)
+    (block_comment    . (ts-fold-range-seq 1 -1))))
 
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."

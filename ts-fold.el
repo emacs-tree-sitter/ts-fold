@@ -82,6 +82,7 @@
     (erlang-mode            . ,(ts-fold-parsers-erlang))
     (ess-r-mode             . ,(ts-fold-parsers-r))
     (fish-mode              . ,(ts-fold-parsers-fish))
+    (fsharp-mode            . ,(ts-fold-parsers-fsharp))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
@@ -880,6 +881,26 @@ more information."
               (end (1- end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
+(defun ts-fold-range-fsharp-module-defn (node offset)
+  "Define fold range for `module_defn' in FSharp.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (car (ts-fold-find-children node "=")))
+              (beg (tsc-node-end-position beg))
+              (end (tsc-node-end-position node)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-fsharp-record-type-defn (node offset)
+  "Define fold range for `record_type_defn' in FSharp.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((beg (car (ts-fold-find-children node "{")))
+              (beg (tsc-node-end-position beg))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
 (defun ts-fold-range-groovy-block (node offset)
   "Define fold range for `block' in Groovy.
 
@@ -1313,9 +1334,8 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let*
-      ((parent (tsc-get-parent node))
-       (parent (tsc-get-parent parent)))
+  (when-let* ((parent (tsc-get-parent node))
+              (parent (tsc-get-parent parent)))
     (ts-fold--cons-add (cons -1 0) (ts-fold-range-seq node offset))))
 
 (defun ts-fold-range-pascal-comment (node offset)

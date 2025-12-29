@@ -193,6 +193,10 @@ type of content by checking the word boundary's existence."
   "Extract summary from DOC-STR in Julia."
   (ts-fold-summary--generic doc-str '("#" "\"\"\"")))
 
+(defun ts-fold-summary-ocaml (doc-str)
+  "Extract summary from DOC-STR in OCaml."
+  (ts-fold-summary--generic doc-str '("\"\"")))
+
 ;;
 ;; (@* "Core" )
 ;;
@@ -210,6 +214,7 @@ type of content by checking the word boundary's existence."
     (beancount-mode         . ts-fold-summary-elisp)
     (c-mode                 . ts-fold-summary-c)
     (c++-mode               . ts-fold-summary-c)
+    (caml-mode              . ts-fold-summary-ocaml)
     (cmake-mode             . ts-fold-summary-ruby-doc)
     (clojure-mode           . ts-fold-summary-elisp)
     (csharp-mode            . ts-fold-summary-csharp)
@@ -220,6 +225,7 @@ type of content by checking the word boundary's existence."
     (elixir-mode            . ts-fold-summary-ruby-doc)
     (erlang-mode            . ts-fold-summary-tex-doc)
     (fish-mode              . ts-fold-summary-javadoc)
+    (fsharp-mode            . ts-fold-summary-ocaml)
     (gdscript-mode          . ts-fold-summary-ruby-doc)
     (glsl-mode              . ts-fold-summary-c)
     (go-mode                . ts-fold-summary-go)
