@@ -1,6 +1,6 @@
 ;;; ts-fold-parsers.el --- Adapter layer to Tree-Sitter  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-2025  emacs-tree-sitter maintainers
+;; Copyright (C) 2021-2026  emacs-tree-sitter maintainers
 
 ;; Created date 2021-10-04 17:45:48
 

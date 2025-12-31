@@ -1,6 +1,6 @@
 ;;; ts-fold.el --- Code folding using tree-sitter  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-2025  emacs-tree-sitter maintainers
+;; Copyright (C) 2021-2026  emacs-tree-sitter maintainers
 
 ;; Created date 2021-08-11 14:12:37
 

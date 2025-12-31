@@ -1,6 +1,6 @@
 ;;; ts-fold-summary.el --- Extract summary from fold region  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-2025  emacs-tree-sitter maintainers
+;; Copyright (C) 2021-2026  emacs-tree-sitter maintainers
 
 ;; Created date 2021-10-04 16:59:22
 
