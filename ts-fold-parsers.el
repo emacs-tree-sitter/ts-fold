@@ -56,6 +56,7 @@
 (declare-function ts-fold-range-fish-case "ts-fold.el")
 (declare-function ts-fold-range-fsharp-module-defn "ts-fold.el")
 (declare-function ts-fold-range-fsharp-record-type-defn "ts-fold.el")
+(declare-function ts-fold-range-git-config-section "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia-function "ts-fold.el")
