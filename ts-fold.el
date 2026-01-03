@@ -85,6 +85,7 @@
     (fish-mode              . ,(ts-fold-parsers-fish))
     (fsharp-mode            . ,(ts-fold-parsers-fsharp))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
+    (gitconfig-mode         . ,(ts-fold-parsers-git-config))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
     (graphql-mode           . ,(ts-fold-parsers-graphql))
@@ -900,6 +901,18 @@ more information."
   (when-let* ((beg (car (ts-fold-find-children node "{")))
               (beg (tsc-node-end-position beg))
               (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-git-config-section (node offset)
+  "Return the fold range for `section' in YAML.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((first (car (ts-fold-find-children-traverse node "section_header")))
+              (beg (tsc-node-end-position first))
+              (end (tsc-node-end-position node)))
+    (when ts-fold-on-next-line
+      (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-groovy-block (node offset)

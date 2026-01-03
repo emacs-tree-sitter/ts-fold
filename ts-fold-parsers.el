@@ -296,6 +296,13 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
+(defun ts-fold-parsers-git-config ()
+  "Rule set for Git config."
+  '((section . ts-fold-range-git-config-section)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
 (defun ts-fold-parsers-glsl ()
   "Rule set for GLSL."
   '((field_declaration_list . ts-fold-range-seq)
