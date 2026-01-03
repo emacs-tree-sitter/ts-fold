@@ -908,7 +908,7 @@ more information."
 
 For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
-  (when-let* ((first (car (ts-fold-find-children-traverse node "section_header")))
+  (when-let* ((first (car (ts-fold-find-children node "section_header")))
               (beg (tsc-node-end-position first))
               (end (tsc-node-end-position node)))
     (when ts-fold-on-next-line
