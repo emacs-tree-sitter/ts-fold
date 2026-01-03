@@ -81,6 +81,7 @@
     (elixir-mode            . ,(ts-fold-parsers-elixir))
     (erlang-mode            . ,(ts-fold-parsers-erlang))
     (ess-r-mode             . ,(ts-fold-parsers-r))
+    (fennel-mode            . ,(ts-fold-parsers-fennel))
     (fish-mode              . ,(ts-fold-parsers-fish))
     (fsharp-mode            . ,(ts-fold-parsers-fsharp))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
