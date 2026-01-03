@@ -261,6 +261,14 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "%")))))
 
+(defun ts-fold-parsers-fennel ()
+  "Rules set for Fennel."
+  '((macro_form . ts-fold-range-elisp-function)
+    (fn_form    . ts-fold-range-elisp-function)
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
+
 (defun ts-fold-parsers-fish ()
   "Rules set for Fish."
   '((function_definition . ts-fold-range-fish-function)
