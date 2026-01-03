@@ -228,6 +228,7 @@ type of content by checking the word boundary's existence."
     (fish-mode              . ts-fold-summary-javadoc)
     (fsharp-mode            . ts-fold-summary-ocaml)
     (gdscript-mode          . ts-fold-summary-ruby-doc)
+    (gitconfig-mode         . ts-fold-summary-ruby-doc)
     (glsl-mode              . ts-fold-summary-c)
     (go-mode                . ts-fold-summary-go)
     (graphql-mode           . ts-fold-summary-ruby-doc)

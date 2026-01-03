@@ -56,6 +56,7 @@
 (declare-function ts-fold-range-fish-case "ts-fold.el")
 (declare-function ts-fold-range-fsharp-module-defn "ts-fold.el")
 (declare-function ts-fold-range-fsharp-record-type-defn "ts-fold.el")
+(declare-function ts-fold-range-git-config-section "ts-fold.el")
 (declare-function ts-fold-range-haskell-function "ts-fold.el")
 (declare-function ts-fold-range-html "ts-fold.el")
 (declare-function ts-fold-range-julia-function "ts-fold.el")
@@ -292,6 +293,13 @@
 (defun ts-fold-parsers-gdscript ()
   "Rule set for GGScript."
   '((body . (ts-fold-range-seq -1 1))
+    (comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-git-config ()
+  "Rule set for Git config."
+  '((section . ts-fold-range-git-config-section)
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
