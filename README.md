@@ -139,6 +139,7 @@ These languages are fairly complete:
 - Scala / Scheme / SQL / Svelte / Swift
 - TOML / TypeScript / TSX
 - Verilog / VHDL / Vim
+- WGSL
 - XML
 - YAML
 - Zig
