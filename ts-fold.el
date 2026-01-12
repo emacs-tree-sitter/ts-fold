@@ -158,6 +158,7 @@
     (vhdl-mode              . ,(ts-fold-parsers-vhdl))
     (vimrc-mode             . ,(ts-fold-parsers-vim))
     (wat-mode               . ,(ts-fold-parsers-wat))
+    (wgsl-mode              . ,(ts-fold-parsers-wgsl))
     (nxml-mode              . ,(ts-fold-parsers-xml))
     (yaml-mode              . ,(ts-fold-parsers-yaml))
     (k8s-mode               . ,(ts-fold-parsers-yaml))

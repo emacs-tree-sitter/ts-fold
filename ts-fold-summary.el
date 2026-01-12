@@ -297,6 +297,7 @@ type of content by checking the word boundary's existence."
     (vhdl-mode              . ts-fold-summary-lua-doc)
     (vimrc-mode             . ts-fold-summary-vim)
     (wat-mode               . ts-fold-summary-elisp)
+    (wgsl-mode              . ts-fold-summary-c)
     (nxml-mode              . ts-fold-summary-xml)
     (yaml-mode              . ts-fold-summary-ruby-doc)
     (k8s-mode               . ts-fold-summary-ruby-doc)
