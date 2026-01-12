@@ -800,6 +800,13 @@
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset ";;")))))
 
+(defun ts-fold-parsers-wgsl ()
+  "Rule set for WGSL."
+  '((compound_statement . ts-fold-range-seq)
+    (struct_member      . ts-fold-range-wat-func)
+    (line_comment       . ts-fold-range-c-like-comment)
+    (block_comment      . ts-fold-range-c-like-comment)))
+
 (defun ts-fold-parsers-xml ()
   "Rule set for XML."
   '((element . ts-fold-range-html)
