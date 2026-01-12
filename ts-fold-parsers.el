@@ -803,7 +803,7 @@
 (defun ts-fold-parsers-wgsl ()
   "Rule set for WGSL."
   '((compound_statement . ts-fold-range-seq)
-    (struct_member      . ts-fold-range-wat-func)
+    (struct_declaration . ts-fold-range-groovy-block)
     (line_comment       . ts-fold-range-c-like-comment)
     (block_comment      . ts-fold-range-c-like-comment)))
 
