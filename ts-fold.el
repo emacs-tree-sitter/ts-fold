@@ -157,6 +157,7 @@
     (verilog-mode           . ,(ts-fold-parsers-verilog))
     (vhdl-mode              . ,(ts-fold-parsers-vhdl))
     (vimrc-mode             . ,(ts-fold-parsers-vim))
+    (wat-mode               . ,(ts-fold-parsers-wat))
     (nxml-mode              . ,(ts-fold-parsers-xml))
     (yaml-mode              . ,(ts-fold-parsers-yaml))
     (k8s-mode               . ,(ts-fold-parsers-yaml))
@@ -1580,6 +1581,27 @@ more information."
               (end (tsc-node-end-position node)))
     (when ts-fold-on-next-line
       (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-wat-module (node offset)
+  "Return the fold range for `module' in Wasm Text.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((param-node (tsc-get-nth-child node 1))
+              (beg (tsc-node-end-position param-node))
+              (end (1- (tsc-node-end-position node))))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-wat-func (node offset)
+  "Return the fold range for `module_field_func' in Wasm Text.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((body (car (ts-fold-find-children node "result")))
+              (next (tsc-get-next-sibling body))
+              (beg (tsc-node-start-position next))
+              (end (1- (tsc-node-end-position node))))
     (ts-fold--cons-add (cons beg end) offset)))
 
 (defun ts-fold-range-yaml-seq-item (node offset)

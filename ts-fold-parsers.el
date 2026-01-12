@@ -109,6 +109,8 @@
 (declare-function ts-fold-range-vhdl-package "ts-fold.el")
 (declare-function ts-fold-range-vhdl-type "ts-fold.el")
 (declare-function ts-fold-range-vim-for-loop "ts-fold.el")
+(declare-function ts-fold-range-wat-module "ts-fold.el")
+(declare-function ts-fold-range-wat-func "ts-fold.el")
 (declare-function ts-fold-range-yaml-seq-item "ts-fold.el")
 
 ;;
@@ -789,6 +791,14 @@
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "\"")))))
+
+(defun ts-fold-parsers-wat ()
+  "Rule set for Wasm text format."
+  '((module            . ts-fold-range-wat-module)
+    (module_field_func . ts-fold-range-wat-func)
+    (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset ";;")))))
 
 (defun ts-fold-parsers-xml ()
   "Rule set for XML."
