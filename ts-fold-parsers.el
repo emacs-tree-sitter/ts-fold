@@ -335,6 +335,7 @@
 (defun ts-fold-parsers-haskell ()
   "Rule set for Haskell."
   '((function . ts-fold-range-haskell-function)
+    (bind     . ts-fold-range-haskell-function)
     (comment  . ts-fold-range-lua-comment)))
 
 (defun ts-fold-parsers-haxe ()
