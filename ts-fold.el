@@ -85,6 +85,7 @@
     (fish-mode              . ,(ts-fold-parsers-fish))
     (fsharp-mode            . ,(ts-fold-parsers-fsharp))
     (gdscript-mode          . ,(ts-fold-parsers-gdscript))
+    (gdshader-mode          . ,(ts-fold-parsers-gdshader))
     (gitconfig-mode         . ,(ts-fold-parsers-git-config))
     (glsl-mode              . ,(ts-fold-parsers-glsl))
     (go-mode                . ,(ts-fold-parsers-go))
