@@ -293,11 +293,17 @@
     (block_comment    . (ts-fold-range-seq 1 -1))))
 
 (defun ts-fold-parsers-gdscript ()
-  "Rule set for GGScript."
+  "Rule set for GDScript."
   '((body . (ts-fold-range-seq -1 1))
     (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-gdshader ()
+  "Rule set for GDShader."
+  '((compound_statement . ts-fold-range-seq)
+    (struct_fields      . ts-fold-range-seq)
+    (comment            . ts-fold-range-c-like-comment)))
 
 (defun ts-fold-parsers-git-config ()
   "Rule set for Git config."

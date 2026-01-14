@@ -20,6 +20,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * feat: Add `Git config` support ([#139](../../pull/139))
 * feat: Add `Wasm Text` support ([#140](../../pull/140))
 * feat: Add `WGSL` support ([#141](../../pull/141))
+* feat: Add `GDShader` support ([#142](../../pull/142))
 
 ## 0.4.0
 > Released Feb 12, 2025
