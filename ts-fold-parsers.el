@@ -91,6 +91,7 @@
 (declare-function ts-fold-range-org-body "ts-fold.el")
 (declare-function ts-fold-range-clojure-function "ts-fold.el")
 (declare-function ts-fold-range-cmake-body "ts-fold.el")
+(declare-function ts-fold-range-crystal-block "ts-fold.el")
 (declare-function ts-fold-range-editorconfig-section "ts-fold.el")
 (declare-function ts-fold-range-pascal-comment "ts-fold.el")
 (declare-function ts-fold-range-python-block "treesit-fold.el")
@@ -193,6 +194,17 @@
   "Rule set for CMake."
   '((body . ts-fold-range-cmake-body)
     (line_comment
+     . (lambda (node offset)
+         (ts-fold-range-line-comment node offset "#")))))
+
+(defun ts-fold-parsers-crystal ()
+  "Rule set for Crystal."
+  '((block      . ts-fold-range-crystal-block)
+    (method_def . ts-fold-range-crystal-block)
+    (while      . ts-fold-range-crystal-block)
+    (call       . ts-fold-range-crystal-block)
+    (until      . ts-fold-range-crystal-block)
+    (comment
      . (lambda (node offset)
          (ts-fold-range-line-comment node offset "#")))))
 
