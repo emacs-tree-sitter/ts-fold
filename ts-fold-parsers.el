@@ -772,10 +772,11 @@
   "Rule set for TypeScript."
   (append
    (ts-fold-parsers-javascript)
-   '((class_body    . ts-fold-range-seq)
-     (enum_body     . ts-fold-range-seq)
-     (named_imports . ts-fold-range-seq)
-     (object_type   . ts-fold-range-seq))))
+   '((class_body     . ts-fold-range-seq)
+     (enum_body      . ts-fold-range-seq)
+     (named_imports  . ts-fold-range-seq)
+     (object_type    . ts-fold-range-seq)
+     (interface_body . ts-fold-range-seq))))
 
 (defun ts-fold-parsers-tsx ()
   "Rule set for TSX files (TypeScript with JSX)."
