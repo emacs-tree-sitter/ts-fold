@@ -73,6 +73,7 @@
     (caml-mode              . ,(ts-fold-parsers-ocaml))
     (cmake-mode             . ,(ts-fold-parsers-cmake))
     (clojure-mode           . ,(ts-fold-parsers-clojure))
+    (crystal-mode           . ,(ts-fold-parsers-crystal))
     (csharp-mode            . ,(ts-fold-parsers-csharp))
     (css-mode               . ,(ts-fold-parsers-css))
     (dart-mode              . ,(ts-fold-parsers-dart))
@@ -771,6 +772,19 @@ For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
 more information."
   (when-let* ((beg (tsc-node-start-position node))
               (end (tsc-node-end-position node)))
+    (when ts-fold-on-next-line  ; display nicely
+      (setq end (ts-fold--last-eol end)))
+    (ts-fold--cons-add (cons beg end) offset)))
+
+(defun ts-fold-range-crystal-block (node offset)
+  "Return the fold range for `block' NODE in Crystal.
+
+For arguments NODE and OFFSET, see function `ts-fold-range-seq' for
+more information."
+  (when-let* ((expr (car (ts-fold-find-children node "expressions")))
+              (prev (tsc-get-prev-sibling expr))
+              (beg (tsc-node-end-position prev))
+              (end (tsc-node-end-position expr)))
     (when ts-fold-on-next-line  ; display nicely
       (setq end (ts-fold--last-eol end)))
     (ts-fold--cons-add (cons beg end) offset)))

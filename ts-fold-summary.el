@@ -217,6 +217,7 @@ type of content by checking the word boundary's existence."
     (caml-mode              . ts-fold-summary-ocaml)
     (cmake-mode             . ts-fold-summary-ruby-doc)
     (clojure-mode           . ts-fold-summary-elisp)
+    (crystal-mode           . ts-fold-summary-ruby-doc)
     (csharp-mode            . ts-fold-summary-csharp)
     (css-mode               . ts-fold-summary-javadoc)
     (dart-mode              . ts-fold-summary-javadoc)
